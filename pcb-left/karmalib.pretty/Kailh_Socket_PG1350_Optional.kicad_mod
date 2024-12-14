@@ -596,7 +596,7 @@
 		)
 	)
 	(pad "" np_thru_hole circle
-		(at 3.5 8.5 180)
+		(at 3.78 8.5 180)
 		(size 1.7018 1.7018)
 		(drill 1.7018)
 		(layers "*.Cu" "*.Mask")
@@ -624,7 +624,7 @@
 		(uuid "4f9cae01-61ca-4ecf-9f43-ae726f513c05")
 	)
 	(pad "" np_thru_hole circle
-		(at 14.5 8.5 180)
+		(at 14.22 8.5 180)
 		(size 1.7018 1.7018)
 		(drill 1.7018)
 		(layers "*.Cu" "*.Mask")
@@ -665,6 +665,7 @@
 		)
 	)
 	(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(hide yes)
 		(offset
 			(xyz 9 -8.5 7.5)
 		)
