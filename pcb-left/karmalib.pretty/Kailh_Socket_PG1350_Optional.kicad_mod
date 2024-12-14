@@ -643,6 +643,7 @@
 		(uuid "a60ed05d-6c41-4482-8dad-62cc28832c40")
 	)
 	(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(hide yes)
 		(offset
 			(xyz 9 -8.5 2.1)
 		)

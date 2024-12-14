@@ -1,3 +1,5 @@
 .DS_Store
 pcb-left/**
 scratch/**
+*.lck
+**/#auto_saved_files#
