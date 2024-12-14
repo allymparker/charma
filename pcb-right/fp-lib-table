@@ -1,4 +1,4 @@
 (fp_lib_table
   (version 7)
-  (lib (name "karmalib")(type "KiCad")(uri "${KIPRJMOD}/karmalib.pretty")(options "")(descr ""))
+  (lib (name "karmalib")(type "KiCad")(uri "/Users/ally/src/allymparker/charma/pcb-left/karmalib.pretty")(options "")(descr ""))
 )
