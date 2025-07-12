@@ -123,7 +123,7 @@
 			(mirror no)
 			(drillshape 0)
 			(scaleselection 1)
-			(outputdirectory "pcb-left-gerbers/")
+			(outputdirectory "pcb-gerbers/")
 		)
 	)
 	(net 0 "")
@@ -231,7 +231,7 @@
 		)
 		(path "/352d3093-c733-46d8-a6cc-f920c8e31710")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 2 10)
@@ -919,7 +919,7 @@
 		)
 		(path "/65bbf193-b1ca-4bc6-8657-2136e8fd28d8")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 2 10)
@@ -1607,7 +1607,7 @@
 		)
 		(path "/18cd5941-0910-4b8f-8f76-21556e5c1d7d")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 2 10)
@@ -2295,7 +2295,7 @@
 		)
 		(path "/7b554f40-8dc8-4314-880a-92168ff9bb4b")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 2 14.7)
@@ -2985,7 +2985,7 @@
 		)
 		(path "/94f34607-22a5-4711-a7c9-42084b763bff")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 2 10)
@@ -3673,7 +3673,7 @@
 		)
 		(path "/d58ad2bd-4c4f-4d5e-9612-3df35f3648d6")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 2 14.7)
@@ -4363,7 +4363,7 @@
 		)
 		(path "/417b8227-e5be-4432-b210-1d0b777d8032")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 2 10)
@@ -5051,7 +5051,7 @@
 		)
 		(path "/eebcb680-7956-45f5-9fa2-93650ac747a0")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 2 10)
@@ -5742,7 +5742,7 @@
 		(property ki_fp_filters "Connector*:*_1x??_*")
 		(path "/0dc85b2e-9ed1-41c4-b9a4-bf8c31cb11ee")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole dnp)
 		(fp_line
 			(start -1.33 3.87)
@@ -6007,7 +6007,7 @@
 		)
 		(path "/99e9d14c-cdca-4455-8578-ab16a65647ef")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 2 10)
@@ -6695,7 +6695,7 @@
 		)
 		(path "/60de1095-5bdf-4da7-aefa-10c8976ca45c")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 2 10)
@@ -7383,7 +7383,7 @@
 		)
 		(path "/648788c2-a101-43ee-841a-c8eb5a79220a")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 2 10)
@@ -8071,7 +8071,7 @@
 		)
 		(path "/465b9a03-31cd-49a0-a413-cd07181ead3d")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 2 10)
@@ -8759,7 +8759,7 @@
 		)
 		(path "/4303a97f-e6df-4a49-887b-01bcd44a570b")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 2 10)
@@ -9447,7 +9447,7 @@
 		)
 		(path "/5bc276f4-9082-447f-89c1-17471b611ee0")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 2 10)
@@ -10135,7 +10135,7 @@
 		)
 		(path "/878088e9-b658-4485-abae-0590dee9a2d1")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 2 10)
@@ -10824,7 +10824,7 @@
 		)
 		(path "/2a19fd1a-1317-48be-9d05-329bdb6eb74a")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start -3.9 -3.75)
@@ -11172,7 +11172,7 @@
 		)
 		(path "/c4288dae-2826-4d0b-93fe-271f753c7280")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr smd exclude_from_pos_files)
 		(fp_rect
 			(start 3.350197 -10.849813)
@@ -11943,7 +11943,7 @@
 		)
 		(path "/8e4e2e2b-59f9-46db-a170-fa950b7d4409")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 2 10)
@@ -12631,7 +12631,7 @@
 		)
 		(path "/8fab506f-1c5f-48e0-8cb4-62277f81d405")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 2 10)
@@ -13428,7 +13428,7 @@
 		)
 		(path "/06c86cd3-e147-414c-985c-91dc40735b5c")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 2 10)
@@ -14120,7 +14120,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/1c0ddaea-9abc-4acd-9ffe-a94f829e524c")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 0.400001 0.7)
@@ -14264,7 +14264,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/feb9c38c-2e79-43c7-95fc-6eed2ba63d91")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 0.4 0.7)
@@ -14408,7 +14408,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/bc1e70b9-f317-478f-93fc-5cec40fb8a07")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 0.4 0.7)
@@ -14552,7 +14552,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/ac7cb393-f830-423c-beed-56032f186c52")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 0.4 0.7)
@@ -14696,7 +14696,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/1fee1d82-1f9c-47da-9fe3-a9273ecb69c8")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 0.4 0.7)
@@ -14840,7 +14840,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/edab3938-73d7-4cbc-9a43-df64ccc97c61")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 0.4 0.7)
@@ -14984,7 +14984,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/64334053-37b5-4404-bf7b-33504a8d3abf")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 0.4 0.7)
@@ -15128,7 +15128,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/d6885ac7-2696-4d60-8044-a32558134667")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 0.4 0.699999)
@@ -15272,7 +15272,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/e71bdf57-bc31-400e-8430-801e2ea6029f")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 0.4 0.7)
@@ -15416,7 +15416,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/c49494fd-0b97-42f0-8be6-3ff5650802c8")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 0.4 0.7)
@@ -15560,7 +15560,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/45eabdda-7b52-4dec-a185-256370fef058")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 0.4 0.7)
@@ -15704,7 +15704,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/1c2ea357-3ce1-4d7c-b50b-489c270f2d4c")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 0.4 0.7)
@@ -15848,7 +15848,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/795ab807-af61-4165-9cb4-71e7b9fde846")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 0.4 0.7)
@@ -15992,7 +15992,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/ddb954ae-6a54-44c4-a365-0b9388a28369")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 0.4 0.7)
@@ -16136,7 +16136,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/e9f3f907-83a5-438d-8d74-1ea98410ee6f")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 0.4 0.7)
@@ -16280,7 +16280,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/c66c04a7-239b-489f-abf1-6150b3a52352")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 0.4 0.7)
@@ -16424,7 +16424,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/710118e8-dfc5-4eb9-9df7-94ffaa69a9ea")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 0.4 0.7)
@@ -16568,7 +16568,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/7794104e-3a0a-4ee6-9362-5e09c5e3535f")
 		(sheetname "Root")
-		(sheetfile "pcb-left.kicad_sch")
+		(sheetfile "pcb.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 0.4 0.7)

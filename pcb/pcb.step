@@ -1,7 +1,7 @@
 ISO-10303-21;
 HEADER;
 FILE_DESCRIPTION(('KiCad electronic assembly'),'2;1');
-FILE_NAME('pcb-left.step','2024-12-16T18:44:54',('Pcbnew'),('Kicad'),
+FILE_NAME('pcb.step','2024-12-16T18:44:54',('Pcbnew'),('Kicad'),
   'Open CASCADE STEP processor 7.7','KiCad to STEP converter','Unknown'
   );
 FILE_SCHEMA(('AUTOMOTIVE_DESIGN { 1 0 10303 214 1 1 1 1 }'));
@@ -15,7 +15,7 @@ DATA;
 #4 = PRODUCT_DEFINITION_SHAPE('','',#5);
 #5 = PRODUCT_DEFINITION('design','',#6,#9);
 #6 = PRODUCT_DEFINITION_FORMATION('','',#7);
-#7 = PRODUCT('pcb-left 1','pcb-left 1','',(#8));
+#7 = PRODUCT('pcb 1','pcb 1','',(#8));
 #8 = PRODUCT_CONTEXT('',#2,'mechanical');
 #9 = PRODUCT_DEFINITION_CONTEXT('part definition',#2,'design');
 #10 = SHAPE_REPRESENTATION('',(#11,#15,#19,#23,#27,#31,#35,#39,#43,#47,
@@ -28720,7 +28720,7 @@ SHAPE_REPRESENTATION_RELATIONSHIP() );
 #27301 = PRODUCT_DEFINITION_SHAPE('','',#27302);
 #27302 = PRODUCT_DEFINITION('design','',#27303,#27306);
 #27303 = PRODUCT_DEFINITION_FORMATION('','',#27304);
-#27304 = PRODUCT('_autosave-pcb-left_PCB','_autosave-pcb-left_PCB','',(
+#27304 = PRODUCT('_autosave-pcb_PCB','_autosave-pcb_PCB','',(
     #27305));
 #27305 = PRODUCT_CONTEXT('',#2,'mechanical');
 #27306 = PRODUCT_DEFINITION_CONTEXT('part definition',#2,'design');
