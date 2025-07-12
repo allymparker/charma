@@ -642,7 +642,7 @@
 		(layers "B.Cu" "B.Paste" "B.Mask")
 		(uuid "a60ed05d-6c41-4482-8dad-62cc28832c40")
 	)
-	(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+	(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 		(hide yes)
 		(offset
 			(xyz 9 -8.5 2.1)
@@ -654,7 +654,7 @@
 			(xyz 0 0 0)
 		)
 	)
-	(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+	(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 		(offset
 			(xyz 14 -12.05 -1.8)
 		)
@@ -665,7 +665,7 @@
 			(xyz -90 0 0)
 		)
 	)
-	(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+	(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 		(hide yes)
 		(offset
 			(xyz 9 -8.5 7.5)

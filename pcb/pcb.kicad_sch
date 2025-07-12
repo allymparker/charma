@@ -5,7 +5,7 @@
 	(uuid "f98b87e5-a6a7-4c83-9bb9-aca334f9bfc8")
 	(paper "User" 200 200)
 	(title_block
-		(title "Karma Wireless Split Ergonomic Keyboard")
+		(title "Charma Wireless Split Ergonomic Keyboard")
 		(date "2023-04-04")
 		(rev "0.32")
 	)
@@ -2549,7 +2549,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 62.23 99.187 0)
 			(effects
 				(font
@@ -2704,7 +2704,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 72.898 69.215 0)
 			(effects
 				(font
@@ -2780,7 +2780,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 86.106 104.267 90)
 			(effects
 				(font
@@ -2856,7 +2856,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 43.434 74.295 90)
 			(effects
 				(font
@@ -2932,7 +2932,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 75.438 74.295 90)
 			(effects
 				(font
@@ -3007,7 +3007,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:SKHLLCA010"
+		(property "Footprint" "charmalib:SKHLLCA010"
 			(at 148.0312 131.4704 0)
 			(effects
 				(font
@@ -3081,7 +3081,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 83.566 54.229 0)
 			(effects
 				(font
@@ -3155,7 +3155,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 51.562 69.215 0)
 			(effects
 				(font
@@ -3229,7 +3229,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 40.894 84.201 0)
 			(effects
 				(font
@@ -3305,7 +3305,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 86.106 89.281 90)
 			(effects
 				(font
@@ -3379,7 +3379,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 83.566 69.215 0)
 			(effects
 				(font
@@ -3453,7 +3453,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 62.23 54.229 0)
 			(effects
 				(font
@@ -3527,7 +3527,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 72.898 84.201 0)
 			(effects
 				(font
@@ -3603,7 +3603,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 43.434 89.281 90)
 			(effects
 				(font
@@ -3677,7 +3677,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 62.23 69.215 0)
 			(effects
 				(font
@@ -3751,7 +3751,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 62.23 84.201 0)
 			(effects
 				(font
@@ -3827,7 +3827,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 64.77 104.267 90)
 			(effects
 				(font
@@ -3903,7 +3903,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 64.77 74.295 90)
 			(effects
 				(font
@@ -3979,7 +3979,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 75.438 59.309 90)
 			(effects
 				(font
@@ -4053,7 +4053,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 83.566 99.187 0)
 			(effects
 				(font
@@ -4127,7 +4127,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 40.894 69.215 0)
 			(effects
 				(font
@@ -4201,7 +4201,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 51.562 84.201 0)
 			(effects
 				(font
@@ -4275,7 +4275,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 51.562 54.229 0)
 			(effects
 				(font
@@ -4349,7 +4349,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 40.894 54.229 0)
 			(effects
 				(font
@@ -4423,7 +4423,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 72.898 54.229 0)
 			(effects
 				(font
@@ -4499,7 +4499,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 54.102 59.309 90)
 			(effects
 				(font
@@ -4575,7 +4575,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 64.77 59.309 90)
 			(effects
 				(font
@@ -4650,7 +4650,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "karmalib:XIAO_nRF52840_SMD_Cutout"
+		(property "Footprint" "charmalib:XIAO_nRF52840_SMD_Cutout"
 			(at 134.6708 68.7578 0)
 			(effects
 				(font
@@ -4786,7 +4786,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 43.434 59.309 90)
 			(effects
 				(font
@@ -4862,7 +4862,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 54.102 89.281 90)
 			(effects
 				(font
@@ -4936,7 +4936,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 72.898 99.187 0)
 			(effects
 				(font
@@ -5012,7 +5012,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 75.438 104.267 90)
 			(effects
 				(font
@@ -5088,7 +5088,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 54.102 74.295 90)
 			(effects
 				(font
@@ -5164,7 +5164,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 75.438 89.281 90)
 			(effects
 				(font
@@ -5240,7 +5240,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 86.106 74.295 90)
 			(effects
 				(font
@@ -5316,7 +5316,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 86.106 59.309 90)
 			(effects
 				(font
@@ -5390,7 +5390,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 83.566 84.201 0)
 			(effects
 				(font
@@ -5466,7 +5466,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 64.77 89.281 90)
 			(effects
 				(font

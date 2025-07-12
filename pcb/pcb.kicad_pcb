@@ -163,7 +163,7 @@
 	(net 34 "unconnected-(U1-5V-Pad14)")
 	(net 35 "unconnected-(U1-A31_SWDIO-Pad15)")
 	(net 36 "unconnected-(U1-A30_SWCLK-Pad16)")
-	(footprint "karmalib:Kailh_Socket_PG1350_Optional"
+	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "0aab911b-fa07-4288-a4fa-55208ec4f7c9")
 		(at 107 38.55)
@@ -193,7 +193,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 9 8.5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -815,7 +815,7 @@
 			(pintype "passive")
 			(uuid "b386ad7d-73d2-4dda-90f4-8a9f4a845bbe")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 2.1)
@@ -827,7 +827,7 @@
 				(xyz 0 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 			(offset
 				(xyz 14 -12.05 -1.8)
 			)
@@ -838,7 +838,7 @@
 				(xyz -90 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 7.5)
@@ -851,7 +851,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Kailh_Socket_PG1350_Optional"
+	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "28c0b5da-7c7e-451c-9773-d3ef4797f472")
 		(at 71 65.75)
@@ -881,7 +881,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 9 8.5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -1503,7 +1503,7 @@
 			(pintype "passive")
 			(uuid "b269ef6b-495a-4323-9f38-e0eb4bf96655")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 2.1)
@@ -1515,7 +1515,7 @@
 				(xyz 0 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 			(offset
 				(xyz 14 -12.05 -1.8)
 			)
@@ -1526,7 +1526,7 @@
 				(xyz -90 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 7.5)
@@ -1539,7 +1539,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Kailh_Socket_PG1350_Optional"
+	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "34362ffa-3483-4c54-aed7-2fad06ca0956")
 		(at 89 53)
@@ -1569,7 +1569,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 9 8.5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -2191,7 +2191,7 @@
 			(pintype "passive")
 			(uuid "f56ae76d-2bf4-480f-983e-78cf5b43a0db")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 2.1)
@@ -2203,7 +2203,7 @@
 				(xyz 0 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 			(offset
 				(xyz 14 -12.05 -1.8)
 			)
@@ -2214,7 +2214,7 @@
 				(xyz -90 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 7.5)
@@ -2227,7 +2227,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Kailh_Socket_PG1350_Optional"
+	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "4233b528-2480-4b50-886b-37a0367afd48")
 		(at 134.906 104.512 -42)
@@ -2257,7 +2257,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 9.000001 8.5 138)
 			(layer "F.Fab")
 			(hide yes)
@@ -2881,7 +2881,7 @@
 			(pintype "passive")
 			(uuid "49f9d018-bc6f-4d30-bc20-83340200e3e9")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 2.1)
@@ -2893,7 +2893,7 @@
 				(xyz 0 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 			(offset
 				(xyz 14 -12.05 -1.8)
 			)
@@ -2904,7 +2904,7 @@
 				(xyz -90 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 7.5)
@@ -2917,7 +2917,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Kailh_Socket_PG1350_Optional"
+	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "46d516ea-90bc-4476-99cb-a55f2643cce8")
 		(at 35 50.45)
@@ -2947,7 +2947,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 9 8.5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -3569,7 +3569,7 @@
 			(pintype "passive")
 			(uuid "862ae67c-ec51-4aa2-bf64-ce011cb4b189")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 2.1)
@@ -3581,7 +3581,7 @@
 				(xyz 0 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 			(offset
 				(xyz 14 -12.05 -1.8)
 			)
@@ -3592,7 +3592,7 @@
 				(xyz -90 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 7.5)
@@ -3605,7 +3605,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Kailh_Socket_PG1350_Optional"
+	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "496b35c0-778a-4fe0-b284-fc27d8f7811b")
 		(at 112.945 94.902 -21)
@@ -3635,7 +3635,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 9.000001 8.500001 159)
 			(layer "F.Fab")
 			(hide yes)
@@ -4259,7 +4259,7 @@
 			(pintype "passive")
 			(uuid "03206e2d-c9fd-4359-b891-300469e6248b")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 2.1)
@@ -4271,7 +4271,7 @@
 				(xyz 0 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 			(offset
 				(xyz 14 -12.05 -1.8)
 			)
@@ -4282,7 +4282,7 @@
 				(xyz -90 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 7.5)
@@ -4295,7 +4295,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Kailh_Socket_PG1350_Optional"
+	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "519a8ba0-a173-47fc-9dea-01f279db1123")
 		(at 53 53)
@@ -4325,7 +4325,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 9 8.5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -4947,7 +4947,7 @@
 			(pintype "passive")
 			(uuid "11f2eaa5-9736-403e-bbed-390ae87cd2a7")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 2.1)
@@ -4959,7 +4959,7 @@
 				(xyz 0 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 			(offset
 				(xyz 14 -12.05 -1.8)
 			)
@@ -4970,7 +4970,7 @@
 				(xyz -90 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 7.5)
@@ -4983,7 +4983,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Kailh_Socket_PG1350_Optional"
+	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "52538cdf-effe-4e14-b09e-ea3b2de855bb")
 		(at 107 72.55)
@@ -5013,7 +5013,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 9 8.5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -5635,7 +5635,7 @@
 			(pintype "passive")
 			(uuid "6aefc37a-1daa-4a50-9092-db0a7767dfd2")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 2.1)
@@ -5647,7 +5647,7 @@
 				(xyz 0 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 			(offset
 				(xyz 14 -12.05 -1.8)
 			)
@@ -5658,7 +5658,7 @@
 				(xyz -90 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 7.5)
@@ -5939,7 +5939,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Kailh_Socket_PG1350_Optional"
+	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "58d32294-59d5-432d-a00e-c81f58c8a1de")
 		(at 89 36)
@@ -5969,7 +5969,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 9 8.5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -6591,7 +6591,7 @@
 			(pintype "passive")
 			(uuid "576810c0-c884-4bf1-a14d-3611efcf0554")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 2.1)
@@ -6603,7 +6603,7 @@
 				(xyz 0 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 			(offset
 				(xyz 14 -12.05 -1.8)
 			)
@@ -6614,7 +6614,7 @@
 				(xyz -90 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 7.5)
@@ -6627,7 +6627,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Kailh_Socket_PG1350_Optional"
+	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "5948dfcc-c4df-41ea-82eb-6b124527d828")
 		(at 89 70)
@@ -6657,7 +6657,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 9 8.5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -7279,7 +7279,7 @@
 			(pintype "passive")
 			(uuid "f18956f0-3ef3-4356-a2e4-b5cb87da409c")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 2.1)
@@ -7291,7 +7291,7 @@
 				(xyz 0 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 			(offset
 				(xyz 14 -12.05 -1.8)
 			)
@@ -7302,7 +7302,7 @@
 				(xyz -90 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 7.5)
@@ -7315,7 +7315,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Kailh_Socket_PG1350_Optional"
+	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "59dc1f56-3ec7-4c4d-b1e3-facef7a42d81")
 		(at 71 48.825)
@@ -7345,7 +7345,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 9 8.5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -7967,7 +7967,7 @@
 			(pintype "passive")
 			(uuid "d11730a7-09bd-47b3-970d-9d3f9b6f5921")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 2.1)
@@ -7979,7 +7979,7 @@
 				(xyz 0 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 			(offset
 				(xyz 14 -12.05 -1.8)
 			)
@@ -7990,7 +7990,7 @@
 				(xyz -90 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 7.5)
@@ -8003,7 +8003,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Kailh_Socket_PG1350_Optional"
+	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "5bcfa437-0461-4b1d-b721-73b8d763e95f")
 		(at 107 55.55)
@@ -8033,7 +8033,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 9 8.5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -8655,7 +8655,7 @@
 			(pintype "passive")
 			(uuid "04e6ec28-41ef-4d26-b9f6-332f1218840f")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 2.1)
@@ -8667,7 +8667,7 @@
 				(xyz 0 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 			(offset
 				(xyz 14 -12.05 -1.8)
 			)
@@ -8678,7 +8678,7 @@
 				(xyz -90 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 7.5)
@@ -8691,7 +8691,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Kailh_Socket_PG1350_Optional"
+	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "69415565-4584-4a28-bf60-13027af05ecd")
 		(at 35 84.45)
@@ -8721,7 +8721,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 9 8.5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -9343,7 +9343,7 @@
 			(pintype "passive")
 			(uuid "6d7b3966-73ee-4335-9818-fa245370d8af")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 2.1)
@@ -9355,7 +9355,7 @@
 				(xyz 0 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 			(offset
 				(xyz 14 -12.05 -1.8)
 			)
@@ -9366,7 +9366,7 @@
 				(xyz -90 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 7.5)
@@ -9379,7 +9379,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Kailh_Socket_PG1350_Optional"
+	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "794bc154-10c8-47fb-b31b-e17cce3dcd28")
 		(at 71 31.75)
@@ -9409,7 +9409,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 9 8.5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -10031,7 +10031,7 @@
 			(pintype "passive")
 			(uuid "e9c1730e-7dd5-4338-a72c-0074deeb7790")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 2.1)
@@ -10043,7 +10043,7 @@
 				(xyz 0 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 			(offset
 				(xyz 14 -12.05 -1.8)
 			)
@@ -10054,7 +10054,7 @@
 				(xyz -90 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 7.5)
@@ -10067,7 +10067,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Kailh_Socket_PG1350_Optional"
+	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "79fa9351-1273-4910-8972-3b2392af73d7")
 		(at 35 67.45)
@@ -10097,7 +10097,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 9 8.5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -10719,7 +10719,7 @@
 			(pintype "passive")
 			(uuid "99625e28-cb26-477f-b11a-03a60470b769")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 2.1)
@@ -10731,7 +10731,7 @@
 				(xyz 0 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 			(offset
 				(xyz 14 -12.05 -1.8)
 			)
@@ -10742,7 +10742,7 @@
 				(xyz -90 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 7.5)
@@ -10755,7 +10755,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:SKHLLCA010"
+	(footprint "charmalib:SKHLLCA010"
 		(layer "F.Cu")
 		(uuid "815c1fa2-c593-466c-8dd2-fa445fc2b574")
 		(at 115.56 33.74)
@@ -10786,7 +10786,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:SKHLLCA010"
+		(property "Footprint" "charmalib:SKHLLCA010"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -10986,7 +10986,7 @@
 			(remove_unused_layers no)
 			(uuid "bdd2e710-f568-409d-9e18-a19bf50bfbd5")
 		)
-		(model "${KIPRJMOD}/karmalib.step/SKHLLCA010.step"
+		(model "${KIPRJMOD}/charmalib.step/SKHLLCA010.step"
 			(offset
 				(xyz 0 3.25 2)
 			)
@@ -11106,7 +11106,7 @@
 			(uuid "e2ab18e9-3e86-4fd2-9aab-3b0bbd0ae5b6")
 		)
 	)
-	(footprint "karmalib:XIAO_nRF52840_SMD_Cutout"
+	(footprint "charmalib:XIAO_nRF52840_SMD_Cutout"
 		(layer "F.Cu")
 		(uuid "a32397c4-400c-4b78-8ce1-e4204269b892")
 		(at 40.5 40.39 90)
@@ -11134,7 +11134,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:XIAO_nRF52840_SMD_Cutout"
+		(property "Footprint" "charmalib:XIAO_nRF52840_SMD_Cutout"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -11645,7 +11645,7 @@
 			(pintype "power_out")
 			(uuid "712e5cfd-7a5f-4828-9eab-a6b7855beba0")
 		)
-		(model "${KIPRJMOD}/karmalib.step/XIAO_nRF52840.step"
+		(model "${KIPRJMOD}/charmalib.step/XIAO_nRF52840.step"
 			(offset
 				(xyz -3 38.5 7.4)
 			)
@@ -11875,7 +11875,7 @@
 			(uuid "9a2f0cab-f864-4ba1-84eb-5d97ad4490e2")
 		)
 	)
-	(footprint "karmalib:Kailh_Socket_PG1350_Optional"
+	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "c3c3b784-9c69-4446-81d8-c820554baf1d")
 		(at 53 70)
@@ -11905,7 +11905,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 9 8.5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -12527,7 +12527,7 @@
 			(pintype "passive")
 			(uuid "14421c1c-1b22-4e3a-8806-f8de6e9f5005")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 2.1)
@@ -12539,7 +12539,7 @@
 				(xyz 0 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 			(offset
 				(xyz 14 -12.05 -1.8)
 			)
@@ -12550,7 +12550,7 @@
 				(xyz -90 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 7.5)
@@ -12563,7 +12563,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Kailh_Socket_PG1350_Optional"
+	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "ecf0d254-6679-4492-abd8-4ed8849a0fa0")
 		(at 53 36)
@@ -12593,7 +12593,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 9 8.5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -13215,7 +13215,7 @@
 			(pintype "passive")
 			(uuid "668bce46-acb2-486d-bf0c-bfb0283a4886")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 2.1)
@@ -13227,7 +13227,7 @@
 				(xyz 0 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 			(offset
 				(xyz 14 -12.05 -1.8)
 			)
@@ -13238,7 +13238,7 @@
 				(xyz -90 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 7.5)
@@ -13360,7 +13360,7 @@
 			(uuid "076ecf24-da32-4543-80fc-900cca6fff23")
 		)
 	)
-	(footprint "karmalib:Kailh_Socket_PG1350_Optional"
+	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "fb64b780-4b34-4a88-a3fc-1becbd497eae")
 		(at 89 93.8)
@@ -13390,7 +13390,7 @@
 				)
 			)
 		)
-		(property "Footprint" "karmalib:Kailh_Socket_PG1350_Optional"
+		(property "Footprint" "charmalib:Kailh_Socket_PG1350_Optional"
 			(at 9 8.5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -14012,7 +14012,7 @@
 			(pintype "passive")
 			(uuid "52dc83ec-8561-4404-a078-57a96f2ca640")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Switch_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Switch_PG1350_Optional.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 2.1)
@@ -14024,7 +14024,7 @@
 				(xyz 0 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Kailh_Socket_PG1350_Optional.step"
+		(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 			(offset
 				(xyz 14 -12.05 -1.8)
 			)
@@ -14035,7 +14035,7 @@
 				(xyz -90 0 0)
 			)
 		)
-		(model "${KIPRJMOD}/karmalib.step/Keycap.step"
+		(model "${KIPRJMOD}/charmalib.step/Keycap.step"
 			(hide yes)
 			(offset
 				(xyz 9 -8.5 7.5)
@@ -14048,7 +14048,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Diode_SOD123"
+	(footprint "charmalib:Diode_SOD123"
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "01a764ee-5577-44ed-ae37-77fe433346d8")
@@ -14081,7 +14081,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 0 0 48)
 			(layer "F.Fab")
 			(hide yes)
@@ -14180,7 +14180,7 @@
 			(pintype "passive")
 			(uuid "b63cf79f-29c1-463b-813f-c442be7b6a5f")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -14192,7 +14192,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Diode_SOD123"
+	(footprint "charmalib:Diode_SOD123"
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "05cf5942-2fcb-4ee8-a00a-d4eb0fe9b93c")
@@ -14225,7 +14225,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 0 0 -90)
 			(layer "F.Fab")
 			(hide yes)
@@ -14324,7 +14324,7 @@
 			(pintype "passive")
 			(uuid "ebfe4944-1a00-4293-9605-0c6f781c6ab1")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -14336,7 +14336,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Diode_SOD123"
+	(footprint "charmalib:Diode_SOD123"
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "0810f501-7477-4ce1-b04e-b119c74a11d2")
@@ -14369,7 +14369,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 0 0 -90)
 			(layer "F.Fab")
 			(hide yes)
@@ -14468,7 +14468,7 @@
 			(pintype "passive")
 			(uuid "19e6be75-92a3-4b91-b624-0d29918c9b0c")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -14480,7 +14480,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Diode_SOD123"
+	(footprint "charmalib:Diode_SOD123"
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "081159c4-051f-4d3f-80ab-ed1597d73c8b")
@@ -14513,7 +14513,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 0 0 -90)
 			(layer "F.Fab")
 			(hide yes)
@@ -14612,7 +14612,7 @@
 			(pintype "passive")
 			(uuid "eb397c55-2001-46c8-babc-1aa30eddcacb")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -14624,7 +14624,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Diode_SOD123"
+	(footprint "charmalib:Diode_SOD123"
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "18280b29-7f12-4842-8813-2a96d76a811c")
@@ -14657,7 +14657,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 0 0 -90)
 			(layer "F.Fab")
 			(hide yes)
@@ -14756,7 +14756,7 @@
 			(pintype "passive")
 			(uuid "f8963684-8355-4415-a7c5-d1d7b85b8a2d")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -14768,7 +14768,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Diode_SOD123"
+	(footprint "charmalib:Diode_SOD123"
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "202c3b32-968d-4dc5-9ff3-b1427fd982ba")
@@ -14801,7 +14801,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 0 0 -90)
 			(layer "F.Fab")
 			(hide yes)
@@ -14900,7 +14900,7 @@
 			(pintype "passive")
 			(uuid "4844e5c7-5ada-47d3-8e7e-77e9441fc083")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -14912,7 +14912,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Diode_SOD123"
+	(footprint "charmalib:Diode_SOD123"
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "3406ff00-7d29-4233-9295-9522720b77c4")
@@ -14945,7 +14945,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 0 0 -90)
 			(layer "F.Fab")
 			(hide yes)
@@ -15044,7 +15044,7 @@
 			(pintype "passive")
 			(uuid "ab0b31ce-e623-408b-90fb-f3280867e9af")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -15056,7 +15056,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Diode_SOD123"
+	(footprint "charmalib:Diode_SOD123"
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "6f3ce177-a893-4f56-9ac8-96adcd15ece7")
@@ -15089,7 +15089,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 0 0 69)
 			(layer "F.Fab")
 			(hide yes)
@@ -15188,7 +15188,7 @@
 			(pintype "passive")
 			(uuid "09b68bf7-afe9-4a3d-939b-e06b4165bb74")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -15200,7 +15200,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Diode_SOD123"
+	(footprint "charmalib:Diode_SOD123"
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "76d357f6-8934-471e-baff-5291067ddfeb")
@@ -15233,7 +15233,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 0 0 -90)
 			(layer "F.Fab")
 			(hide yes)
@@ -15332,7 +15332,7 @@
 			(pintype "passive")
 			(uuid "1996ce67-473e-482c-a4f4-b81da6b20cbc")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -15344,7 +15344,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Diode_SOD123"
+	(footprint "charmalib:Diode_SOD123"
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "980414c4-b120-4519-8a49-1d09ff2661a2")
@@ -15377,7 +15377,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 0 0 -90)
 			(layer "F.Fab")
 			(hide yes)
@@ -15476,7 +15476,7 @@
 			(pintype "passive")
 			(uuid "d68647c1-f6c6-4290-ba80-c33306590db9")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -15488,7 +15488,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Diode_SOD123"
+	(footprint "charmalib:Diode_SOD123"
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "ada52507-907b-4b0c-94d3-392b0a449913")
@@ -15521,7 +15521,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 0 0 -90)
 			(layer "F.Fab")
 			(hide yes)
@@ -15620,7 +15620,7 @@
 			(pintype "passive")
 			(uuid "ad1d8cdd-e5c0-4e64-a3d7-2d1d02fee6df")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -15632,7 +15632,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Diode_SOD123"
+	(footprint "charmalib:Diode_SOD123"
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "b39e1911-beaf-4e89-ab83-e42319aa0613")
@@ -15665,7 +15665,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 0 0 -90)
 			(layer "F.Fab")
 			(hide yes)
@@ -15764,7 +15764,7 @@
 			(pintype "passive")
 			(uuid "82d49c86-0f34-4f8d-aeef-ba98c676c90f")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -15776,7 +15776,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Diode_SOD123"
+	(footprint "charmalib:Diode_SOD123"
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "ba2cf726-6bcf-462a-91c3-463cc7077247")
@@ -15809,7 +15809,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 0 0 -90)
 			(layer "F.Fab")
 			(hide yes)
@@ -15908,7 +15908,7 @@
 			(pintype "passive")
 			(uuid "bb7be08a-b652-485f-9a60-7fadbfebfce8")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -15920,7 +15920,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Diode_SOD123"
+	(footprint "charmalib:Diode_SOD123"
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "bca49e5a-5be4-4185-82af-ca391de9d817")
@@ -15953,7 +15953,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 0 0 -90)
 			(layer "F.Fab")
 			(hide yes)
@@ -16052,7 +16052,7 @@
 			(pintype "passive")
 			(uuid "29d1e2c8-8916-4706-97d1-ecf617493503")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -16064,7 +16064,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Diode_SOD123"
+	(footprint "charmalib:Diode_SOD123"
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "c1bb8233-bb0f-43f3-8762-56bae7cbd8b1")
@@ -16097,7 +16097,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 0 0 -90)
 			(layer "F.Fab")
 			(hide yes)
@@ -16196,7 +16196,7 @@
 			(pintype "passive")
 			(uuid "763e74a7-58da-4575-8d15-de4b5366d7dd")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -16208,7 +16208,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Diode_SOD123"
+	(footprint "charmalib:Diode_SOD123"
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "ee83eda0-b39a-43e5-810e-e3812e5620c7")
@@ -16241,7 +16241,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 0 0 -90)
 			(layer "F.Fab")
 			(hide yes)
@@ -16340,7 +16340,7 @@
 			(pintype "passive")
 			(uuid "40e66634-4de2-45e4-84b4-2c2f4f897853")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -16352,7 +16352,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Diode_SOD123"
+	(footprint "charmalib:Diode_SOD123"
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "f1784413-7100-4559-bbff-142c7ccb4f0e")
@@ -16385,7 +16385,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 0 0 -90)
 			(layer "F.Fab")
 			(hide yes)
@@ -16484,7 +16484,7 @@
 			(pintype "passive")
 			(uuid "1698bf06-1650-43ae-8e07-47c7e0fdfdb0")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -16496,7 +16496,7 @@
 			)
 		)
 	)
-	(footprint "karmalib:Diode_SOD123"
+	(footprint "charmalib:Diode_SOD123"
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "fa44492d-2b35-4fb7-91fc-8af21e8d3255")
@@ -16529,7 +16529,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Footprint" "karmalib:Diode_SOD123"
+		(property "Footprint" "charmalib:Diode_SOD123"
 			(at 0 0 -90)
 			(layer "F.Fab")
 			(hide yes)
@@ -16628,7 +16628,7 @@
 			(pintype "passive")
 			(uuid "01b59434-8b2d-4840-8e33-96c2b3a7d446")
 		)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
