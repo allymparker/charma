@@ -46,14 +46,13 @@ class KeyboardLayoutCalculator:
             4: 2.55,      # Column 4 (inner index)
         }
         
-    def calculate_position(self, row: int, col: int, is_right_half: bool = False) -> Tuple[float, float]:
+    def calculate_left_position(self, row: int, col: int) -> Tuple[float, float]:
         """
-        Calculate the position of a key at given row and column.
+        Calculate the position of a key at given row and column for the left half.
         
         Args:
             row: Row number (0-2)
             col: Column number (0-4)
-            is_right_half: True for right half, False for left half
             
         Returns:
             Tuple of (x, y) coordinates in mm
@@ -66,19 +65,32 @@ class KeyboardLayoutCalculator:
         for c in range(col + 1):
             y += self.column_stagger[c]
         
-        # For right half, mirror the layout
-        if is_right_half:
-            # Mirror across Y axis and add separation between halves
-            separation = 30.0  # mm separation between halves (increased)
-            # Calculate the rightmost position of left half
-            left_half_width = 4 * self.x_pitch + self.footprint_width
-            x = left_half_width + separation + ((4 - col) * self.x_pitch)
-        
         return (x, y)
+    
+    def mirror_position(self, left_x: float, left_y: float) -> Tuple[float, float]:
+        """
+        Mirror a left half position to create the corresponding right half position.
+        
+        Args:
+            left_x: X coordinate from left half
+            left_y: Y coordinate from left half (same for both halves)
+            
+        Returns:
+            Tuple of (x, y) coordinates for the mirrored position
+        """
+        # Calculate the rightmost position of left half
+        left_half_width = 4 * self.x_pitch + self.footprint_width
+        separation = 30.0  # mm separation between halves
+        
+        # Mirror the x coordinate
+        right_x = left_half_width + separation + (left_half_width - left_x - self.footprint_width)
+        
+        return (right_x, left_y)
     
     def generate_all_positions(self) -> Dict[str, List[Tuple[str, float, float]]]:
         """
         Generate all key positions for both halves of the keyboard.
+        Both halves numbered top-left to bottom-right (row by row, left to right).
         
         Returns:
             Dictionary with 'left' and 'right' keys containing lists of
@@ -86,22 +98,26 @@ class KeyboardLayoutCalculator:
         """
         positions = {'left': [], 'right': []}
         
-        # Generate positions for left half (numbered column by column, L-R, then T-B)
+        # Generate left half positions (numbered row by row, left to right)
         switch_num = 1
-        for col in range(5):
-            for row in range(3):
-                x, y = self.calculate_position(row, col, is_right_half=False)
+        for row in range(3):
+            for col in range(5):
+                x, y = self.calculate_left_position(row, col)
                 key_name = f"SWL{switch_num}"
                 positions['left'].append((key_name, x, y))
                 switch_num += 1
         
-        # Generate positions for right half (numbered L-R, T-B)
+        # Generate right half by mirroring left positions
+        # Numbered row by row, left to right from the right half perspective
         switch_num = 1
         for row in range(3):
-            for col in range(4, -1, -1):  # Iterate columns in reverse (4,3,2,1,0)
-                x, y = self.calculate_position(row, col, is_right_half=True)
+            for col in range(4, -1, -1):  # Reverse column order (4,3,2,1,0)
+                # Find the corresponding left position
+                left_x, left_y = self.calculate_left_position(row, col)
+                # Mirror it to get right position
+                right_x, right_y = self.mirror_position(left_x, left_y)
                 key_name = f"SWR{switch_num}"
-                positions['right'].append((key_name, x, y))
+                positions['right'].append((key_name, right_x, right_y))
                 switch_num += 1
         
         return positions
