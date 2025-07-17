@@ -86,19 +86,23 @@ class KeyboardLayoutCalculator:
         """
         positions = {'left': [], 'right': []}
         
-        # Generate positions for left half
-        for row in range(3):
-            for col in range(5):
+        # Generate positions for left half (numbered column by column, L-R, then T-B)
+        switch_num = 1
+        for col in range(5):
+            for row in range(3):
                 x, y = self.calculate_position(row, col, is_right_half=False)
-                key_name = f"L{row}{col}"
+                key_name = f"SWL{switch_num}"
                 positions['left'].append((key_name, x, y))
+                switch_num += 1
         
-        # Generate positions for right half
+        # Generate positions for right half (numbered L-R, T-B)
+        switch_num = 1
         for row in range(3):
-            for col in range(5):
+            for col in range(4, -1, -1):  # Iterate columns in reverse (4,3,2,1,0)
                 x, y = self.calculate_position(row, col, is_right_half=True)
-                key_name = f"R{row}{col}"
+                key_name = f"SWR{switch_num}"
                 positions['right'].append((key_name, x, y))
+                switch_num += 1
         
         return positions
     
