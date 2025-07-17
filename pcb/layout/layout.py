@@ -3,11 +3,11 @@
 KiCad Footprint Position Calculator for Split Column Staggered Keyboard
 
 Calculates positions for switch footprints in a split keyboard layout.
-Specifications:
-- 3 rows, 5 columns per half
+Default specifications:
+- 3 rows, 5 columns per half (configurable)
 - Footprint size: 17.5mm x 16.5mm
 - Spacing: 0.5mm between keys
-- Column staggered layout
+- Column staggered layout (configurable)
 """
 
 import math
@@ -15,16 +15,28 @@ from typing import List, Tuple, Dict
 
 
 class KeyboardLayoutCalculator:
-    def __init__(self, origin_x: float = 0.0, origin_y: float = 0.0):
+    def __init__(self, origin_x: float = 0.0, origin_y: float = 0.0, 
+                 num_rows: int = 3, column_stagger: Dict[int, float] = None):
         """
         Initialize the keyboard layout calculator.
         
         Args:
             origin_x: X coordinate of the origin in mm
             origin_y: Y coordinate of the origin in mm
+            num_rows: Number of rows in the keyboard layout
+            column_stagger: Dictionary mapping column index to stagger offset in mm
+                          If None, uses default column stagger values
         """
         self.origin_x = origin_x
         self.origin_y = origin_y
+        
+        # Layout dimensions
+        self.num_rows = num_rows
+        
+        # Column stagger offsets (in mm) - adjust these for desired stagger
+        self.column_stagger = column_stagger.copy()
+        
+        self.num_cols = len(self.column_stagger)
         
         # Footprint dimensions in mm
         self.footprint_width = 17.5
@@ -37,22 +49,13 @@ class KeyboardLayoutCalculator:
         self.x_pitch = self.footprint_width + self.key_spacing
         self.y_pitch = self.footprint_height + self.key_spacing
         
-        # Column stagger offsets (in mm) - adjust these for desired stagger
-        self.column_stagger = {
-            0: 0.0,      # Column 0 (pinky)
-            1: -14.45,     # Column 1 (ring)
-            2: -4.25,     # Column 2 (middle)
-            3: 4.25,     # Column 3 (index)
-            4: 2.55,      # Column 4 (inner index)
-        }
-        
     def calculate_left_position(self, row: int, col: int) -> Tuple[float, float]:
         """
         Calculate the position of a key at given row and column for the left half.
         
         Args:
-            row: Row number (0-2)
-            col: Column number (0-4)
+            row: Row number (0 to num_rows-1)
+            col: Column number (0 to num_cols-1)
             
         Returns:
             Tuple of (x, y) coordinates in mm
@@ -79,7 +82,7 @@ class KeyboardLayoutCalculator:
             Tuple of (x, y) coordinates for the mirrored position
         """
         # Calculate the rightmost position of left half
-        left_half_width = 4 * self.x_pitch + self.footprint_width
+        left_half_width = (self.num_cols - 1) * self.x_pitch + self.footprint_width
         separation = 30.0  # mm separation between halves
         
         # Mirror the x coordinate
@@ -100,8 +103,8 @@ class KeyboardLayoutCalculator:
         
         # Generate left half positions (numbered row by row, left to right)
         switch_num = 1
-        for row in range(3):
-            for col in range(5):
+        for row in range(self.num_rows):
+            for col in range(self.num_cols):
                 x, y = self.calculate_left_position(row, col)
                 key_name = f"SWL{switch_num}"
                 positions['left'].append((key_name, x, y))
@@ -110,8 +113,8 @@ class KeyboardLayoutCalculator:
         # Generate right half by mirroring left positions
         # Numbered row by row, left to right from the right half perspective
         switch_num = 1
-        for row in range(3):
-            for col in range(4, -1, -1):  # Reverse column order (4,3,2,1,0)
+        for row in range(self.num_rows):
+            for col in range(self.num_cols - 1, -1, -1):  # Reverse column order
                 # Find the corresponding left position
                 left_x, left_y = self.calculate_left_position(row, col)
                 # Mirror it to get right position
@@ -300,9 +303,15 @@ def main():
     """Main function to demonstrate the keyboard layout calculator."""
     print("Split Column Staggered Keyboard Layout Calculator")
     print("================================================")
-    
-    # Create calculator with origin at (0, 0)
-    calc = KeyboardLayoutCalculator(origin_x=0.0, origin_y=0.0)
+    column_stagger = {
+                0: 0.0,      # Column 0 (pinky)
+                1: -14.45,   # Column 1 (ring)
+                2: -4.25,    # Column 2 (middle)
+                3: 4.25,     # Column 3 (index)
+                4: 2.55,     # Column 4 (inner index)
+            }
+    # Create calculator with default parameters
+    calc = KeyboardLayoutCalculator(origin_x=0.0, origin_y=0.0, column_stagger=column_stagger, num_rows=3)
     
     # Print layout information
     print(f"\nLayout Specifications:")
@@ -310,8 +319,8 @@ def main():
     print(f"- Key spacing: {calc.key_spacing}mm")
     print(f"- X pitch: {calc.x_pitch}mm")
     print(f"- Y pitch: {calc.y_pitch}mm")
-    print(f"- Rows: 3")
-    print(f"- Columns per half: 5")
+    print(f"- Rows: {calc.num_rows}")
+    print(f"- Columns per half: {calc.num_cols}")
     
     # Display all positions
     calc.print_positions()
