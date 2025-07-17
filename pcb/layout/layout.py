@@ -32,6 +32,7 @@ class KeyboardLayoutCalculator:
         """
         self.origin_x = origin_x
         self.origin_y = origin_y
+        self.split_separation = 60.0  # mm - separation between left and right halves
         
         # Layout dimensions
         self.num_rows = num_rows
@@ -61,7 +62,9 @@ class KeyboardLayoutCalculator:
         self.thumb_arc_start_angle = -90  # degrees - starting angle for thumb arc
         self.thumb_arc_end_angle = -48.0  # degrees - ending angle for thumb arc
         self.thumb_offset_x = 0  # mm - horizontal offset from center of bottom key in thumb_arc_col_start
-        self.thumb_offset_y = 0  # mm - vertical offset from center of bottom key in thumb_arc_col_start
+        self.thumb_offset_y = 7.05+self.y_pitch # mm - vertical offset from center of bottom key in thumb_arc_col_start
+
+
         
     def calculate_left_position(self, row: int, col: int) -> Tuple[float, float]:
         """
@@ -117,9 +120,13 @@ class KeyboardLayoutCalculator:
         # Find the reference point (center of bottom key in thumb_arc_col_start column)
         ref_x, ref_y = self.calculate_left_position(self.num_rows - 1, self.thumb_arc_col_start)
         
-        # Apply thumb offset from reference point
-        thumb_x = ref_x + self.thumb_offset_x + arc_x
-        thumb_y = ref_y + self.thumb_offset_y + arc_y
+        # Calculate arc origin: X stays at reference, Y is reference plus arc radius (below the reference)
+        arc_origin_x = ref_x + self.thumb_offset_x
+        arc_origin_y = ref_y + self.thumb_offset_y + self.thumb_arc_radius
+        
+        # Apply arc position relative to arc origin
+        thumb_x = arc_origin_x + arc_x
+        thumb_y = arc_origin_y + arc_y
         
         # Key rotation follows the arc tangent (perpendicular to radius)
         # Add 90 degrees to make keys tangent to the arc
@@ -143,7 +150,7 @@ class KeyboardLayoutCalculator:
         """
         # Use the same mirroring logic as main keys for X coordinate
         left_half_width = (self.num_cols - 1) * self.x_pitch + self.footprint_width
-        separation = 30.0  # mm separation between halves
+        separation = self.split_separation
         
         # Mirror the x coordinate
         right_x = left_half_width + separation + (left_half_width - left_x)
@@ -169,7 +176,7 @@ class KeyboardLayoutCalculator:
         """
         # Calculate the rightmost position of left half (center-based)
         left_half_width = (self.num_cols - 1) * self.x_pitch + self.footprint_width
-        separation = 30.0  # mm separation between halves
+        separation = self.split_separation # mm separation between halves
         
         # Mirror the x coordinate (accounting for center positioning)
         right_x = left_half_width + separation + (left_half_width - left_x)
@@ -200,7 +207,7 @@ class KeyboardLayoutCalculator:
         # Generate left half thumb key positions
         for thumb_idx in range(self.num_thumb_keys):
             x, y, rotation = self.calculate_thumb_position(thumb_idx, is_left=True)
-            key_name = f"SWTL{thumb_idx + 1}"
+            key_name = f"SWL{switch_num + thumb_idx + 1}"
             positions['left'].append((key_name, x, y, rotation))
         
         # Generate right half main key positions by mirroring left positions
@@ -220,7 +227,7 @@ class KeyboardLayoutCalculator:
         for thumb_idx in range(self.num_thumb_keys):
             left_x, left_y, left_rotation = self.calculate_thumb_position(thumb_idx, is_left=True)
             right_x, right_y, right_rotation = self.mirror_thumb_position(left_x, left_y, left_rotation)
-            key_name = f"SWTR{thumb_idx + 1}"
+            key_name = f"SWR{switch_num + thumb_idx + 1}"
             positions['right'].append((key_name, right_x, right_y, right_rotation))
         
         return positions
@@ -418,7 +425,7 @@ class KeyboardLayoutCalculator:
         # Calculate left thumb arc origin
         ref_x, ref_y = self.calculate_left_position(self.num_rows - 1, self.thumb_arc_col_start)
         left_origin_x = ref_x + self.thumb_offset_x
-        left_origin_y = ref_y + self.thumb_offset_y
+        left_origin_y = ref_y + self.thumb_offset_y + self.thumb_arc_radius
         
         # Calculate right thumb arc origin by mirroring the left origin
         right_origin_x, right_origin_y = self.mirror_position(left_origin_x, left_origin_y)
