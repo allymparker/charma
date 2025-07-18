@@ -207,7 +207,7 @@ class KeyboardLayoutCalculator:
         # Generate left half thumb key positions
         for thumb_idx in range(self.num_thumb_keys):
             x, y, rotation = self.calculate_thumb_position(thumb_idx, is_left=True)
-            key_name = f"SWL{switch_num + thumb_idx + 1}"
+            key_name = f"SWL{switch_num + thumb_idx}"
             positions['left'].append((key_name, x, y, rotation))
         
         # Generate right half main key positions by mirroring left positions
@@ -227,7 +227,7 @@ class KeyboardLayoutCalculator:
         for thumb_idx in range(self.num_thumb_keys):
             left_x, left_y, left_rotation = self.calculate_thumb_position(thumb_idx, is_left=True)
             right_x, right_y, right_rotation = self.mirror_thumb_position(left_x, left_y, left_rotation)
-            key_name = f"SWR{switch_num + thumb_idx + 1}"
+            key_name = f"SWR{switch_num + thumb_idx}"
             positions['right'].append((key_name, right_x, right_y, right_rotation))
         
         return positions
@@ -267,11 +267,11 @@ class KeyboardLayoutCalculator:
             
             f.write("# Left Half\n")
             for key_name, x, y, rotation in positions['left']:
-                f.write(f"{key_name} {x:.3f} {y:.3f} {rotation:.1f}\n")
+                f.write(f"{key_name} {x:.3f} {y:.3f} {-rotation:.1f}\n")
             
             f.write("\n# Right Half\n")
             for key_name, x, y, rotation in positions['right']:
-                f.write(f"{key_name} {x:.3f} {y:.3f} {rotation:.1f}\n")
+                f.write(f"{key_name} {x:.3f} {y:.3f} {-rotation:.1f}\n")
         
         print(f"Positions exported to {filename}")
     
