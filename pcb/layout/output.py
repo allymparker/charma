@@ -16,21 +16,17 @@ def print_positions(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str,
     
     print("\nLeft Half:")
     print("-" * 45)
-    print("Switches:")
-    for key_name, x, y, rotation in positions['left']['switches']:
-        print(f"  {key_name}: ({x:6.2f}, {y:6.2f}, {rotation:6.1f}°)")
-    print("Diodes:")
-    for diode_name, x, y, rotation in positions['left']['diodes']:
-        print(f"  {diode_name}: ({x:6.2f}, {y:6.2f}, {rotation:6.1f}°)")
+    for component_type, components in positions['left'].items():
+        print(f"{component_type.capitalize()}:")
+        for component_name, x, y, rotation in components:
+            print(f"  {component_name}: ({x:6.2f}, {y:6.2f}, {rotation:6.1f}°)")
     
     print("\nRight Half:")
     print("-" * 45)
-    print("Switches:")
-    for key_name, x, y, rotation in positions['right']['switches']:
-        print(f"  {key_name}: ({x:6.2f}, {y:6.2f}, {rotation:6.1f}°)")
-    print("Diodes:")
-    for diode_name, x, y, rotation in positions['right']['diodes']:
-        print(f"  {diode_name}: ({x:6.2f}, {y:6.2f}, {rotation:6.1f}°)")
+    for component_type, components in positions['right'].items():
+        print(f"{component_type.capitalize()}:")
+        for component_name, x, y, rotation in components:
+            print(f"  {component_name}: ({x:6.2f}, {y:6.2f}, {rotation:6.1f}°)")
 
 
 def export_csv(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_positions.csv"):
@@ -50,11 +46,23 @@ def export_csv(positions: Dict[str, Dict[str, List[Tuple[str, float, float, floa
         for diode_name, x, y, rotation in positions['left']['diodes']:
             f.write(f"{diode_name},{x:.3f},{y:.3f},{rotation:.1f},Left,Diode\n")
         
+        # Add specific components for left half
+        for component_type, components in positions['left'].items():
+            if component_type not in ['switches', 'diodes']:
+                for component_name, x, y, rotation in components:
+                    f.write(f"{component_name},{x:.3f},{y:.3f},{rotation:.1f},Left,{component_type}\n")
+        
         for key_name, x, y, rotation in positions['right']['switches']:
             f.write(f"{key_name},{x:.3f},{y:.3f},{rotation:.1f},Right,Switch\n")
         
         for diode_name, x, y, rotation in positions['right']['diodes']:
             f.write(f"{diode_name},{x:.3f},{y:.3f},{rotation:.1f},Right,Diode\n")
+        
+        # Add specific components for right half
+        for component_type, components in positions['right'].items():
+            if component_type not in ['switches', 'diodes']:
+                for component_name, x, y, rotation in components:
+                    f.write(f"{component_name},{x:.3f},{y:.3f},{rotation:.1f},Right,{component_type}\n")
     
     print(f"Positions exported to {filename}")
 
@@ -72,7 +80,14 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
     all_switch_positions = positions['left']['switches'] + positions['right']['switches']
     all_diode_positions = positions['left']['diodes'] + positions['right']['diodes']
     
-    # Calculate bounds considering both switches and diodes
+    # Collect all specific component positions
+    all_specific_positions = []
+    for half in ['left', 'right']:
+        for component_type, components in positions[half].items():
+            if component_type not in ['switches', 'diodes']:
+                all_specific_positions.extend(components)
+    
+    # Calculate bounds considering switches, diodes, and specific components
     switch_min_x = min(x - config.footprint_width/2 for _, x, y, r in all_switch_positions)
     switch_max_x = max(x + config.footprint_width/2 for _, x, y, r in all_switch_positions)
     switch_min_y = min(y - config.footprint_height/2 for _, x, y, r in all_switch_positions)
@@ -83,10 +98,22 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
     diode_min_y = min(y - config.diode_height/2 for _, x, y, r in all_diode_positions)
     diode_max_y = max(y + config.diode_height/2 for _, x, y, r in all_diode_positions)
     
-    min_x = min(switch_min_x, diode_min_x) - 10
-    max_x = max(switch_max_x, diode_max_x) + 10
-    min_y = min(switch_min_y, diode_min_y) - 25  # More space at top
-    max_y = max(switch_max_y, diode_max_y) + 10  # Less space at bottom (no legend)
+    # Include specific components in bounds calculation
+    if all_specific_positions:
+        specific_min_x = min(x - 2 for _, x, y, r in all_specific_positions)  # 2mm margin for dot
+        specific_max_x = max(x + 2 for _, x, y, r in all_specific_positions)
+        specific_min_y = min(y - 2 for _, x, y, r in all_specific_positions)
+        specific_max_y = max(y + 2 for _, x, y, r in all_specific_positions)
+        
+        min_x = min(switch_min_x, diode_min_x, specific_min_x) - 10
+        max_x = max(switch_max_x, diode_max_x, specific_max_x) + 10
+        min_y = min(switch_min_y, diode_min_y, specific_min_y) - 25  # More space at top
+        max_y = max(switch_max_y, diode_max_y, specific_max_y) + 10  # Less space at bottom
+    else:
+        min_x = min(switch_min_x, diode_min_x) - 10
+        max_x = max(switch_max_x, diode_max_x) + 10
+        min_y = min(switch_min_y, diode_min_y) - 25  # More space at top
+        max_y = max(switch_max_y, diode_max_y) + 10  # Less space at bottom (no legend)
     
     width = max_x - min_x
     height = max_y - min_y
@@ -264,6 +291,41 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
   </g>
 '''
     
+    # Add specific components for both halves
+    for half in ['left', 'right']:
+        for component_type, components in positions[half].items():
+            if component_type not in ['switches', 'diodes']:
+                # Choose color based on component type
+                if component_type == 'MCU':
+                    fill_color = "#ff6b35"
+                    stroke_color = "#d63031"
+                    text_color = "#2d3436"
+                elif component_type == 'HOLE':
+                    fill_color = "#636e72"
+                    stroke_color = "#2d3436"
+                    text_color = "#2d3436"
+                elif component_type == 'BAT':
+                    fill_color = "#00b894"
+                    stroke_color = "#00a085"
+                    text_color = "#2d3436"
+                elif component_type == 'RSW':
+                    fill_color = "#e17055"
+                    stroke_color = "#d63031"
+                    text_color = "#2d3436"
+                else:
+                    fill_color = "#74b9ff"
+                    stroke_color = "#0984e3"
+                    text_color = "#2d3436"
+                
+                for component_name, x, y, rotation in components:
+                    svg_content += f'''  <!-- {component_name} -->
+  <circle cx="{x:.1f}" cy="{y:.1f}" r="1.5" 
+          fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.2"/>
+  <text x="{x:.1f}" y="{y - 3:.1f}" 
+        text-anchor="middle" font-family="Arial, sans-serif" font-size="2" 
+        fill="{text_color}" font-weight="bold">{component_name}</text>
+'''
+    
     # Add thumb arc origins
     # Calculate left thumb arc origin
     ref_x, ref_y = KeyboardLayoutCalculator.calculate_left_position(config, config.num_rows - 1, config.thumb_arc_col_start)
@@ -293,6 +355,26 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
   <text x="{right_origin_x:.1f}" y="{right_origin_y - 4:.1f}" 
         text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
         fill="#d32f2f" font-weight="bold">R-ARC</text>
+  
+  <!-- Origin Point -->
+  <g>
+    <circle cx="{config.origin_x:.1f}" cy="{config.origin_y:.1f}" r="2" 
+            fill="#ff4444" stroke="#cc0000" stroke-width="0.3"/>
+    <circle cx="{config.origin_x:.1f}" cy="{config.origin_y:.1f}" r="5" 
+            fill="none" stroke="#ff4444" stroke-width="0.2" stroke-dasharray="1,1"/>
+    <line x1="{config.origin_x - 10:.1f}" y1="{config.origin_y:.1f}" 
+          x2="{config.origin_x + 10:.1f}" y2="{config.origin_y:.1f}" 
+          stroke="#ff4444" stroke-width="0.3"/>
+    <line x1="{config.origin_x:.1f}" y1="{config.origin_y - 10:.1f}" 
+          x2="{config.origin_x:.1f}" y2="{config.origin_y + 10:.1f}" 
+          stroke="#ff4444" stroke-width="0.3"/>
+    <text x="{config.origin_x:.1f}" y="{config.origin_y - 7:.1f}" 
+          text-anchor="middle" font-family="Arial, sans-serif" font-size="2" 
+          fill="#ff4444" font-weight="bold">ORIGIN</text>
+    <text x="{config.origin_x:.1f}" y="{config.origin_y + 10:.1f}" 
+          text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
+          fill="#666666">({config.origin_x:.1f}, {config.origin_y:.1f})</text>
+  </g>
 </svg>'''
     
     with open(filename, 'w') as f:

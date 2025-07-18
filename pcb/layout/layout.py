@@ -90,9 +90,9 @@ class KeyboardLayoutCalculator:
         Returns:
             Tuple of (x, y) coordinates in mm (center of footprint)
         """
-        # Base position calculation (top-left corner)
-        x = config.origin_x + (col * config.x_pitch)
-        y = config.origin_y + (row * config.y_pitch)
+        # Base position calculation (center of footprint)
+        x = config.origin_x + ((col-0.5) * config.x_pitch)
+        y = config.origin_y + ((row-0.5) * config.y_pitch)
         
         # Apply column stagger by summing the stagger offsets up to this column
         for c in range(col + 1):
@@ -284,6 +284,7 @@ class KeyboardLayoutCalculator:
             # Calculate and add diode position
             diode_x, diode_y, diode_rotation = KeyboardLayoutCalculator.calculate_diode_position(config, x, y, rotation)
             positions['left']['diodes'].append((diode_name, diode_x, diode_y, diode_rotation))
+
         
         # Generate right half main key positions by mirroring left positions
         # Numbered row by row, left to right from the right half perspective
@@ -320,4 +321,24 @@ class KeyboardLayoutCalculator:
             diode_x, diode_y, diode_rotation = KeyboardLayoutCalculator.calculate_diode_position(config, right_x, right_y, right_rotation)
             positions['right']['diodes'].append((diode_name, diode_x, diode_y, diode_rotation))
         
+        # Add specific placements
+        specific_positions = [
+            ("MCU",  1,  10.5, 10.39, 90),
+            ("HOLE", 1,  97.5,  2.50, 0),
+            ("HOLE", 2, 26.25,  2.50, 0),
+            ("HOLE", 3,   2.5, 76.70, 0),
+            ("HOLE", 4,  97.5, 61.00, 0),
+            ("BAT",  1,  46.725, 56.260, 0),
+            ("RSW",  1,  33.5, 1.95, 0),
+        
+        ]
+        for ref, ix, x_mm, y_mm, rotation in specific_positions:
+           if ref not in positions['left']:
+               positions['left'][ref] = []
+               positions['right'][ref] = []
+
+           positions['left'][ref].append((f"{ref}L{ix}", x_mm,  y_mm, rotation))
+           positions['right'][ref].append((f"{ref}R{ix}", *KeyboardLayoutCalculator.mirror_thumb_position(config, x_mm, y_mm, rotation)))
+
+
         return positions
