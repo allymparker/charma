@@ -32,7 +32,7 @@ class KeyboardLayoutCalculator:
         """
         self.origin_x = origin_x
         self.origin_y = origin_y
-        self.split_separation = 60.0  # mm - separation between left and right halves
+        self.split_separation = 90.0  # mm - separation between left and right halves
         
         # Layout dimensions
         self.num_rows = num_rows
@@ -49,6 +49,14 @@ class KeyboardLayoutCalculator:
         # Footprint dimensions in mm
         self.footprint_width = 17.5
         self.footprint_height = 16.5
+        
+        # Diode dimensions in mm
+        self.diode_width = 1.5
+        self.diode_height = 5.2
+        
+        # Diode offset from switch center in mm
+        self.diode_offset_x = -6.5
+        self.diode_offset_y = -5.2
         
         # Spacing between keys in mm
         self.key_spacing = 0.5
@@ -183,17 +191,52 @@ class KeyboardLayoutCalculator:
         
         return (right_x, left_y)
     
-    def generate_all_positions(self) -> Dict[str, List[Tuple[str, float, float, float]]]:
+    def calculate_diode_position(self, switch_x: float, switch_y: float, switch_rotation: float = 0.0) -> Tuple[float, float, float]:
         """
-        Generate all key positions for both halves of the keyboard.
+        Calculate the diode position relative to a switch position.
+        
+        Args:
+            switch_x: X coordinate of the switch center
+            switch_y: Y coordinate of the switch center
+            switch_rotation: Rotation of the switch in degrees (for thumb keys)
+            
+        Returns:
+            Tuple of (x, y, rotation) coordinates for the diode center
+        """
+        if abs(switch_rotation) < 0.1:  # No rotation for main keys
+            diode_x = switch_x + self.diode_offset_x
+            diode_y = switch_y + self.diode_offset_y
+            diode_rotation = 0.0
+        else:  # Rotated thumb keys - apply rotation to offset
+            # Convert rotation to radians
+            rot_rad = math.radians(switch_rotation)
+            
+            # Apply rotation to the offset vector
+            rotated_offset_x = (self.diode_offset_x * math.cos(rot_rad) - 
+                               self.diode_offset_y * math.sin(rot_rad))
+            rotated_offset_y = (self.diode_offset_x * math.sin(rot_rad) + 
+                               self.diode_offset_y * math.cos(rot_rad))
+            
+            diode_x = switch_x + rotated_offset_x
+            diode_y = switch_y + rotated_offset_y
+            diode_rotation = switch_rotation
+        
+        return (diode_x, diode_y, diode_rotation)
+    
+    def generate_all_positions(self) -> Dict[str, Dict[str, List[Tuple[str, float, float, float]]]]:
+        """
+        Generate all key and diode positions for both halves of the keyboard.
         Both halves numbered top-left to bottom-right (row by row, left to right).
-        Includes main keys and thumb keys.
+        Includes main keys, thumb keys, and their corresponding diodes.
         
         Returns:
-            Dictionary with 'left' and 'right' keys containing lists of
-            (key_name, x, y, rotation) tuples
+            Dictionary with 'left' and 'right' keys, each containing 'switches' and 'diodes'
+            with lists of (component_name, x, y, rotation) tuples
         """
-        positions = {'left': [], 'right': []}
+        positions = {
+            'left': {'switches': [], 'diodes': []}, 
+            'right': {'switches': [], 'diodes': []}
+        }
         
         # Generate left half main key positions (numbered row by row, left to right)
         switch_num = 1
@@ -201,14 +244,29 @@ class KeyboardLayoutCalculator:
             for col in range(self.num_cols):
                 x, y = self.calculate_left_position(row, col)
                 key_name = f"SWL{switch_num}"
-                positions['left'].append((key_name, x, y, 0.0))  # Main keys have 0 rotation
+                diode_name = f"DL{switch_num}"
+                
+                # Add switch position
+                positions['left']['switches'].append((key_name, x, y, 0.0))  # Main keys have 0 rotation
+                
+                # Calculate and add diode position
+                diode_x, diode_y, diode_rotation = self.calculate_diode_position(x, y, 0.0)
+                positions['left']['diodes'].append((diode_name, diode_x, diode_y, diode_rotation))
+                
                 switch_num += 1
         
         # Generate left half thumb key positions
         for thumb_idx in range(self.num_thumb_keys):
             x, y, rotation = self.calculate_thumb_position(thumb_idx, is_left=True)
             key_name = f"SWL{switch_num + thumb_idx}"
-            positions['left'].append((key_name, x, y, rotation))
+            diode_name = f"DL{switch_num + thumb_idx}"
+            
+            # Add switch position
+            positions['left']['switches'].append((key_name, x, y, rotation))
+            
+            # Calculate and add diode position
+            diode_x, diode_y, diode_rotation = self.calculate_diode_position(x, y, rotation)
+            positions['left']['diodes'].append((diode_name, diode_x, diode_y, diode_rotation))
         
         # Generate right half main key positions by mirroring left positions
         # Numbered row by row, left to right from the right half perspective
@@ -220,7 +278,15 @@ class KeyboardLayoutCalculator:
                 # Mirror it to get right position
                 right_x, right_y = self.mirror_position(left_x, left_y)
                 key_name = f"SWR{switch_num}"
-                positions['right'].append((key_name, right_x, right_y, 0.0))  # Main keys have 0 rotation
+                diode_name = f"DR{switch_num}"
+                
+                # Add switch position
+                positions['right']['switches'].append((key_name, right_x, right_y, 0.0))  # Main keys have 0 rotation
+                
+                # Calculate and add diode position
+                diode_x, diode_y, diode_rotation = self.calculate_diode_position(right_x, right_y, 0.0)
+                positions['right']['diodes'].append((diode_name, diode_x, diode_y, diode_rotation))
+                
                 switch_num += 1
         
         # Generate right half thumb key positions by mirroring left thumb positions
@@ -228,12 +294,19 @@ class KeyboardLayoutCalculator:
             left_x, left_y, left_rotation = self.calculate_thumb_position(thumb_idx, is_left=True)
             right_x, right_y, right_rotation = self.mirror_thumb_position(left_x, left_y, left_rotation)
             key_name = f"SWR{switch_num + thumb_idx}"
-            positions['right'].append((key_name, right_x, right_y, right_rotation))
+            diode_name = f"DR{switch_num + thumb_idx}"
+            
+            # Add switch position
+            positions['right']['switches'].append((key_name, right_x, right_y, right_rotation))
+            
+            # Calculate and add diode position
+            diode_x, diode_y, diode_rotation = self.calculate_diode_position(right_x, right_y, right_rotation)
+            positions['right']['diodes'].append((diode_name, diode_x, diode_y, diode_rotation))
         
         return positions
     
     def print_positions(self):
-        """Print all key positions in a readable format."""
+        """Print all key and diode positions in a readable format."""
         positions = self.generate_all_positions()
         
         print("Keyboard Layout Positions (center coordinates in mm)")
@@ -241,13 +314,21 @@ class KeyboardLayoutCalculator:
         
         print("\nLeft Half:")
         print("-" * 45)
-        for key_name, x, y, rotation in positions['left']:
-            print(f"{key_name}: ({x:6.2f}, {y:6.2f}, {rotation:6.1f}°)")
+        print("Switches:")
+        for key_name, x, y, rotation in positions['left']['switches']:
+            print(f"  {key_name}: ({x:6.2f}, {y:6.2f}, {rotation:6.1f}°)")
+        print("Diodes:")
+        for diode_name, x, y, rotation in positions['left']['diodes']:
+            print(f"  {diode_name}: ({x:6.2f}, {y:6.2f}, {rotation:6.1f}°)")
         
         print("\nRight Half:")
         print("-" * 45)
-        for key_name, x, y, rotation in positions['right']:
-            print(f"{key_name}: ({x:6.2f}, {y:6.2f}, {rotation:6.1f}°)")
+        print("Switches:")
+        for key_name, x, y, rotation in positions['right']['switches']:
+            print(f"  {key_name}: ({x:6.2f}, {y:6.2f}, {rotation:6.1f}°)")
+        print("Diodes:")
+        for diode_name, x, y, rotation in positions['right']['diodes']:
+            print(f"  {diode_name}: ({x:6.2f}, {y:6.2f}, {rotation:6.1f}°)")
     
     def export_kicad_format(self, filename: str = "keyboard_positions.txt"):
         """
@@ -265,13 +346,21 @@ class KeyboardLayoutCalculator:
             f.write("# Rotation is in degrees (positive is counterclockwise)\n")
             f.write("# Generated by layout.py\n\n")
             
-            f.write("# Left Half\n")
-            for key_name, x, y, rotation in positions['left']:
+            f.write("# Left Half - Switches\n")
+            for key_name, x, y, rotation in positions['left']['switches']:
                 f.write(f"{key_name} {x:.3f} {y:.3f} {-rotation:.1f}\n")
             
-            f.write("\n# Right Half\n")
-            for key_name, x, y, rotation in positions['right']:
+            f.write("\n# Left Half - Diodes\n")
+            for diode_name, x, y, rotation in positions['left']['diodes']:
+                f.write(f"{diode_name} {x:.3f} {y:.3f} {-rotation:.1f}\n")
+            
+            f.write("\n# Right Half - Switches\n")
+            for key_name, x, y, rotation in positions['right']['switches']:
                 f.write(f"{key_name} {x:.3f} {y:.3f} {-rotation:.1f}\n")
+            
+            f.write("\n# Right Half - Diodes\n")
+            for diode_name, x, y, rotation in positions['right']['diodes']:
+                f.write(f"{diode_name} {x:.3f} {y:.3f} {-rotation:.1f}\n")
         
         print(f"Positions exported to {filename}")
     
@@ -285,13 +374,19 @@ class KeyboardLayoutCalculator:
         positions = self.generate_all_positions()
         
         with open(filename, 'w') as f:
-            f.write("Reference,X(mm),Y(mm),Rotation(degrees),Half\n")
+            f.write("Reference,X(mm),Y(mm),Rotation(degrees),Half,Type\n")
             
-            for key_name, x, y, rotation in positions['left']:
-                f.write(f"{key_name},{x:.3f},{y:.3f},{rotation:.1f},Left\n")
+            for key_name, x, y, rotation in positions['left']['switches']:
+                f.write(f"{key_name},{x:.3f},{y:.3f},{rotation:.1f},Left,Switch\n")
             
-            for key_name, x, y, rotation in positions['right']:
-                f.write(f"{key_name},{x:.3f},{y:.3f},{rotation:.1f},Right\n")
+            for diode_name, x, y, rotation in positions['left']['diodes']:
+                f.write(f"{diode_name},{x:.3f},{y:.3f},{rotation:.1f},Left,Diode\n")
+            
+            for key_name, x, y, rotation in positions['right']['switches']:
+                f.write(f"{key_name},{x:.3f},{y:.3f},{rotation:.1f},Right,Switch\n")
+            
+            for diode_name, x, y, rotation in positions['right']['diodes']:
+                f.write(f"{diode_name},{x:.3f},{y:.3f},{rotation:.1f},Right,Diode\n")
         
         print(f"Positions exported to {filename}")
     
@@ -305,11 +400,24 @@ class KeyboardLayoutCalculator:
         positions = self.generate_all_positions()
         
         # Calculate SVG dimensions (accounting for center coordinates and rotation)
-        all_positions = positions['left'] + positions['right']
-        min_x = min(x - self.footprint_width/2 for _, x, y, r in all_positions) - 10
-        max_x = max(x + self.footprint_width/2 for _, x, y, r in all_positions) + 10
-        min_y = min(y - self.footprint_height/2 for _, x, y, r in all_positions) - 25  # More space at top
-        max_y = max(y + self.footprint_height/2 for _, x, y, r in all_positions) + 35  # More space at bottom
+        all_switch_positions = positions['left']['switches'] + positions['right']['switches']
+        all_diode_positions = positions['left']['diodes'] + positions['right']['diodes']
+        
+        # Calculate bounds considering both switches and diodes
+        switch_min_x = min(x - self.footprint_width/2 for _, x, y, r in all_switch_positions)
+        switch_max_x = max(x + self.footprint_width/2 for _, x, y, r in all_switch_positions)
+        switch_min_y = min(y - self.footprint_height/2 for _, x, y, r in all_switch_positions)
+        switch_max_y = max(y + self.footprint_height/2 for _, x, y, r in all_switch_positions)
+        
+        diode_min_x = min(x - self.diode_width/2 for _, x, y, r in all_diode_positions)
+        diode_max_x = max(x + self.diode_width/2 for _, x, y, r in all_diode_positions)
+        diode_min_y = min(y - self.diode_height/2 for _, x, y, r in all_diode_positions)
+        diode_max_y = max(y + self.diode_height/2 for _, x, y, r in all_diode_positions)
+        
+        min_x = min(switch_min_x, diode_min_x) - 10
+        max_x = max(switch_max_x, diode_max_x) + 10
+        min_y = min(switch_min_y, diode_min_y) - 25  # More space at top
+        max_y = max(switch_max_y, diode_max_y) + 10  # Less space at bottom (no legend)
         
         width = max_x - min_x
         height = max_y - min_y
@@ -352,12 +460,11 @@ class KeyboardLayoutCalculator:
 '''
         
         # Add key rectangles and labels for left half
-        for key_name, x, y, rotation in positions['left']:
-            # Determine if this is a thumb key for styling
-            is_thumb = key_name.startswith("SWTL")
-            fill_color = "#fff3e0" if is_thumb else "#e3f2fd"
-            stroke_color = "#f57c00" if is_thumb else "#1976d2"
-            text_color = "#f57c00" if is_thumb else "#1976d2"
+        for key_name, x, y, rotation in positions['left']['switches']:
+            # Use same color for all left switches
+            fill_color = "#e3f2fd"
+            stroke_color = "#1976d2"
+            text_color = "#1976d2"
             
             if abs(rotation) < 0.1:  # No rotation for main keys
                 # Convert center coordinates to top-left for rectangle drawing
@@ -386,13 +493,46 @@ class KeyboardLayoutCalculator:
   </g>
 '''
         
+        # Add diode rectangles and labels for left half
+        for diode_name, x, y, rotation in positions['left']['diodes']:
+            # Use same color for all left diodes
+            fill_color = "#a8dadc"
+            stroke_color = "#457b9d"
+            text_color = "#1d3557"
+            
+            if abs(rotation) < 0.1:  # No rotation for main keys
+                # Convert center coordinates to top-left for rectangle drawing
+                rect_x = x - self.diode_width/2
+                rect_y = y - self.diode_height/2
+                svg_content += f'''  <!-- {diode_name} -->
+  <rect x="{rect_x:.1f}" y="{rect_y:.1f}" 
+        width="{self.diode_width:.1f}" height="{self.diode_height:.1f}"
+        fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.1"/>
+  <text x="{x:.1f}" y="{y + 0.5:.1f}" 
+        text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
+        fill="{text_color}" font-weight="bold">{diode_name}</text>
+'''
+            else:  # Rotated thumb diodes
+                # Convert center coordinates to top-left for rectangle drawing
+                rect_x = -self.diode_width/2
+                rect_y = -self.diode_height/2
+                svg_content += f'''  <!-- {diode_name} -->
+  <g transform="translate({x:.1f},{y:.1f}) rotate({rotation:.1f})">
+    <rect x="{rect_x:.1f}" y="{rect_y:.1f}" 
+          width="{self.diode_width:.1f}" height="{self.diode_height:.1f}"
+          fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.1"/>
+    <text x="0" y="0.5" 
+          text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
+          fill="{text_color}" font-weight="bold">{diode_name}</text>
+  </g>
+'''
+        
         # Add key rectangles and labels for right half
-        for key_name, x, y, rotation in positions['right']:
-            # Determine if this is a thumb key for styling
-            is_thumb = key_name.startswith("SWTR")
-            fill_color = "#fff8e1" if is_thumb else "#f3e5f5"
-            stroke_color = "#ff9800" if is_thumb else "#7b1fa2"
-            text_color = "#ff9800" if is_thumb else "#7b1fa2"
+        for key_name, x, y, rotation in positions['right']['switches']:
+            # Use same color for all right switches
+            fill_color = "#f3e5f5"
+            stroke_color = "#7b1fa2"
+            text_color = "#7b1fa2"
             
             if abs(rotation) < 0.1:  # No rotation for main keys
                 # Convert center coordinates to top-left for rectangle drawing
@@ -418,6 +558,40 @@ class KeyboardLayoutCalculator:
     <text x="0" y="1" 
           text-anchor="middle" font-family="Arial, sans-serif" font-size="2.5" 
           fill="{text_color}" font-weight="bold">{key_name}</text>
+  </g>
+'''
+        
+        # Add diode rectangles and labels for right half
+        for diode_name, x, y, rotation in positions['right']['diodes']:
+            # Use same color for all right diodes
+            fill_color = "#dda0dd"
+            stroke_color = "#9a031e"
+            text_color = "#5f0a87"
+            
+            if abs(rotation) < 0.1:  # No rotation for main keys
+                # Convert center coordinates to top-left for rectangle drawing
+                rect_x = x - self.diode_width/2
+                rect_y = y - self.diode_height/2
+                svg_content += f'''  <!-- {diode_name} -->
+  <rect x="{rect_x:.1f}" y="{rect_y:.1f}" 
+        width="{self.diode_width:.1f}" height="{self.diode_height:.1f}"
+        fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.1"/>
+  <text x="{x:.1f}" y="{y + 0.5:.1f}" 
+        text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
+        fill="{text_color}" font-weight="bold">{diode_name}</text>
+'''
+            else:  # Rotated thumb diodes
+                # Convert center coordinates to top-left for rectangle drawing
+                rect_x = -self.diode_width/2
+                rect_y = -self.diode_height/2
+                svg_content += f'''  <!-- {diode_name} -->
+  <g transform="translate({x:.1f},{y:.1f}) rotate({rotation:.1f})">
+    <rect x="{rect_x:.1f}" y="{rect_y:.1f}" 
+          width="{self.diode_width:.1f}" height="{self.diode_height:.1f}"
+          fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.1"/>
+    <text x="0" y="0.5" 
+          text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
+          fill="{text_color}" font-weight="bold">{diode_name}</text>
   </g>
 '''
         
@@ -450,53 +624,6 @@ class KeyboardLayoutCalculator:
   <text x="{right_origin_x:.1f}" y="{right_origin_y - 4:.1f}" 
         text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
         fill="#d32f2f" font-weight="bold">R-ARC</text>
-'''
-        
-        # Add legend
-        legend_x = min_x + 5
-        legend_y = max_y - 40  # More space for expanded legend with arc origins
-        svg_content += f'''
-  <!-- Legend -->
-  <rect x="{legend_x:.1f}" y="{legend_y:.1f}" width="55" height="27" 
-        fill="white" stroke="#dee2e6" stroke-width="0.5" rx="1"/>
-  
-  <text x="{legend_x + 27.5:.1f}" y="{legend_y + 3:.1f}" 
-        text-anchor="middle" font-family="Arial, sans-serif" font-size="2.5" 
-        fill="#212529" font-weight="bold">Legend</text>
-  
-  <!-- Main Keys -->
-  <rect x="{legend_x + 2:.1f}" y="{legend_y + 5:.1f}" width="4" height="3" 
-        fill="#e3f2fd" stroke="#1976d2" stroke-width="0.1"/>
-  <text x="{legend_x + 7:.1f}" y="{legend_y + 7:.1f}" 
-        font-family="Arial, sans-serif" font-size="1.8" fill="#212529">Left Main</text>
-  
-  <rect x="{legend_x + 18:.1f}" y="{legend_y + 5:.1f}" width="4" height="3" 
-        fill="#f3e5f5" stroke="#7b1fa2" stroke-width="0.1"/>
-  <text x="{legend_x + 23:.1f}" y="{legend_y + 7:.1f}" 
-        font-family="Arial, sans-serif" font-size="1.8" fill="#212529">Right Main</text>
-  
-  <!-- Thumb Keys -->
-  <rect x="{legend_x + 2:.1f}" y="{legend_y + 10:.1f}" width="4" height="3" 
-        fill="#fff3e0" stroke="#f57c00" stroke-width="0.1"/>
-  <text x="{legend_x + 7:.1f}" y="{legend_y + 12:.1f}" 
-        font-family="Arial, sans-serif" font-size="1.8" fill="#212529">Left Thumb</text>
-  
-  <rect x="{legend_x + 18:.1f}" y="{legend_y + 10:.1f}" width="4" height="3" 
-        fill="#fff8e1" stroke="#ff9800" stroke-width="0.1"/>
-  <text x="{legend_x + 23:.1f}" y="{legend_y + 12:.1f}" 
-        font-family="Arial, sans-serif" font-size="1.8" fill="#212529">Right Thumb</text>
-  
-  <!-- Thumb Arc Origins -->
-  <circle cx="{legend_x + 4:.1f}" cy="{legend_y + 16:.1f}" r="1" 
-          fill="#d32f2f" stroke="#b71c1c" stroke-width="0.2"/>
-  <text x="{legend_x + 7:.1f}" y="{legend_y + 17:.1f}" 
-        font-family="Arial, sans-serif" font-size="1.8" fill="#212529">Arc Origins</text>
-  
-  <!-- Dimensions -->
-  <text x="{legend_x + 27.5:.1f}" y="{legend_y + 22:.1f}" 
-        text-anchor="middle" font-family="Arial, sans-serif" font-size="1.8" 
-        fill="#6c757d">Footprint: {self.footprint_width}×{self.footprint_height}mm | Spacing: {self.key_spacing}mm</text>
-
 </svg>'''
         
         with open(filename, 'w') as f:
@@ -517,12 +644,14 @@ def main():
                 4: 2.55,     # Column 4 (inner index)
             }
     # Create calculator with default parameters (including 3 thumb keys)
-    calc = KeyboardLayoutCalculator(origin_x=0.0, origin_y=0.0, column_stagger=column_stagger, 
+    calc = KeyboardLayoutCalculator(origin_x=14, origin_y=28.95, column_stagger=column_stagger, 
                                    num_rows=3, num_thumb_keys=3, thumb_arc_col_start=3)
     
     # Print layout information
     print(f"\nLayout Specifications:")
-    print(f"- Footprint size: {calc.footprint_width}mm x {calc.footprint_height}mm")
+    print(f"- Switch footprint size: {calc.footprint_width}mm x {calc.footprint_height}mm")
+    print(f"- Diode footprint size: {calc.diode_width}mm x {calc.diode_height}mm")
+    print(f"- Diode offset from switch: ({calc.diode_offset_x}mm, {calc.diode_offset_y}mm)")
     print(f"- Key spacing: {calc.key_spacing}mm")
     print(f"- X pitch: {calc.x_pitch}mm")
     print(f"- Y pitch: {calc.y_pitch}mm")
