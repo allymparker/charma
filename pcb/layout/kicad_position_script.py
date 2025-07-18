@@ -1,8 +1,8 @@
-v#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 KiCad PCB Layout Script for Keyboard Positions
 
-This script reads the keyboard_positions.txt file and positions footprints
+This script calculates keyboard positions using the layout.py module and positions footprints
 in your KiCad PCB file accordingly.
 
 Usage:
@@ -13,16 +13,33 @@ Usage:
 Or save this as an action plugin in your KiCad plugins directory.
 """
 
-import pcbnew
 import os
+import sys
 
-def position_keyboard_footprints(positions_file="./layout/keyboard_positions.txt"):
+# Add the layout module to the path
+script_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, script_dir)
+
+from layout import KeyboardLayoutConfig, KeyboardLayoutCalculator
+
+try:
+    import pcbnew
+except ImportError:
+    print("Warning: pcbnew module not available. This script must be run within KiCad.")
+    pcbnew = None
+
+
+def position_keyboard_footprints_from_positions(positions):
     """
-    Position keyboard footprints based on the positions file.
+    Position keyboard footprints based on calculated positions.
     
     Args:
-        positions_file: Path to the keyboard positions file
+        positions: Dictionary from KeyboardLayoutCalculator.generate_all_positions()
     """
+    if pcbnew is None:
+        print("Error: pcbnew module not available. This script must be run within KiCad.")
+        return
+        
     # Get the current board
     board = pcbnew.GetBoard()
     
@@ -30,37 +47,20 @@ def position_keyboard_footprints(positions_file="./layout/keyboard_positions.txt
         print("Error: No PCB board loaded!")
         return
     
-    # Check if positions file exists
-    if not os.path.exists(positions_file):
-        print(f"Error: Positions file '{positions_file}' not found!")
-        print(f"Current directory: {os.getcwd()}")
-        return
+    # Convert positions to flat dictionary format
+    position_dict = {}
+    for half_name, half_data in positions.items():
+        for component_type, components in half_data.items():
+            for ref, x_mm, y_mm, rotation in components:
+                position_dict[ref] = (x_mm, y_mm, rotation)
     
-    # Read positions from file
-    positions = {}
-    with open(positions_file, 'r') as f:
-        for line in f:
-            line = line.strip()
-            # Skip comments and empty lines
-            if line.startswith('#') or not line:
-                continue
-            
-            # Parse: Reference X(mm) Y(mm) Rotation(degrees)
-            parts = line.split()
-            if len(parts) >= 4:
-                ref = parts[0]
-                x_mm = float(parts[1])
-                y_mm = float(parts[2])
-                rotation = float(parts[3])
-                positions[ref] = (x_mm, y_mm, rotation)
-    
-    print(f"Loaded {len(positions)} positions from {positions_file}")
+    print(f"Loaded {len(position_dict)} positions from calculator")
     
     # Position footprints
     positioned_count = 0
     missing_footprints = []
     
-    for ref, (x_mm, y_mm, rotation) in positions.items():
+    for ref, (x_mm, y_mm, rotation) in position_dict.items():
         # Find the footprint by reference
         footprint = board.FindFootprintByReference(ref)
         
@@ -94,26 +94,39 @@ def position_keyboard_footprints(positions_file="./layout/keyboard_positions.txt
     pcbnew.Refresh()
     print("Layout complete! The display has been refreshed.")
 
+
+def position_keyboard_footprints_direct(config=None):
+    """
+    Position keyboard footprints by calculating positions directly.
+    
+    Args:
+        config: KeyboardLayoutConfig instance. If None, uses default configuration.
+    """
+    # Use default configuration if none provided
+    if config is None:
+        column_stagger = {
+            0: 0.0,      # Column 0 (pinky)
+            1: -14.45,   # Column 1 (ring)
+            2: -4.25,    # Column 2 (middle)
+            3: 4.25,     # Column 3 (index)
+            4: 2.55,     # Column 4 (inner index)
+        }
+        config = KeyboardLayoutConfig(
+            origin_x=14, origin_y=28.95, column_stagger=column_stagger, 
+            num_rows=3, num_thumb_keys=3, thumb_arc_col_start=3
+        )
+    
+    # Calculate positions
+    positions = KeyboardLayoutCalculator.generate_all_positions(config)
+    
+    # Position the footprints
+    position_keyboard_footprints_from_positions(positions)
+
+
 # Main execution
 if __name__ == "__main__":
-    # Try to find the positions file in common locations
-    try:
-        # First try current working directory
-        positions_file = "keyboard_positions.txt"
-        if not os.path.exists(positions_file):
-            # Try relative to script location if __file__ is available
-            try:
-                script_dir = os.path.dirname(os.path.abspath(__file__))
-                positions_file = os.path.join(script_dir, "keyboard_positions.txt")
-            except NameError:
-                # __file__ not available (running in console), use current directory
-                positions_file = "./layout/keyboard_positions.txt"
-        
-        position_keyboard_footprints(positions_file)
-    except Exception as e:
-        print(f"Error: {e}")
-        print("You can also call the function directly:")
-        print("position_keyboard_footprints('/full/path/to/keyboard_positions.txt')")
+    print("Calculating positions directly from layout configuration...")
+    position_keyboard_footprints_direct()
 
 # For direct console execution, you can also just call:
-# position_keyboard_footprints("keyboard_positions.txt")
+# position_keyboard_footprints_direct()  # Calculate positions directly

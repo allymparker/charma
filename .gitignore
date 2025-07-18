@@ -3,5 +3,6 @@ pcb-left/**
 scratch/**
 *.lck
 **/#auto_saved_files#
-pcb/layout/keyboard_positions.txt
-pcb/layout/keyboard_layout.svg
+pcb/layout/*.txt
+pcb/layout/*.svg
+pcb/layout/__pycache__/**
