@@ -52,12 +52,13 @@ class KeyboardLayoutConfig:
         self.footprint_height = 16.5
         
         # Diode dimensions in mm
-        self.diode_width = 1.5
-        self.diode_height = 5.2
+        self.diode_width = 5.2
+        self.diode_height = 1.5
         
         # Diode offset from switch center in mm
         self.diode_offset_x = -6.5
         self.diode_offset_y = -5.2
+        self.diode_orientation = -90;
         
         # Spacing between keys in mm
         self.key_spacing = 0.5
@@ -219,7 +220,7 @@ class KeyboardLayoutCalculator:
         if abs(switch_rotation) < 0.1:  # No rotation for main keys
             diode_x = switch_x + config.diode_offset_x
             diode_y = switch_y + config.diode_offset_y
-            diode_rotation = 0.0
+            diode_rotation = config.diode_orientation
         else:  # Rotated thumb keys - apply rotation to offset
             # Convert rotation to radians
             rot_rad = math.radians(switch_rotation)
@@ -232,7 +233,7 @@ class KeyboardLayoutCalculator:
             
             diode_x = switch_x + rotated_offset_x
             diode_y = switch_y + rotated_offset_y
-            diode_rotation = switch_rotation
+            diode_rotation = switch_rotation + config.diode_orientation
         
         return (diode_x, diode_y, diode_rotation)
     
