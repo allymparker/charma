@@ -56,7 +56,7 @@ except ImportError:
     pcbnew = None
 
 
-def position_keyboard_footprints_from_positions(positions):
+def position_keyboard_footprints_from_positions(positions, x_origin=0, y_origin=0):
     """
     Position keyboard footprints based on calculated positions.
     
@@ -93,18 +93,16 @@ def position_keyboard_footprints_from_positions(positions):
         
         if footprint:
             # Convert mm to KiCad internal units (nanometers)
-            x_nm = pcbnew.FromMM(x_mm)
-            y_nm = pcbnew.FromMM(y_mm)
+            x_nm = pcbnew.FromMM(x_mm+x_origin)
+            y_nm = pcbnew.FromMM(y_mm+y_origin)
             
             # Set position (KiCad uses VECTOR2I for position)
             footprint.SetPosition(pcbnew.VECTOR2I(int(x_nm), int(y_nm)))
             
             # Set rotation (KiCad uses degrees)
-            print(f"Positioning {ref} at ({x_mm:.3f}, {y_mm:.3f}) mm, rotation: {rotation}°")
-            footprint.SetOrientationDegrees(rotation)
+            footprint.SetOrientationDegrees(-rotation)
             
             positioned_count += 1
-            print(f"Positioned {ref} at ({x_mm:.3f}, {y_mm:.3f}) mm, {rotation:.1f}°")
         else:
             missing_footprints.append(ref)
     
@@ -162,7 +160,7 @@ def position_keyboard_footprints_direct(config=None):
     print_positions(config, positions)
 
     # Position the footprints
-    position_keyboard_footprints_from_positions(positions)
+    position_keyboard_footprints_from_positions(positions, 30, 30)
 
 
 # Main execution

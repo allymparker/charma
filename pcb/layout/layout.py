@@ -8,6 +8,11 @@ Default specifications:
 - Footprint size: 17.5mm x 16.5mm
 - Spacing: 0.5mm between keys
 - Column staggered layout (configurable)
+
+ORIENTATION CONVENTIONS:
+- All rotations are calculated using SVG convention (positive = counterclockwise)
+- KiCad has opposite rotation convention, so the KiCad script inverts thumb switch rotations
+- Diode orientations work as-is in both SVG and KiCad outputs
 """
 
 import math
@@ -58,7 +63,7 @@ class KeyboardLayoutConfig:
         # Diode offset from switch center in mm
         self.diode_offset_x = -6.5
         self.diode_offset_y = -5.2
-        self.diode_orientation = -90;
+        self.diode_orientation = 90;
         
         # Spacing between keys in mm
         self.key_spacing = 0.5
@@ -324,7 +329,7 @@ class KeyboardLayoutCalculator:
         
         # Add specific placements
         specific_positions = [
-            ("MCU",  1,  10.5, 10.39, 90),
+            ("MCU",  1,  10.5, 10.39, -90),
             ("HOLE", 1,  97.5,  2.50, 0),
             ("HOLE", 2, 26.25,  2.50, 0),
             ("HOLE", 3,   2.5, 76.70, 0),

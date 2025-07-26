@@ -47,7 +47,7 @@ def main():
     print_positions(config, positions)
     
     # Export files
-    # export_csv(positions)
+    export_csv(positions)
     export_svg(config, positions, "keyboard_layout.svg")
     
     print(f"\nFiles generated:")
