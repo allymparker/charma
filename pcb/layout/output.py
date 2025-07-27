@@ -169,7 +169,7 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
             svg_content += f'''  <!-- {key_name} -->
   <rect x="{rect_x:.1f}" y="{rect_y:.1f}" 
         width="{config.footprint_width:.1f}" height="{config.footprint_height:.1f}"
-        fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.1"/>
+        fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.01"/>
   <text x="{x:.1f}" y="{y + 1:.1f}" 
         text-anchor="middle" font-family="Arial, sans-serif" font-size="2.5" 
         fill="{text_color}" font-weight="bold">{key_name}</text>
@@ -182,7 +182,7 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
   <g transform="translate({x:.1f},{y:.1f}) rotate({rotation:.1f})">
     <rect x="{rect_x:.1f}" y="{rect_y:.1f}" 
           width="{config.footprint_width:.1f}" height="{config.footprint_height:.1f}"
-          fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.1"/>
+          fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.01"/>
     <text x="0" y="1" 
           text-anchor="middle" font-family="Arial, sans-serif" font-size="2.5" 
           fill="{text_color}" font-weight="bold">{key_name}</text>
@@ -237,7 +237,7 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
             svg_content += f'''  <!-- {key_name} -->
   <rect x="{rect_x:.1f}" y="{rect_y:.1f}" 
         width="{config.footprint_width:.1f}" height="{config.footprint_height:.1f}"
-        fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.1"/>
+        fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.01"/>
   <text x="{x:.1f}" y="{y + 1:.1f}" 
         text-anchor="middle" font-family="Arial, sans-serif" font-size="2.5" 
         fill="{text_color}" font-weight="bold">{key_name}</text>
@@ -250,7 +250,7 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
   <g transform="translate({x:.1f},{y:.1f}) rotate({rotation:.1f})">
     <rect x="{rect_x:.1f}" y="{rect_y:.1f}" 
           width="{config.footprint_width:.1f}" height="{config.footprint_height:.1f}"
-          fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.1"/>
+          fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.01"/>
     <text x="0" y="1" 
           text-anchor="middle" font-family="Arial, sans-serif" font-size="2.5" 
           fill="{text_color}" font-weight="bold">{key_name}</text>
@@ -318,11 +318,22 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
                     text_color = "#2d3436"
                 
                 for component_name, x, y, rotation in components:
-                    svg_content += f'''  <!-- {component_name} -->
+                    if component_type == 'HOLE':
+                        # Make holes 3mm circles (radius = 1.5mm)
+                        svg_content += f'''  <!-- {component_name} -->
   <circle cx="{x:.1f}" cy="{y:.1f}" r="1.5" 
-          fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.2"/>
+          fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.1"/>
   <text x="{x:.1f}" y="{y - 3:.1f}" 
         text-anchor="middle" font-family="Arial, sans-serif" font-size="2" 
+        fill="{text_color}" font-weight="bold">{component_name}</text>
+'''
+                    else:
+                        # Make all other components small dots (radius = 0.5mm)
+                        svg_content += f'''  <!-- {component_name} -->
+  <circle cx="{x:.1f}" cy="{y:.1f}" r="0.5" 
+          fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.1"/>
+  <text x="{x:.1f}" y="{y - 2:.1f}" 
+        text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
         fill="{text_color}" font-weight="bold">{component_name}</text>
 '''
     
@@ -337,10 +348,10 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
     
     # Add left thumb arc origin marker
     svg_content += f'''  <!-- Left Thumb Arc Origin -->
-  <circle cx="{left_origin_x:.1f}" cy="{left_origin_y:.1f}" r="1" 
-          fill="#d32f2f" stroke="#b71c1c" stroke-width="0.2"/>
+  <circle cx="{left_origin_x:.1f}" cy="{left_origin_y:.1f}" r="0.5" 
+          fill="#d32f2f" stroke="#b71c1c" stroke-width="0.1"/>
   <circle cx="{left_origin_x:.1f}" cy="{left_origin_y:.1f}" r="3" 
-          fill="none" stroke="#d32f2f" stroke-width="0.1" stroke-dasharray="0.5,0.5"/>
+          fill="none" stroke="#d32f2f" stroke-width="0.05" stroke-dasharray="0.5,0.5"/>
   <text x="{left_origin_x:.1f}" y="{left_origin_y - 4:.1f}" 
         text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
         fill="#d32f2f" font-weight="bold">L-ARC</text>
@@ -348,32 +359,32 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
     
     # Add right thumb arc origin marker
     svg_content += f'''  <!-- Right Thumb Arc Origin -->
-  <circle cx="{right_origin_x:.1f}" cy="{right_origin_y:.1f}" r="1" 
-          fill="#d32f2f" stroke="#b71c1c" stroke-width="0.2"/>
+  <circle cx="{right_origin_x:.1f}" cy="{right_origin_y:.1f}" r="0.5" 
+          fill="#d32f2f" stroke="#b71c1c" stroke-width="0.1"/>
   <circle cx="{right_origin_x:.1f}" cy="{right_origin_y:.1f}" r="3" 
-          fill="none" stroke="#d32f2f" stroke-width="0.1" stroke-dasharray="0.5,0.5"/>
+          fill="none" stroke="#d32f2f" stroke-width="0.05" stroke-dasharray="0.5,0.5"/>
   <text x="{right_origin_x:.1f}" y="{right_origin_y - 4:.1f}" 
         text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
         fill="#d32f2f" font-weight="bold">R-ARC</text>
   
-  <!-- Origin Point -->
+  <!-- Coordinate Origin (0,0) -->
   <g>
-    <circle cx="{config.origin_x:.1f}" cy="{config.origin_y:.1f}" r="2" 
-            fill="#ff4444" stroke="#cc0000" stroke-width="0.3"/>
-    <circle cx="{config.origin_x:.1f}" cy="{config.origin_y:.1f}" r="5" 
-            fill="none" stroke="#ff4444" stroke-width="0.2" stroke-dasharray="1,1"/>
-    <line x1="{config.origin_x - 10:.1f}" y1="{config.origin_y:.1f}" 
-          x2="{config.origin_x + 10:.1f}" y2="{config.origin_y:.1f}" 
-          stroke="#ff4444" stroke-width="0.3"/>
-    <line x1="{config.origin_x:.1f}" y1="{config.origin_y - 10:.1f}" 
-          x2="{config.origin_x:.1f}" y2="{config.origin_y + 10:.1f}" 
-          stroke="#ff4444" stroke-width="0.3"/>
-    <text x="{config.origin_x:.1f}" y="{config.origin_y - 7:.1f}" 
+    <circle cx="0" cy="0" r="0.5" 
+            fill="#ff4444" stroke="#cc0000" stroke-width="0.1"/>
+    <circle cx="0" cy="0" r="5" 
+            fill="none" stroke="#ff4444" stroke-width="0.05" stroke-dasharray="1,1"/>
+    <line x1="-10" y1="0" 
+          x2="10" y2="0" 
+          stroke="#ff4444" stroke-width="0.1"/>
+    <line x1="0" y1="-10" 
+          x2="0" y2="10" 
+          stroke="#ff4444" stroke-width="0.1"/>
+    <text x="0" y="-7" 
           text-anchor="middle" font-family="Arial, sans-serif" font-size="2" 
           fill="#ff4444" font-weight="bold">ORIGIN</text>
-    <text x="{config.origin_x:.1f}" y="{config.origin_y + 10:.1f}" 
+    <text x="0" y="10" 
           text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
-          fill="#666666">({config.origin_x:.1f}, {config.origin_y:.1f})</text>
+          fill="#666666">(0.0, 0.0)</text>
   </g>
 </svg>'''
     
