@@ -46,6 +46,15 @@ except NameError:
 
 sys.path.insert(0, script_dir)
 
+# Import modules with reloading support
+import importlib
+import layout
+import output
+
+# Reload modules to pick up any changes made since last run
+importlib.reload(layout)
+importlib.reload(output)
+
 from layout import KeyboardLayoutConfig, KeyboardLayoutCalculator
 from output import print_positions
 
