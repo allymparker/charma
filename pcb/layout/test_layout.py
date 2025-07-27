@@ -152,9 +152,11 @@ class TestKeyboardLayoutCalculator(unittest.TestCase):
         # Y should be the same
         self.assertAlmostEqual(left_y, right_y, places=2)
         
-        # X should be mirrored
-        left_half_width = (self.stagger_config.num_cols - 1) * self.stagger_config.x_pitch + self.stagger_config.footprint_width
-        expected_right_x = left_half_width + self.stagger_config.split_separation + (left_half_width - left_x)
+        # X should be mirrored based on new logic: 
+        # distance from last column + separation - distance from last column
+        last_col_x, _ = KeyboardLayoutCalculator.calculate_left_position(self.stagger_config, 0, self.stagger_config.num_cols - 1)
+        distance_from_last_col = left_x - last_col_x
+        expected_right_x = last_col_x + self.stagger_config.split_separation - distance_from_last_col
         self.assertAlmostEqual(right_x, expected_right_x, places=2)
 
     def test_mirror_thumb_position(self):
@@ -169,8 +171,9 @@ class TestKeyboardLayoutCalculator(unittest.TestCase):
         self.assertAlmostEqual(right_rotation, -left_rotation, places=2)
         
         # X should be mirrored using same logic as regular mirror
-        left_half_width = (self.stagger_config.num_cols - 1) * self.stagger_config.x_pitch + self.stagger_config.footprint_width
-        expected_right_x = left_half_width + self.stagger_config.split_separation + (left_half_width - left_x)
+        last_col_x, _ = KeyboardLayoutCalculator.calculate_left_position(self.stagger_config, 0, self.stagger_config.num_cols - 1)
+        distance_from_last_col = left_x - last_col_x
+        expected_right_x = last_col_x + self.stagger_config.split_separation - distance_from_last_col
         self.assertAlmostEqual(right_x, expected_right_x, places=2)
 
     def test_calculate_diode_position_no_rotation(self):
@@ -337,6 +340,28 @@ class TestKeyboardLayoutCalculator(unittest.TestCase):
                     self.assertTrue(math.isfinite(x), f"Non-finite X coordinate for {name}")
                     self.assertTrue(math.isfinite(y), f"Non-finite Y coordinate for {name}")
                     self.assertTrue(math.isfinite(rotation), f"Non-finite rotation for {name}")
+
+    def test_mirror_separation_distance(self):
+        """Test that the separation between left and right halves is exactly as configured."""
+        config = self.stagger_config
+        
+        # Get the center of the last column on the left (column 4, row 0)
+        last_col_left = config.num_cols - 1
+        left_x, left_y = KeyboardLayoutCalculator.calculate_left_position(config, 0, last_col_left)
+        
+        # Get the center of the first column on the right (which is mirrored from last column on left)
+        right_x, right_y = KeyboardLayoutCalculator.mirror_position(config, left_x, left_y)
+        
+        # The separation should be exactly the configured split_separation
+        actual_separation = right_x - left_x
+        expected_separation = config.split_separation
+        
+        print(f"Left last column center: {left_x}")
+        print(f"Right first column center: {right_x}")
+        print(f"Actual separation: {actual_separation}")
+        print(f"Expected separation: {expected_separation}")
+        
+        self.assertAlmostEqual(actual_separation, expected_separation, places=2)
 
 
 if __name__ == '__main__':

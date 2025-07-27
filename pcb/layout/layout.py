@@ -62,7 +62,7 @@ class KeyboardLayoutConfig:
         """
         self.origin_x = origin_x
         self.origin_y = origin_y
-        self.split_separation = 65.0  # mm - separation between left and right halves
+        self.split_separation = 75.0  # mm - separation between left and right halves
         
         # Layout dimensions
         self.num_rows = num_rows
@@ -194,14 +194,7 @@ class KeyboardLayoutCalculator:
             Tuple of (x, y, rotation) coordinates for the mirrored position
         """
         # Use the same mirroring logic as main keys for X coordinate
-        left_half_width = (config.num_cols - 1) * config.x_pitch + config.footprint_width
-        separation = config.split_separation
-        
-        # Mirror the x coordinate
-        right_x = left_half_width + separation + (left_half_width - left_x)
-        
-        # Y coordinate stays the same
-        right_y = left_y
+        right_x, right_y = KeyboardLayoutCalculator.mirror_position(config, left_x, left_y)
         
         # Mirror the rotation (negate the angle)
         right_rotation = -left_rotation
@@ -221,12 +214,14 @@ class KeyboardLayoutCalculator:
         Returns:
             Tuple of (x, y) coordinates for the mirrored position (center of footprint)
         """
-        # Calculate the rightmost position of left half (center-based)
-        left_half_width = (config.num_cols - 1) * config.x_pitch + config.footprint_width
-        separation = config.split_separation # mm separation between halves
+        # Calculate the position of the last column center on the left
+        last_col_x, _ = KeyboardLayoutCalculator.calculate_left_position(config, 0, config.num_cols - 1)
         
-        # Mirror the x coordinate (accounting for center positioning)
-        right_x = left_half_width + separation + (left_half_width - left_x)
+        # For mirroring: distance from last column on left to this position
+        distance_from_last_col = left_x - last_col_x
+        
+        # Right position: last column + separation - distance (to mirror)
+        right_x = last_col_x + config.split_separation - distance_from_last_col
         
         return (right_x, left_y)
     
