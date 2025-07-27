@@ -55,7 +55,7 @@ class TestKeyboardLayoutCalculator(unittest.TestCase):
             SpecificPosition("MCU", 1, 10.0, 10.0, -90.0),
         ]
         
-        self.config = KeyboardLayoutConfig(
+        self.stagger_config = KeyboardLayoutConfig(
             origin_x=10.0,
             origin_y=20.0,
             num_rows=3,
@@ -66,79 +66,72 @@ class TestKeyboardLayoutCalculator(unittest.TestCase):
             specific_positions=self.specific_positions
         )
 
-    def test_calculate_left_position_basic(self):
-        """Test basic left position calculation."""
-        # Test origin position (row 0, col 0)
-        x, y = KeyboardLayoutCalculator.calculate_left_position(self.config, 0, 0)
-        
-        # Expected: origin + adjustments + center offset
-        expected_x = self.config.origin_x + (-0.5 * self.config.x_pitch) + 0.25 + (self.config.footprint_width / 2)
-        expected_y = self.config.origin_y + (-0.5 * self.config.y_pitch) + 0.25 + (self.config.footprint_height / 2) + self.column_stagger[0]
-        
-        self.assertAlmostEqual(x, expected_x, places=2)
-        self.assertAlmostEqual(y, expected_y, places=2)
-
-    def test_calculate_left_position_with_stagger(self):
-        """Test left position calculation with column stagger."""
-        # Test column 1 which has stagger
-        x, y = KeyboardLayoutCalculator.calculate_left_position(self.config, 0, 1)
-        
-        # Expected: includes stagger for columns 0 and 1
-        expected_stagger = self.column_stagger[0] + self.column_stagger[1]
-        expected_x = self.config.origin_x + (0.5 * self.config.x_pitch) + 0.25 + (self.config.footprint_width / 2)
-        expected_y = self.config.origin_y + (-0.5 * self.config.y_pitch) + 0.25 + (self.config.footprint_height / 2) + expected_stagger
-        
-        self.assertAlmostEqual(x, expected_x, places=2)
-        self.assertAlmostEqual(y, expected_y, places=2)
-
-    def test_calculate_left_position_different_rows(self):
-        """Test left position calculation for different rows."""
-        x1, y1 = KeyboardLayoutCalculator.calculate_left_position(self.config, 0, 0)
-        x2, y2 = KeyboardLayoutCalculator.calculate_left_position(self.config, 1, 0)
-        
-        # X should be the same for same column
-        self.assertAlmostEqual(x1, x2, places=2)
-        
-        # Y should differ by y_pitch
-        self.assertAlmostEqual(y2 - y1, self.config.y_pitch, places=2)
-
-    def test_calculate_thumb_position_single_key(self):
-        """Test thumb position calculation with single thumb key."""
-        # Create config with single thumb key
-        single_thumb_config = KeyboardLayoutConfig(
+        self.no_stagger_config = KeyboardLayoutConfig(
             origin_x=10.0,
             origin_y=20.0,
             num_rows=3,
-            column_stagger=self.column_stagger,
-            num_thumb_keys=1,
+            column_stagger={0: 0.0, 1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0},
+            num_thumb_keys=2,
             thumb_arc_col_start=2,
             thumb_arc_config=self.thumb_arc_config,
             specific_positions=self.specific_positions
         )
+
+    def test_calculate_left_position_col_0_row_0(self):
+        """Test basic left position calculation."""
+        config = self.no_stagger_config  
+        x, y = KeyboardLayoutCalculator.calculate_left_position(config, 0, 0)
         
-        x, y, rotation = KeyboardLayoutCalculator.calculate_thumb_position(single_thumb_config, 0, is_left=True)
-        
-        # Single key should have 0 angle, so rotation should be 90
-        self.assertAlmostEqual(rotation, 90.0, places=1)
-        
-        # Position should be at arc center (angle = 0)
-        ref_x, ref_y = KeyboardLayoutCalculator.calculate_left_position(single_thumb_config, single_thumb_config.num_rows - 1, single_thumb_config.thumb_arc_col_start)
-        arc_origin_x = ref_x + single_thumb_config.thumb_arc_config.offset_x
-        arc_origin_y = ref_y + single_thumb_config.thumb_arc_config.offset_y + single_thumb_config.thumb_arc_config.radius
-        
-        expected_x = arc_origin_x + single_thumb_config.thumb_arc_config.radius  # cos(0) = 1
-        expected_y = arc_origin_y  # sin(0) = 0
+        expected_x = config.origin_x 
+        expected_y = config.origin_y
         
         self.assertAlmostEqual(x, expected_x, places=2)
         self.assertAlmostEqual(y, expected_y, places=2)
 
+
+    def test_calculate_left_position_col_0_row_1(self):
+        """Test basic left position calculation."""
+        config = self.no_stagger_config  
+        x, y = KeyboardLayoutCalculator.calculate_left_position(config, 1, 0)
+        
+        expected_x = config.origin_x 
+        expected_y = config.origin_y + config.key_spacing + config.footprint_height
+        
+        self.assertAlmostEqual(x, expected_x, places=2)
+        self.assertAlmostEqual(y, expected_y, places=2)
+
+    def test_calculate_left_position_col_1_row_0(self):
+        """Test basic left position calculation."""
+        config = self.no_stagger_config  
+        x, y = KeyboardLayoutCalculator.calculate_left_position(config, 0, 1)
+        
+        expected_x = config.origin_x + config.key_spacing + config.footprint_width  
+        expected_y = config.origin_y
+        
+        self.assertAlmostEqual(x, expected_x, places=2)
+        self.assertAlmostEqual(y, expected_y, places=2)
+
+
+    def test_calculate_left_position_with_stagger(self):
+        """Test left position calculation with column stagger."""
+        config = self.stagger_config
+        x, y = KeyboardLayoutCalculator.calculate_left_position(config, 0, 2)
+        
+        expected_stagger = self.column_stagger[0] + self.column_stagger[1] + self.column_stagger[2]
+        expected_x = config.origin_x + (2* config.x_pitch)
+        expected_y = config.origin_y + expected_stagger
+
+        self.assertAlmostEqual(x, expected_x, places=2)
+        self.assertAlmostEqual(y, expected_y, places=2)
+
+
     def test_calculate_thumb_position_multiple_keys(self):
         """Test thumb position calculation with multiple thumb keys."""
         # Test first thumb key (index 0)
-        x1, y1, rotation1 = KeyboardLayoutCalculator.calculate_thumb_position(self.config, 0, is_left=True)
+        x1, y1, rotation1 = KeyboardLayoutCalculator.calculate_thumb_position(self.stagger_config, 0, is_left=True)
         
         # Test second thumb key (index 1)
-        x2, y2, rotation2 = KeyboardLayoutCalculator.calculate_thumb_position(self.config, 1, is_left=True)
+        x2, y2, rotation2 = KeyboardLayoutCalculator.calculate_thumb_position(self.stagger_config, 1, is_left=True)
         
         # Rotations should be different
         self.assertNotAlmostEqual(rotation1, rotation2, places=1)
@@ -153,21 +146,21 @@ class TestKeyboardLayoutCalculator(unittest.TestCase):
 
     def test_mirror_position(self):
         """Test position mirroring for right half."""
-        left_x, left_y = KeyboardLayoutCalculator.calculate_left_position(self.config, 0, 0)
-        right_x, right_y = KeyboardLayoutCalculator.mirror_position(self.config, left_x, left_y)
+        left_x, left_y = KeyboardLayoutCalculator.calculate_left_position(self.stagger_config, 0, 0)
+        right_x, right_y = KeyboardLayoutCalculator.mirror_position(self.stagger_config, left_x, left_y)
         
         # Y should be the same
         self.assertAlmostEqual(left_y, right_y, places=2)
         
         # X should be mirrored
-        left_half_width = (self.config.num_cols - 1) * self.config.x_pitch + self.config.footprint_width
-        expected_right_x = left_half_width + self.config.split_separation + (left_half_width - left_x)
+        left_half_width = (self.stagger_config.num_cols - 1) * self.stagger_config.x_pitch + self.stagger_config.footprint_width
+        expected_right_x = left_half_width + self.stagger_config.split_separation + (left_half_width - left_x)
         self.assertAlmostEqual(right_x, expected_right_x, places=2)
 
     def test_mirror_thumb_position(self):
         """Test thumb position mirroring for right half."""
-        left_x, left_y, left_rotation = KeyboardLayoutCalculator.calculate_thumb_position(self.config, 0, is_left=True)
-        right_x, right_y, right_rotation = KeyboardLayoutCalculator.mirror_thumb_position(self.config, left_x, left_y, left_rotation)
+        left_x, left_y, left_rotation = KeyboardLayoutCalculator.calculate_thumb_position(self.stagger_config, 0, is_left=True)
+        right_x, right_y, right_rotation = KeyboardLayoutCalculator.mirror_thumb_position(self.stagger_config, left_x, left_y, left_rotation)
         
         # Y should be the same
         self.assertAlmostEqual(left_y, right_y, places=2)
@@ -176,8 +169,8 @@ class TestKeyboardLayoutCalculator(unittest.TestCase):
         self.assertAlmostEqual(right_rotation, -left_rotation, places=2)
         
         # X should be mirrored using same logic as regular mirror
-        left_half_width = (self.config.num_cols - 1) * self.config.x_pitch + self.config.footprint_width
-        expected_right_x = left_half_width + self.config.split_separation + (left_half_width - left_x)
+        left_half_width = (self.stagger_config.num_cols - 1) * self.stagger_config.x_pitch + self.stagger_config.footprint_width
+        expected_right_x = left_half_width + self.stagger_config.split_separation + (left_half_width - left_x)
         self.assertAlmostEqual(right_x, expected_right_x, places=2)
 
     def test_calculate_diode_position_no_rotation(self):
@@ -186,13 +179,13 @@ class TestKeyboardLayoutCalculator(unittest.TestCase):
         switch_rotation = 0.0
         
         diode_x, diode_y, diode_rotation = KeyboardLayoutCalculator.calculate_diode_position(
-            self.config, switch_x, switch_y, switch_rotation
+            self.stagger_config, switch_x, switch_y, switch_rotation
         )
         
         # For non-rotated switches, offset is applied directly
-        expected_x = switch_x + self.config.diode_offset_x
-        expected_y = switch_y + self.config.diode_offset_y
-        expected_rotation = self.config.diode_orientation
+        expected_x = switch_x + self.stagger_config.diode_offset_x
+        expected_y = switch_y + self.stagger_config.diode_offset_y
+        expected_rotation = self.stagger_config.diode_orientation
         
         self.assertAlmostEqual(diode_x, expected_x, places=2)
         self.assertAlmostEqual(diode_y, expected_y, places=2)
@@ -204,19 +197,19 @@ class TestKeyboardLayoutCalculator(unittest.TestCase):
         switch_rotation = 45.0  # 45 degrees
         
         diode_x, diode_y, diode_rotation = KeyboardLayoutCalculator.calculate_diode_position(
-            self.config, switch_x, switch_y, switch_rotation
+            self.stagger_config, switch_x, switch_y, switch_rotation
         )
         
         # For rotated switches, offset vector is rotated
         rot_rad = math.radians(switch_rotation)
-        expected_offset_x = (self.config.diode_offset_x * math.cos(rot_rad) - 
-                           self.config.diode_offset_y * math.sin(rot_rad))
-        expected_offset_y = (self.config.diode_offset_x * math.sin(rot_rad) + 
-                           self.config.diode_offset_y * math.cos(rot_rad))
+        expected_offset_x = (self.stagger_config.diode_offset_x * math.cos(rot_rad) - 
+                           self.stagger_config.diode_offset_y * math.sin(rot_rad))
+        expected_offset_y = (self.stagger_config.diode_offset_x * math.sin(rot_rad) + 
+                           self.stagger_config.diode_offset_y * math.cos(rot_rad))
         
         expected_x = switch_x + expected_offset_x
         expected_y = switch_y + expected_offset_y
-        expected_rotation = switch_rotation + self.config.diode_orientation
+        expected_rotation = switch_rotation + self.stagger_config.diode_orientation
         
         self.assertAlmostEqual(diode_x, expected_x, places=2)
         self.assertAlmostEqual(diode_y, expected_y, places=2)
@@ -224,7 +217,7 @@ class TestKeyboardLayoutCalculator(unittest.TestCase):
 
     def test_generate_all_positions_structure(self):
         """Test the structure of generated positions."""
-        positions = KeyboardLayoutCalculator.generate_all_positions(self.config)
+        positions = KeyboardLayoutCalculator.generate_all_positions(self.stagger_config)
         
         # Check top-level structure
         self.assertIn('left', positions)
@@ -237,8 +230,8 @@ class TestKeyboardLayoutCalculator(unittest.TestCase):
             self.assertIn('MCU', positions[half])  # From specific_positions
         
         # Check counts
-        expected_main_keys = self.config.num_rows * self.config.num_cols
-        expected_total_keys = expected_main_keys + self.config.num_thumb_keys
+        expected_main_keys = self.stagger_config.num_rows * self.stagger_config.num_cols
+        expected_total_keys = expected_main_keys + self.stagger_config.num_thumb_keys
         
         for half in ['left', 'right']:
             self.assertEqual(len(positions[half]['switches']), expected_total_keys)
@@ -246,7 +239,7 @@ class TestKeyboardLayoutCalculator(unittest.TestCase):
 
     def test_generate_all_positions_naming(self):
         """Test the naming convention of generated positions."""
-        positions = KeyboardLayoutCalculator.generate_all_positions(self.config)
+        positions = KeyboardLayoutCalculator.generate_all_positions(self.stagger_config)
         
         # Check left switches naming
         left_switches = positions['left']['switches']
@@ -274,7 +267,7 @@ class TestKeyboardLayoutCalculator(unittest.TestCase):
 
     def test_generate_all_positions_symmetry(self):
         """Test that left and right halves have proper symmetry."""
-        positions = KeyboardLayoutCalculator.generate_all_positions(self.config)
+        positions = KeyboardLayoutCalculator.generate_all_positions(self.stagger_config)
         
         # Check that left and right have same number of components
         for component_type in ['switches', 'diodes']:
@@ -286,19 +279,19 @@ class TestKeyboardLayoutCalculator(unittest.TestCase):
         # For main keys: left switch at (row, col) corresponds to right switch at (row, num_cols-1-col)
         # But the indexing in the results is sequential, so we need to calculate the mapping
         
-        main_keys = self.config.num_rows * self.config.num_cols
-        thumb_keys = self.config.num_thumb_keys
+        main_keys = self.stagger_config.num_rows * self.stagger_config.num_cols
+        thumb_keys = self.stagger_config.num_thumb_keys
         
         left_switches = positions['left']['switches']
         right_switches = positions['right']['switches']
         
         # Test main keys symmetry
-        for row in range(self.config.num_rows):
-            for col in range(self.config.num_cols):
+        for row in range(self.stagger_config.num_rows):
+            for col in range(self.stagger_config.num_cols):
                 # Left index: row * num_cols + col
-                left_idx = row * self.config.num_cols + col
+                left_idx = row * self.stagger_config.num_cols + col
                 # Right index: row * num_cols + (num_cols - 1 - col)
-                right_idx = row * self.config.num_cols + (self.config.num_cols - 1 - col)
+                right_idx = row * self.stagger_config.num_cols + (self.stagger_config.num_cols - 1 - col)
                 
                 left_y = left_switches[left_idx][2]  # Y coordinate
                 right_y = right_switches[right_idx][2]  # Y coordinate
@@ -335,7 +328,7 @@ class TestKeyboardLayoutCalculator(unittest.TestCase):
 
     def test_coordinate_precision(self):
         """Test that coordinates maintain reasonable precision."""
-        positions = KeyboardLayoutCalculator.generate_all_positions(self.config)
+        positions = KeyboardLayoutCalculator.generate_all_positions(self.stagger_config)
         
         # Check that all coordinates are finite numbers
         for half in ['left', 'right']:

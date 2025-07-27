@@ -87,7 +87,7 @@ class KeyboardLayoutConfig:
         # Diode offset from switch center in mm
         self.diode_offset_x = -6.5
         self.diode_offset_y = -5.2
-        self.diode_orientation = 90;
+        self.diode_orientation = 90
         
         # Spacing between keys in mm
         self.key_spacing = 0.5
@@ -122,18 +122,15 @@ class KeyboardLayoutCalculator:
             Tuple of (x, y) coordinates in mm (center of footprint)
         """
         # Base position calculation (center of footprint)
-        x = config.origin_x + ((col-0.5) * config.x_pitch) + .25
-        y = config.origin_y + ((row-0.5) * config.y_pitch) + .25
+        x = config.origin_x + (col * config.x_pitch)
+        y = config.origin_y + (row * config.y_pitch)
         
         # Apply column stagger by summing the stagger offsets up to this column
         for c in range(col + 1):
             y += config.column_stagger[c]
+       
         
-        # Convert to center coordinates
-        x_center = x + (config.footprint_width / 2)
-        y_center = y + (config.footprint_height / 2)
-        
-        return (x_center, y_center)
+        return (x, y)
     
     @staticmethod
     def calculate_thumb_position(config: KeyboardLayoutConfig, thumb_index: int, is_left: bool = True) -> Tuple[float, float, float]:
