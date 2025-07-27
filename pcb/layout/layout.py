@@ -329,7 +329,7 @@ class KeyboardLayoutCalculator:
         
         # Add specific placements
         specific_positions = [
-            ("MCU",  1,  10.5, 10.39, -90),
+            ("MCU",  1,  10.5,   9.7, -90),
             ("HOLE", 1,  97.5,  2.50, 0),
             ("HOLE", 2, 26.25,  2.50, 0),
             ("HOLE", 3,   2.5, 76.70, 0),
