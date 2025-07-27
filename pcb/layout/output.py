@@ -329,8 +329,8 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
     # Add thumb arc origins
     # Calculate left thumb arc origin
     ref_x, ref_y = KeyboardLayoutCalculator.calculate_left_position(config, config.num_rows - 1, config.thumb_arc_col_start)
-    left_origin_x = ref_x + config.thumb_offset_x
-    left_origin_y = ref_y + config.thumb_offset_y + config.thumb_arc_radius
+    left_origin_x = ref_x + config.thumb_arc_config.offset_x
+    left_origin_y = ref_y + config.thumb_arc_config.offset_y + config.thumb_arc_config.radius
     
     # Calculate right thumb arc origin by mirroring the left origin
     right_origin_x, right_origin_y = KeyboardLayoutCalculator.mirror_position(config, left_origin_x, left_origin_y)

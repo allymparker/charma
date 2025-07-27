@@ -17,13 +17,36 @@ ORIENTATION CONVENTIONS:
 
 import math
 from typing import List, Tuple, Dict
+from dataclasses import dataclass
+
+
+@dataclass
+class ThumbArcConfig:
+    """Configuration for the thumb key arc."""
+    radius: float  # mm - radius of the thumb arc
+    start_angle: float  # degrees - starting angle for thumb arc
+    end_angle: float  # degrees - ending angle for thumb arc
+    offset_x: float  # mm - horizontal offset from center of bottom key in thumb_arc_col_start
+    offset_y: float  # mm - vertical offset from center of bottom key in thumb_arc_col_start
+
+
+@dataclass
+class SpecificPosition:
+    """Configuration for a specific component position."""
+    ref: str  # Reference prefix (e.g., "MCU", "HOLE", "BAT", "RSW")
+    index: int  # Index number
+    x: float  # X coordinate in mm
+    y: float  # Y coordinate in mm
+    rotation: float  # Rotation in degrees
 
 
 class KeyboardLayoutConfig:
     """Configuration for keyboard layout calculations."""
-    def __init__(self, origin_x: float = 0.0, origin_y: float = 0.0, 
-                 num_rows: int = 3, column_stagger: Dict[int, float] = None,
-                 num_thumb_keys: int = 3, thumb_arc_col_start: int = 3):
+    def __init__(self, origin_x: float, origin_y: float, 
+                 num_rows: int, column_stagger: Dict[int, float],
+                 num_thumb_keys: int, thumb_arc_col_start: int,
+                 thumb_arc_config: ThumbArcConfig,
+                 specific_positions: List[SpecificPosition]):
         """
         Initialize the keyboard layout configuration.
         
@@ -32,9 +55,10 @@ class KeyboardLayoutConfig:
             origin_y: Y coordinate of the origin in mm
             num_rows: Number of rows in the keyboard layout
             column_stagger: Dictionary mapping column index to stagger offset in mm
-                          If None, uses default column stagger values
-            num_thumb_keys: Number of thumb keys per half (default: 3)
-            thumb_arc_col_start: Column number under which the thumb arc starts (default: 2)
+            num_thumb_keys: Number of thumb keys per half
+            thumb_arc_col_start: Column number under which the thumb arc starts
+            thumb_arc_config: Configuration for thumb arc layout
+            specific_positions: List of specific component positions
         """
         self.origin_x = origin_x
         self.origin_y = origin_y
@@ -44,7 +68,7 @@ class KeyboardLayoutConfig:
         self.num_rows = num_rows
         
         # Column stagger offsets (in mm) - adjust these for desired stagger
-        self.column_stagger = column_stagger.copy() if column_stagger else {}
+        self.column_stagger = column_stagger.copy()
         
         self.num_cols = len(self.column_stagger)
         
@@ -73,11 +97,12 @@ class KeyboardLayoutConfig:
         self.y_pitch = self.footprint_height + self.key_spacing
         
         # Thumb arc configuration
-        self.thumb_arc_radius = 56.65  # mm - radius of the thumb arc
-        self.thumb_arc_start_angle = -90  # degrees - starting angle for thumb arc
-        self.thumb_arc_end_angle = -48.0  # degrees - ending angle for thumb arc
-        self.thumb_offset_x = 0  # mm - horizontal offset from center of bottom key in thumb_arc_col_start
-        self.thumb_offset_y = 7.05-0.25+self.y_pitch # mm - vertical offset from center of bottom key in thumb_arc_col_start
+        self.thumb_arc_config = thumb_arc_config
+        # Adjust offset_y with y_pitch
+        self.thumb_arc_config.offset_y += self.y_pitch
+        
+        # Specific component positions
+        self.specific_positions = specific_positions
 
 
 class KeyboardLayoutCalculator:
@@ -128,22 +153,22 @@ class KeyboardLayoutCalculator:
         if config.num_thumb_keys == 1:
             angle = 0.0
         else:
-            angle_range = config.thumb_arc_end_angle - config.thumb_arc_start_angle
-            angle = config.thumb_arc_start_angle + (thumb_index * angle_range / (config.num_thumb_keys - 1))
+            angle_range = config.thumb_arc_config.end_angle - config.thumb_arc_config.start_angle
+            angle = config.thumb_arc_config.start_angle + (thumb_index * angle_range / (config.num_thumb_keys - 1))
         
         # Convert angle to radians for calculation
         angle_rad = math.radians(angle)
         
         # Calculate position on the arc
-        arc_x = config.thumb_arc_radius * math.cos(angle_rad)
-        arc_y = config.thumb_arc_radius * math.sin(angle_rad)
+        arc_x = config.thumb_arc_config.radius * math.cos(angle_rad)
+        arc_y = config.thumb_arc_config.radius * math.sin(angle_rad)
         
         # Find the reference point (center of bottom key in thumb_arc_col_start column)
         ref_x, ref_y = KeyboardLayoutCalculator.calculate_left_position(config, config.num_rows - 1, config.thumb_arc_col_start)
         
         # Calculate arc origin: X stays at reference, Y is reference plus arc radius (below the reference)
-        arc_origin_x = ref_x + config.thumb_offset_x
-        arc_origin_y = ref_y + config.thumb_offset_y + config.thumb_arc_radius
+        arc_origin_x = ref_x + config.thumb_arc_config.offset_x
+        arc_origin_y = ref_y + config.thumb_arc_config.offset_y + config.thumb_arc_config.radius
         
         # Apply arc position relative to arc origin
         thumb_x = arc_origin_x + arc_x
@@ -327,24 +352,63 @@ class KeyboardLayoutCalculator:
             diode_x, diode_y, diode_rotation = KeyboardLayoutCalculator.calculate_diode_position(config, right_x, right_y, right_rotation)
             positions['right']['diodes'].append((diode_name, diode_x, diode_y, diode_rotation))
         
-        # Add specific placements
-        specific_positions = [
-            ("MCU",  1,  10.5,   9.7, -90),
-            ("HOLE", 1,  97.5,  2.50, 0),
-            ("HOLE", 2, 26.25,  2.50, 0),
-            ("HOLE", 3,   2.5, 76.70, 0),
-            ("HOLE", 4,  97.8, 61.30, 0),
-            ("BAT",  1,  46.725, 56.260, -90),
-            ("RSW",  1,  34.0, 3.1, -180),
-        
-        ]
-        for ref, ix, x_mm, y_mm, rotation in specific_positions:
-           if ref not in positions['left']:
-               positions['left'][ref] = []
-               positions['right'][ref] = []
+        # Add specific placements from configuration
+        for spec_pos in config.specific_positions:
+            ref = spec_pos.ref
+            if ref not in positions['left']:
+                positions['left'][ref] = []
+                positions['right'][ref] = []
 
-           positions['left'][ref].append((f"{ref}L{ix}", x_mm,  y_mm, rotation))
-           positions['right'][ref].append((f"{ref}R{ix}", *KeyboardLayoutCalculator.mirror_thumb_position(config, x_mm, y_mm, rotation)))
-
+            positions['left'][ref].append((f"{ref}L{spec_pos.index}", spec_pos.x, spec_pos.y, spec_pos.rotation))
+            positions['right'][ref].append((f"{ref}R{spec_pos.index}", *KeyboardLayoutCalculator.mirror_thumb_position(config, spec_pos.x, spec_pos.y, spec_pos.rotation)))
 
         return positions
+
+
+def get_charma_config() -> KeyboardLayoutConfig:
+    """
+    Factory method to create a KeyboardLayoutConfig with Charma-specific settings.
+    
+    Returns:
+        KeyboardLayoutConfig: Configured for the Charma keyboard layout
+    """
+    # Define Charma-specific column stagger
+    column_stagger = {
+        0: 0.0,      # Column 0 (pinky)
+        1: -14.45,   # Column 1 (ring)
+        2: -4.25,    # Column 2 (middle)
+        3: 4.25,     # Column 3 (index)
+        4: 2.55,     # Column 4 (inner index)
+    }
+    
+    # Define Charma-specific thumb arc configuration
+    thumb_arc_config = ThumbArcConfig(
+        radius=56.65,
+        start_angle=-90,
+        end_angle=-48.0,
+        offset_x=0,
+        offset_y=7.05 - 0.25  # Will be adjusted with y_pitch in KeyboardLayoutConfig
+    )
+    
+    # Define Charma-specific component positions
+    specific_positions = [
+        SpecificPosition("MCU", 1, 10.5, 9.7, -90.0),
+        SpecificPosition("HOLE", 1, 97.5, 2.50, 0.0),
+        SpecificPosition("HOLE", 2, 26.25, 2.50, 0.0),
+        SpecificPosition("HOLE", 3, 2.5, 76.70, 0.0),
+        SpecificPosition("HOLE", 4, 97.8, 61.30, 0.0),
+        SpecificPosition("BAT", 1, 46.725, 56.260, -90.0),
+        SpecificPosition("RSW", 1, 34.0, 3.1, -180.0),
+    ]
+    
+    # Create and return the Charma configuration
+    return KeyboardLayoutConfig(
+        origin_x=14,
+        origin_y=28.95,
+        num_rows=3,
+        column_stagger=column_stagger,
+        num_thumb_keys=3,
+        thumb_arc_col_start=3,
+        thumb_arc_config=thumb_arc_config,
+        specific_positions=specific_positions
+    )

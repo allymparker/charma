@@ -55,7 +55,7 @@ import output
 importlib.reload(layout)
 importlib.reload(output)
 
-from layout import KeyboardLayoutConfig, KeyboardLayoutCalculator
+from layout import KeyboardLayoutConfig, KeyboardLayoutCalculator, get_charma_config
 from output import print_positions
 
 try:
@@ -147,21 +147,11 @@ def position_keyboard_footprints_direct(config=None):
     Position keyboard footprints by calculating positions directly.
     
     Args:
-        config: KeyboardLayoutConfig instance. If None, uses default configuration.
+        config: KeyboardLayoutConfig instance. If None, uses Charma default configuration.
     """
-    # Use default configuration if none provided
+    # Use Charma configuration if none provided
     if config is None:
-        column_stagger = {
-            0: 0.0,      # Column 0 (pinky)
-            1: -14.45,   # Column 1 (ring)
-            2: -4.25,    # Column 2 (middle)
-            3: 4.25,     # Column 3 (index)
-            4: 2.55,     # Column 4 (inner index)
-        }
-        config = KeyboardLayoutConfig(
-            origin_x=14, origin_y=28.95, column_stagger=column_stagger, 
-            num_rows=3, num_thumb_keys=3, thumb_arc_col_start=3,
-        )
+        config = get_charma_config()
     
     # Calculate positions
     positions = KeyboardLayoutCalculator.generate_all_positions(config)
