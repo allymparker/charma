@@ -38,7 +38,7 @@ class KeyboardLayoutConfig:
         """
         self.origin_x = origin_x
         self.origin_y = origin_y
-        self.split_separation = 90.0  # mm - separation between left and right halves
+        self.split_separation = 65.0  # mm - separation between left and right halves
         
         # Layout dimensions
         self.num_rows = num_rows
@@ -77,7 +77,7 @@ class KeyboardLayoutConfig:
         self.thumb_arc_start_angle = -90  # degrees - starting angle for thumb arc
         self.thumb_arc_end_angle = -48.0  # degrees - ending angle for thumb arc
         self.thumb_offset_x = 0  # mm - horizontal offset from center of bottom key in thumb_arc_col_start
-        self.thumb_offset_y = 7.05+self.y_pitch # mm - vertical offset from center of bottom key in thumb_arc_col_start
+        self.thumb_offset_y = 7.05-0.25+self.y_pitch # mm - vertical offset from center of bottom key in thumb_arc_col_start
 
 
 class KeyboardLayoutCalculator:
@@ -97,8 +97,8 @@ class KeyboardLayoutCalculator:
             Tuple of (x, y) coordinates in mm (center of footprint)
         """
         # Base position calculation (center of footprint)
-        x = config.origin_x + ((col-0.5) * config.x_pitch)
-        y = config.origin_y + ((row-0.5) * config.y_pitch)
+        x = config.origin_x + ((col-0.5) * config.x_pitch) + .25
+        y = config.origin_y + ((row-0.5) * config.y_pitch) + .25
         
         # Apply column stagger by summing the stagger offsets up to this column
         for c in range(col + 1):
@@ -333,7 +333,7 @@ class KeyboardLayoutCalculator:
             ("HOLE", 1,  97.5,  2.50, 0),
             ("HOLE", 2, 26.25,  2.50, 0),
             ("HOLE", 3,   2.5, 76.70, 0),
-            ("HOLE", 4,  97.5, 61.00, 0),
+            ("HOLE", 4,  97.8, 61.30, 0),
             ("BAT",  1,  46.725, 56.260, -90),
             ("RSW",  1,  34.0, 3.1, -180),
         

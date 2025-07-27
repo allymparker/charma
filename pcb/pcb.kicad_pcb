@@ -746,7 +746,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "0aab911b-fa07-4288-a4fa-55208ec4f7c9")
-		(at 115.75 46.8)
+		(at 116 47.05)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWL5"
@@ -1423,7 +1423,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "0db97067-4ca2-4d59-8f4f-9bc11488db4e")
-		(at 213.25 80.8)
+		(at 213 81.05)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWR11"
@@ -2101,7 +2101,7 @@
 		(placed yes)
 		(layer "F.Cu")
 		(uuid "1074170b-0067-497c-9ecb-54825c6b1e87")
-		(at 242.75 34.8 -90)
+		(at 242.5 35.05 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DR3"
@@ -2284,7 +2284,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "10d72054-312e-4044-ae44-b96be5ba2c8c")
-		(at 267.25 44.25)
+		(at 267 44.5)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWR4"
@@ -2962,7 +2962,7 @@
 		(placed yes)
 		(layer "F.Cu")
 		(uuid "1dd9fc74-c052-4daa-941d-38637e5853b8")
-		(at 185.03383 117.335841 -48)
+		(at 184.78383 117.335841 -48)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DR18"
@@ -3146,7 +3146,7 @@
 		(placed yes)
 		(layer "F.Cu")
 		(uuid "27edf8f0-6d58-4770-93b2-42eaf12cf235")
-		(at 224.75 56.05 -90)
+		(at 224.5 56.3 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DR7"
@@ -3329,7 +3329,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "28c0b5da-7c7e-451c-9773-d3ef4797f472")
-		(at 79.75 74)
+		(at 80 74.25)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWL13"
@@ -4006,7 +4006,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "294c046b-7932-442a-bee9-4cecc3435121")
-		(at 213.25 63.8)
+		(at 213 64.05)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWR6"
@@ -4683,7 +4683,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "323632ff-b2e5-430e-976c-437e9eb867b3")
-		(at 193.343751 116.850845 42)
+		(at 193.093751 116.850845 42)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWR18"
@@ -5362,7 +5362,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "34362ffa-3483-4c54-aed7-2fad06ca0956")
-		(at 97.75 61.25)
+		(at 98 61.5)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWL9"
@@ -6138,7 +6138,7 @@
 		(placed yes)
 		(layer "F.Cu")
 		(uuid "39f304f1-904a-42de-9b8c-84336d4c778e")
-		(at 206.75 75.6 -90)
+		(at 206.5 75.85 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DR11"
@@ -6321,7 +6321,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "4233b528-2480-4b50-886b-37a0367afd48")
-		(at 135.656248 116.850845 -42)
+		(at 135.906248 116.850845 -42)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWL18"
@@ -7099,7 +7099,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "46bb282c-0adb-4268-8c3b-7e35ae31d91f")
-		(at 231.25 78.25)
+		(at 231 78.5)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWR12"
@@ -7776,7 +7776,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "46d516ea-90bc-4476-99cb-a55f2643cce8")
-		(at 43.75 58.7)
+		(at 44 58.95)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWL1"
@@ -8453,7 +8453,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "496b35c0-778a-4fe0-b284-fc27d8f7811b")
-		(at 118.051544 106.062668 -21)
+		(at 118.301544 106.062668 -21)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWL17"
@@ -9133,7 +9133,7 @@
 		(placed yes)
 		(layer "F.Cu")
 		(uuid "49bc10c3-cd70-4ad2-aab4-2944fac4b54f")
-		(at 203.016669 103.537442 -69)
+		(at 202.766669 103.537442 -69)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DR17"
@@ -9316,7 +9316,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "4e07ea24-959f-4a9d-83e8-e24688509910")
-		(at 267.25 61.25)
+		(at 267 61.5)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWR9"
@@ -9993,7 +9993,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "4e2c2f99-9ecd-436c-b486-33e9bf12db05")
-		(at 249.25 40)
+		(at 249 40.25)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWR3"
@@ -10670,7 +10670,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "4f4e726d-edea-45d4-aa9e-c8e14c137364")
-		(at 231.25 102.299999)
+		(at 231 102.299999)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWR16"
@@ -11347,7 +11347,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "519a8ba0-a173-47fc-9dea-01f279db1123")
-		(at 61.75 61.25)
+		(at 62 61.5)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWL7"
@@ -12024,7 +12024,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "52538cdf-effe-4e14-b09e-ea3b2de855bb")
-		(at 115.75 80.8)
+		(at 116 81.05)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWL15"
@@ -12701,7 +12701,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "542e5cd6-f2b2-45fe-864a-ba4553d4257a")
-		(at 249.25 74)
+		(at 249 74.25)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWR13"
@@ -13634,7 +13634,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "58d32294-59d5-432d-a00e-c81f58c8a1de")
-		(at 97.75 44.25)
+		(at 98 44.5)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWL4"
@@ -14311,7 +14311,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "5948dfcc-c4df-41ea-82eb-6b124527d828")
-		(at 97.75 78.25)
+		(at 98 78.5)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWL14"
@@ -14988,7 +14988,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "59dc1f56-3ec7-4c4d-b1e3-facef7a42d81")
-		(at 79.75 57)
+		(at 80 57.25)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWL8"
@@ -15665,7 +15665,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "5a8cf2f1-32ee-46bd-b530-b99564ea7213")
-		(at 267.25 78.25)
+		(at 267 78.5)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWR14"
@@ -16342,7 +16342,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "5bcfa437-0461-4b1d-b721-73b8d763e95f")
-		(at 115.75 63.8)
+		(at 116 64.05)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWL10"
@@ -17020,7 +17020,7 @@
 		(placed yes)
 		(layer "F.Cu")
 		(uuid "5e1dbd11-5a7e-4f9e-8ca9-219545a3f4ff")
-		(at 242.75 68.8 -90)
+		(at 242.5 69.05 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DR13"
@@ -17203,7 +17203,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "5f332cbc-2506-4f56-a7ae-8b7b04dda768")
-		(at 210.948455 106.062668 21)
+		(at 210.698455 106.062668 21)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWR17"
@@ -17882,7 +17882,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "626a2c2c-fa51-40fb-b940-723b776bd595")
-		(at 285.25 58.7)
+		(at 285 58.95)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWR5"
@@ -18560,7 +18560,7 @@
 		(placed yes)
 		(layer "F.Cu")
 		(uuid "6509de7b-3902-4ed3-8139-2802bce560e4")
-		(at 206.75 41.6 -90)
+		(at 206.5 41.85 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DR1"
@@ -18743,7 +18743,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "69415565-4584-4a28-bf60-13027af05ecd")
-		(at 43.75 92.7)
+		(at 44 92.95)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWL11"
@@ -19673,7 +19673,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "794bc154-10c8-47fb-b31b-e17cce3dcd28")
-		(at 79.75 40)
+		(at 80 40.25)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWL3"
@@ -20350,7 +20350,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "79fa9351-1273-4910-8972-3b2392af73d7")
-		(at 43.75 75.7)
+		(at 44 75.95)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWL6"
@@ -21027,7 +21027,7 @@
 	(footprint "Button_Switch_SMD:SW_SPST_SKQG_WithStem"
 		(layer "F.Cu")
 		(uuid "815c1fa2-c593-466c-8dd2-fa445fc2b574")
-		(at 63.5 31.95 180)
+		(at 64 33.1 180)
 		(descr "ALPS 5.2mm Square Low-profile Type (Surface Mount) SKQG Series, With stem, http://www.alps.com/prod/info/E/HTML/Tact/SurfaceMount/SKQG/SKQGAFE010.html")
 		(tags "SPST Button Switch")
 		(property "Reference" "RSWL1"
@@ -21444,7 +21444,7 @@
 			(net 25 "RESET_L")
 			(pinfunction "1")
 			(pintype "passive")
-			(uuid "e1ec50ca-e50a-42f9-8cd6-d15be6145985")
+			(uuid "7f0376fe-baf3-4896-bb91-1d064314525c")
 		)
 		(pad "2" smd rect
 			(at -3.1 1.85 180)
@@ -21462,7 +21462,7 @@
 			(net 24 "GND_L")
 			(pinfunction "2")
 			(pintype "passive")
-			(uuid "ceed6114-96b3-4d77-af63-7b89c05825f6")
+			(uuid "e0a2526c-714c-4a63-96c8-160c3284ea06")
 		)
 		(zone
 			(net 0)
@@ -21492,7 +21492,7 @@
 			)
 			(polygon
 				(pts
-					(xy 62.5 33.25) (xy 59.5 33.25) (xy 59.5 30.65) (xy 62.5 30.65)
+					(xy 63 34.4) (xy 60 34.4) (xy 60 31.8) (xy 63 31.8)
 				)
 			)
 		)
@@ -21524,7 +21524,7 @@
 			)
 			(polygon
 				(pts
-					(xy 67.5 33.25) (xy 64.5 33.25) (xy 64.5 30.65) (xy 67.5 30.65)
+					(xy 68 34.4) (xy 65 34.4) (xy 65 31.8) (xy 68 31.8)
 				)
 			)
 		)
@@ -21643,7 +21643,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "8ce249ba-d749-43ad-b589-600c03967f78")
-		(at 285.25 92.7)
+		(at 285 92.95)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWR15"
@@ -22321,7 +22321,7 @@
 		(placed yes)
 		(layer "F.Cu")
 		(uuid "8f5abe46-ec31-472e-a9e2-22c30dec97a1")
-		(at 278.75 87.5 -90)
+		(at 278.5 87.75 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DR15"
@@ -22603,7 +22603,7 @@
 		(placed yes)
 		(layer "F.Cu")
 		(uuid "95f994a7-233b-4897-b685-eaa1374cdbdc")
-		(at 224.75 39.05 -90)
+		(at 224.5 39.3 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DR2"
@@ -22787,7 +22787,7 @@
 		(placed yes)
 		(layer "F.Cu")
 		(uuid "9a8ad073-ee59-4acf-8481-6b56c13036ce")
-		(at 260.75 39.05 -90)
+		(at 260.5 39.3 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DR4"
@@ -23610,7 +23610,7 @@
 		(placed yes)
 		(layer "F.Cu")
 		(uuid "a98733f1-4a25-4080-a773-2d339833400c")
-		(at 224.75 73.05 -90)
+		(at 224.5 73.3 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DR12"
@@ -23892,7 +23892,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "b2644d24-5e08-41c3-a89f-5bf8471d8d9e")
-		(at 231.25 61.25)
+		(at 231 61.5)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWR7"
@@ -24570,7 +24570,7 @@
 		(placed yes)
 		(layer "F.Cu")
 		(uuid "b3532976-b327-4b99-a0d0-0a4b2be9c2bf")
-		(at 242.75 51.8 -90)
+		(at 242.5 52.05 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DR8"
@@ -24852,7 +24852,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "b7b6a742-5b53-47de-802d-a3aaa1e30844")
-		(at 285.25 75.7)
+		(at 285 75.95)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWR10"
@@ -25530,7 +25530,7 @@
 		(placed yes)
 		(layer "F.Cu")
 		(uuid "bbdba0b5-463d-4fdb-a22c-e051aa5f2722")
-		(at 278.75 53.5 -90)
+		(at 278.5 53.75 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DR5"
@@ -25713,7 +25713,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "c0c1eb6b-a8ce-4d7f-8755-36c51aeff326")
-		(at 249.25 57)
+		(at 249 57.25)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWR8"
@@ -26390,7 +26390,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "c3c3b784-9c69-4446-81d8-c820554baf1d")
-		(at 61.75 78.25)
+		(at 62 78.5)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWL12"
@@ -27068,7 +27068,7 @@
 		(placed yes)
 		(layer "F.Cu")
 		(uuid "c7da5f3c-6a12-4898-9e25-9ec2dcdfd826")
-		(at 224.75 97.099999 -90)
+		(at 224.5 97.099999 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DR16"
@@ -27252,7 +27252,7 @@
 		(placed yes)
 		(layer "F.Cu")
 		(uuid "d6c329df-6bf1-44cc-bc5c-535d84316729")
-		(at 260.75 73.05 -90)
+		(at 260.5 73.3 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DR14"
@@ -27435,7 +27435,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "df9930e2-03d4-4fbc-907a-5206b48f0b10")
-		(at 213.25 46.8)
+		(at 213 47.05)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWR1"
@@ -28112,7 +28112,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "e1abd5b5-e6d0-4dae-a27a-1c34707089b1")
-		(at 231.25 44.25)
+		(at 231 44.5)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWR2"
@@ -28790,7 +28790,7 @@
 		(placed yes)
 		(layer "F.Cu")
 		(uuid "e9a15e45-cda6-45e8-9e7f-a29f356e5670")
-		(at 260.75 56.05 -90)
+		(at 260.5 56.3 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DR9"
@@ -28973,7 +28973,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "ecf0d254-6679-4492-abd8-4ed8849a0fa0")
-		(at 61.75 44.25)
+		(at 62 44.5)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWL2"
@@ -29650,7 +29650,7 @@
 	(footprint "Button_Switch_SMD:SW_SPST_SKQG_WithStem"
 		(layer "F.Cu")
 		(uuid "f81863f2-6cd4-463a-97ce-1046de4dd25b")
-		(at 265.5 31.95 180)
+		(at 265 33.1 180)
 		(descr "ALPS 5.2mm Square Low-profile Type (Surface Mount) SKQG Series, With stem, http://www.alps.com/prod/info/E/HTML/Tact/SurfaceMount/SKQG/SKQGAFE010.html")
 		(tags "SPST Button Switch")
 		(property "Reference" "RSWR1"
@@ -30067,7 +30067,7 @@
 			(net 72 "RESET_R")
 			(pinfunction "1")
 			(pintype "passive")
-			(uuid "fab16c32-198b-470d-a4ff-2986ca35064c")
+			(uuid "51485b96-60f0-42de-ba82-d4b4bc35401e")
 		)
 		(pad "2" smd rect
 			(at -3.1 1.85 180)
@@ -30085,7 +30085,7 @@
 			(net 53 "GND_R")
 			(pinfunction "2")
 			(pintype "passive")
-			(uuid "29b03952-4b55-41c4-8302-f20a4ba22ada")
+			(uuid "019996ef-be71-4c54-84c4-949db5ee0235")
 		)
 		(zone
 			(net 0)
@@ -30115,7 +30115,7 @@
 			)
 			(polygon
 				(pts
-					(xy 264.5 33.25) (xy 261.5 33.25) (xy 261.5 30.65) (xy 264.5 30.65)
+					(xy 264 34.4) (xy 261 34.4) (xy 261 31.8) (xy 264 31.8)
 				)
 			)
 		)
@@ -30147,7 +30147,7 @@
 			)
 			(polygon
 				(pts
-					(xy 269.5 33.25) (xy 266.5 33.25) (xy 266.5 30.65) (xy 269.5 30.65)
+					(xy 269 34.4) (xy 266 34.4) (xy 266 31.8) (xy 269 31.8)
 				)
 			)
 		)
@@ -30266,7 +30266,7 @@
 	(footprint "charmalib:Kailh_Socket_PG1350_Optional"
 		(layer "F.Cu")
 		(uuid "fb64b780-4b34-4a88-a3fc-1becbd497eae")
-		(at 97.75 102.299999)
+		(at 98 102.299999)
 		(descr "Kailh \"Choc\" PG1350 keyswitch with optional socket mount")
 		(tags "kailh,choc")
 		(property "Reference" "SWL16"
@@ -30944,7 +30944,7 @@
 		(placed yes)
 		(layer "F.Cu")
 		(uuid "fcba1970-b77e-426e-9c29-9125226a7d7c")
-		(at 278.75 70.5 -90)
+		(at 278.5 70.75 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DR10"
@@ -31128,7 +31128,7 @@
 		(placed yes)
 		(layer "F.Cu")
 		(uuid "ffabd41c-3558-4f8c-8271-bb45ec905f4a")
-		(at 206.75 58.6 -90)
+		(at 206.5 58.85 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DR6"
@@ -31312,7 +31312,7 @@
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "01a764ee-5577-44ed-ae37-77fe433346d8")
-		(at 134.305286 108.637143 -132)
+		(at 134.555286 108.637143 -132)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DL18"
@@ -31498,7 +31498,7 @@
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "05cf5942-2fcb-4ee8-a00a-d4eb0fe9b93c")
-		(at 73.25 68.8 -90)
+		(at 73.5 69.05 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DL13"
@@ -31684,7 +31684,7 @@
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "0810f501-7477-4ce1-b04e-b119c74a11d2")
-		(at 73.25 34.8 -90)
+		(at 73.5 35.05 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DL3"
@@ -31870,7 +31870,7 @@
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "081159c4-051f-4d3f-80ab-ed1597d73c8b")
-		(at 55.25 39.05 -90)
+		(at 55.5 39.3 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DL2"
@@ -32056,7 +32056,7 @@
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "18280b29-7f12-4842-8813-2a96d76a811c")
-		(at 91.25 56.05 -90)
+		(at 91.5 56.3 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DL9"
@@ -32242,7 +32242,7 @@
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "202c3b32-968d-4dc5-9ff3-b1427fd982ba")
-		(at 109.25 41.6 -90)
+		(at 109.5 41.85 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DL5"
@@ -32428,7 +32428,7 @@
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "3406ff00-7d29-4233-9295-9522720b77c4")
-		(at 37.25 87.5 -90)
+		(at 37.5 87.75 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DL11"
@@ -32614,7 +32614,7 @@
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "6f3ce177-a893-4f56-9ac8-96adcd15ece7")
-		(at 113.846784 98.878658 -111)
+		(at 114.096784 98.878658 -111)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DL17"
@@ -32800,7 +32800,7 @@
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "76d357f6-8934-471e-baff-5291067ddfeb")
-		(at 91.25 73.05 -90)
+		(at 91.5 73.3 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DL14"
@@ -32986,7 +32986,7 @@
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "980414c4-b120-4519-8a49-1d09ff2661a2")
-		(at 37.25 53.5 -90)
+		(at 37.5 53.75 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DL1"
@@ -33172,7 +33172,7 @@
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "ada52507-907b-4b0c-94d3-392b0a449913")
-		(at 109.25 75.6 -90)
+		(at 109.5 75.85 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DL15"
@@ -33358,7 +33358,7 @@
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "b39e1911-beaf-4e89-ab83-e42319aa0613")
-		(at 37.25 70.5 -90)
+		(at 37.5 70.75 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DL6"
@@ -33544,7 +33544,7 @@
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "ba2cf726-6bcf-462a-91c3-463cc7077247")
-		(at 91.25 39.05 -90)
+		(at 91.5 39.3 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DL4"
@@ -33730,7 +33730,7 @@
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "bca49e5a-5be4-4185-82af-ca391de9d817")
-		(at 55.25 56.05 -90)
+		(at 55.5 56.3 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DL7"
@@ -33916,7 +33916,7 @@
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "c1bb8233-bb0f-43f3-8762-56bae7cbd8b1")
-		(at 109.25 58.6 -90)
+		(at 109.5 58.85 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DL10"
@@ -34102,7 +34102,7 @@
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "ee83eda0-b39a-43e5-810e-e3812e5620c7")
-		(at 55.25 73.05 -90)
+		(at 55.5 73.3 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DL12"
@@ -34288,7 +34288,7 @@
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "f1784413-7100-4559-bbff-142c7ccb4f0e")
-		(at 91.25 97.099999 -90)
+		(at 91.5 97.099999 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DL16"
@@ -34474,7 +34474,7 @@
 		(placed yes)
 		(layer "B.Cu")
 		(uuid "fa44492d-2b35-4fb7-91fc-8af21e8d3255")
-		(at 73.25 51.8 -90)
+		(at 73.5 52.05 -90)
 		(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
 		(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
 		(property "Reference" "DL8"
@@ -36351,6 +36351,17 @@
 		(fill no)
 		(layer "Dwgs.User")
 		(uuid "58f94890-e777-4324-82d6-a83f25e7ac35")
+	)
+	(gr_circle
+		(center 61.999995 44.501232)
+		(end 63.749995 44.501232)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(fill no)
+		(layer "Dwgs.User")
+		(uuid "5aaa7fb5-06cd-4e00-9cd8-a13bfd773d9e")
 	)
 	(gr_poly
 		(pts
@@ -39523,7 +39534,7 @@
 			)
 			(justify left bottom)
 		)
-		(render_cache "Version 1.0.0 - 2025-07-26" 0
+		(render_cache "Version 1.0.0 - 2025-07-27" 0
 			(polygon
 				(pts
 					(xy 52.572808 94.431304) (xy 52.821814 94.431304) (xy 53.066667 95.079281) (xy 53.069476 95.079281)
@@ -39838,22 +39849,8 @@
 			)
 			(polygon
 				(pts
-					(xy 69.519476 94.785029) (xy 69.55306 94.778007) (xy 69.588047 94.775198) (xy 69.655684 94.781645)
-					(xy 69.715298 94.800294) (xy 69.768809 94.830107) (xy 69.813239 94.86856) (xy 69.849027 94.915334)
-					(xy 69.876193 94.970959) (xy 69.892926 95.031681) (xy 69.898602 95.097049) (xy 69.895281 95.147496)
-					(xy 69.885629 95.193499) (xy 69.869904 95.235718) (xy 69.835893 95.293489) (xy 69.791563 95.342269)
-					(xy 69.737918 95.381475) (xy 69.674021 95.411268) (xy 69.604481 95.429443) (xy 69.529246 95.435631)
-					(xy 69.452882 95.429387) (xy 69.383738 95.411207) (xy 69.320457 95.381446) (xy 69.266868 95.342147)
-					(xy 69.222574 95.293314) (xy 69.188527 95.235474) (xy 69.172836 95.193217) (xy 69.163204 95.147173)
-					(xy 69.15989 95.096683) (xy 69.160229 95.089783) (xy 69.369755 95.089783) (xy 69.374825 95.132443)
-					(xy 69.389449 95.168815) (xy 69.41378 95.200364) (xy 69.44556 95.224332) (xy 69.483464 95.238987)
-					(xy 69.529246 95.244145) (xy 69.575026 95.238986) (xy 69.612908 95.224329) (xy 69.644651 95.200364)
-					(xy 69.669018 95.168811) (xy 69.68366 95.132439) (xy 69.688736 95.089783) (xy 69.683659 95.047129)
-					(xy 69.669016 95.010779) (xy 69.644651 94.979263) (xy 69.612903 94.955262) (xy 69.575022 94.940586)
-					(xy 69.529246 94.935422) (xy 69.483468 94.940585) (xy 69.445565 94.95526) (xy 69.41378 94.979263)
-					(xy 69.389451 95.010775) (xy 69.374827 95.047125) (xy 69.369755 95.089783) (xy 69.160229 95.089783)
-					(xy 69.162436 95.044937) (xy 69.169659 94.99978) (xy 69.195549 94.916737) (xy 69.233346 94.842121)
-					(xy 69.278836 94.768848) (xy 69.495662 94.431304) (xy 69.75169 94.431304)
+					(xy 69.659366 94.622791) (xy 69.16972 94.622791) (xy 69.16972 94.431304) (xy 69.894389 94.431304)
+					(xy 69.894389 94.615647) (xy 69.498471 95.42) (xy 69.253618 95.42)
 				)
 			)
 		)
