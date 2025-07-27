@@ -115,11 +115,11 @@ class TestKeyboardLayoutCalculator(unittest.TestCase):
     def test_calculate_left_position_with_stagger(self):
         """Test left position calculation with column stagger."""
         config = self.stagger_config
-        x, y = KeyboardLayoutCalculator.calculate_left_position(config, 0, 2)
+        x, y = KeyboardLayoutCalculator.calculate_left_position(config, 1, 2)
         
         expected_stagger = self.column_stagger[0] + self.column_stagger[1] + self.column_stagger[2]
         expected_x = config.origin_x + (2* config.x_pitch)
-        expected_y = config.origin_y + expected_stagger
+        expected_y = config.origin_y + config.y_pitch + expected_stagger
 
         self.assertAlmostEqual(x, expected_x, places=2)
         self.assertAlmostEqual(y, expected_y, places=2)

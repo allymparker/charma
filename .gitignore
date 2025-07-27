@@ -3,6 +3,7 @@ pcb-left/**
 scratch/**
 *.lck
 **/#auto_saved_files#
-pcb/layout/*.txt
-pcb/layout/*.svg
-pcb/layout/__pycache__/**
+**/*.csv
+**/*.svg
+**/__pycache__/**
+
