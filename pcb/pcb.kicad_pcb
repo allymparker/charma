@@ -6,7 +6,7 @@
 		(thickness 1.6)
 		(legacy_teardrops no)
 	)
-	(paper "User" 500 200)
+	(paper "User" 300 200)
 	(title_block
 		(title "Charma Wireless Split Keyboard")
 		(date "2024-12-08")
@@ -206,7 +206,7 @@
 	(footprint "charmalib:XIAO_nRF52840_SMD_Cutout"
 		(layer "F.Cu")
 		(uuid "07a2f6b7-2ef5-4538-944e-b64264e9f444")
-		(at 288.5 40.39 -90)
+		(at 263.5 39.7 -90)
 		(property "Reference" "MCUR1"
 			(at -19.3989 -11.28268 90)
 			(layer "F.SilkS")
