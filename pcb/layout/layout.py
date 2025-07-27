@@ -335,7 +335,7 @@ class KeyboardLayoutCalculator:
             ("HOLE", 3,   2.5, 76.70, 0),
             ("HOLE", 4,  97.5, 61.00, 0),
             ("BAT",  1,  46.725, 56.260, -90),
-            ("RSW",  1,  33.5, 1.95, -180),
+            ("RSW",  1,  34.0, 3.1, -180),
         
         ]
         for ref, ix, x_mm, y_mm, rotation in specific_positions:
