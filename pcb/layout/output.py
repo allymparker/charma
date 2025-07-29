@@ -6,6 +6,7 @@ Contains functions for displaying and exporting keyboard layout positions.
 """
 
 from typing import Dict, List, Tuple
+import svgwrite
 from layout import KeyboardLayoutConfig, KeyboardLayoutCalculator
 
 
@@ -118,42 +119,70 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
     width = max_x - min_x
     height = max_y - min_y
     
-    # Create SVG content
-    svg_content = f'''<?xml version="1.0" encoding="UTF-8"?>
-<svg width="{width:.1f}mm" height="{height:.1f}mm" 
-     viewBox="{min_x:.1f} {min_y:.1f} {width:.1f} {height:.1f}"
-     xmlns="http://www.w3.org/2000/svg">
-  
-  <!-- Background -->
-  <rect x="{min_x:.1f}" y="{min_y:.1f}" width="{width:.1f}" height="{height:.1f}" 
-        fill="#f8f9fa" stroke="none"/>
-  
-  <!-- Grid lines (optional) -->
-  <defs>
-    <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-      <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#e9ecef" stroke-width="0.5"/>
-    </pattern>
-  </defs>
-  <rect x="{min_x:.1f}" y="{min_y:.1f}" width="{width:.1f}" height="{height:.1f}" 
-        fill="url(#grid)"/>
-  
-  <!-- Title -->
-  <text x="{(min_x + max_x) / 2:.1f}" y="{min_y + 8:.1f}" 
-        text-anchor="middle" font-family="Arial, sans-serif" font-size="4" 
-        fill="#212529" font-weight="bold">
-    Split Column Staggered Keyboard Layout
-  </text>
-  
-  <!-- Left Half Label -->
-  <text x="{36:.1f}" y="{min_y + 18:.1f}" 
-        text-anchor="middle" font-family="Arial, sans-serif" font-size="3" 
-        fill="#6c757d">Left Half</text>
-  
-  <!-- Right Half Label -->
-  <text x="{155:.1f}" y="{min_y + 18:.1f}" 
-        text-anchor="middle" font-family="Arial, sans-serif" font-size="3" 
-        fill="#6c757d">Right Half</text>
-'''
+    # Create SVG drawing (using mm units for visualization)
+    dwg = svgwrite.Drawing(
+        filename,
+        size=(f'{width:.1f}mm', f'{height:.1f}mm'),
+        viewBox=f'{min_x:.1f} {min_y:.1f} {width:.1f} {height:.1f}'
+    )
+    
+    # Add background
+    dwg.add(dwg.rect(
+        insert=(min_x, min_y),
+        size=(width, height),
+        fill='#f8f9fa',
+        stroke='none'
+    ))
+    
+    # Add grid pattern
+    grid_pattern = dwg.defs.add(dwg.pattern(
+        id='grid',
+        patternUnits='userSpaceOnUse',
+        size=(10, 10)
+    ))
+    grid_pattern.add(dwg.path(
+        d='M 10 0 L 0 0 0 10',
+        fill='none',
+        stroke='#e9ecef',
+        stroke_width=0.5
+    ))
+    
+    # Apply grid to background
+    dwg.add(dwg.rect(
+        insert=(min_x, min_y),
+        size=(width, height),
+        fill='url(#grid)'
+    ))
+    
+    # Add title
+    dwg.add(dwg.text(
+        'Split Column Staggered Keyboard Layout',
+        insert=((min_x + max_x) / 2, min_y + 8),
+        text_anchor='middle',
+        font_family='Arial, sans-serif',
+        font_size='4',
+        fill='#212529',
+        font_weight='bold'
+    ))
+    
+    # Add half labels
+    dwg.add(dwg.text(
+        'Left Half',
+        insert=(36, min_y + 18),
+        text_anchor='middle',
+        font_family='Arial, sans-serif',
+        font_size='3',
+        fill='#6c757d'
+    ))
+    
+    dwg.add(dwg.text(
+        'Right Half',
+        insert=(155, min_y + 18),
+        text_anchor='middle',
+        font_family='Arial, sans-serif',
+        font_size='3',
+        fill='#6c757d'
+    ))
     
     # Add key rectangles and labels for left half
     for key_name, x, y, rotation in positions['left']['switches']:
@@ -163,31 +192,43 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
         text_color = "#1976d2"
         
         if abs(rotation) < 0.1:  # No rotation for main keys
-            # Convert center coordinates to top-left for rectangle drawing
-            rect_x = x - config.footprint_width/2
-            rect_y = y - config.footprint_height/2
-            svg_content += f'''  <!-- {key_name} -->
-  <rect x="{rect_x:.1f}" y="{rect_y:.1f}" 
-        width="{config.footprint_width:.1f}" height="{config.footprint_height:.1f}"
-        fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.01"/>
-  <text x="{x:.1f}" y="{y + 1:.1f}" 
-        text-anchor="middle" font-family="Arial, sans-serif" font-size="2.5" 
-        fill="{text_color}" font-weight="bold">{key_name}</text>
-'''
+            # Add switch rectangle
+            dwg.add(dwg.rect(
+                insert=(x - config.footprint_width/2, y - config.footprint_height/2),
+                size=(config.footprint_width, config.footprint_height),
+                fill=fill_color,
+                stroke=stroke_color,
+                stroke_width=0.01
+            ))
+            # Add label
+            dwg.add(dwg.text(
+                key_name,
+                insert=(x, y + 1),
+                text_anchor='middle',
+                font_family='Arial, sans-serif',
+                font_size='2.5',
+                fill=text_color,
+                font_weight='bold'
+            ))
         else:  # Rotated thumb keys
-            # Convert center coordinates to top-left for rectangle drawing
-            rect_x = -config.footprint_width/2
-            rect_y = -config.footprint_height/2
-            svg_content += f'''  <!-- {key_name} -->
-  <g transform="translate({x:.1f},{y:.1f}) rotate({rotation:.1f})">
-    <rect x="{rect_x:.1f}" y="{rect_y:.1f}" 
-          width="{config.footprint_width:.1f}" height="{config.footprint_height:.1f}"
-          fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.01"/>
-    <text x="0" y="1" 
-          text-anchor="middle" font-family="Arial, sans-serif" font-size="2.5" 
-          fill="{text_color}" font-weight="bold">{key_name}</text>
-  </g>
-'''
+            group = dwg.g(transform=f'translate({x:.1f},{y:.1f}) rotate({rotation:.1f})')
+            group.add(dwg.rect(
+                insert=(-config.footprint_width/2, -config.footprint_height/2),
+                size=(config.footprint_width, config.footprint_height),
+                fill=fill_color,
+                stroke=stroke_color,
+                stroke_width=0.01
+            ))
+            group.add(dwg.text(
+                key_name,
+                insert=(0, 1),
+                text_anchor='middle',
+                font_family='Arial, sans-serif',
+                font_size='2.5',
+                fill=text_color,
+                font_weight='bold'
+            ))
+            dwg.add(group)
     
     # Add diode rectangles and labels for left half
     for diode_name, x, y, rotation in positions['left']['diodes']:
@@ -197,31 +238,43 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
         text_color = "#1d3557"
         
         if abs(rotation) < 0.1:  # No rotation for main keys
-            # Convert center coordinates to top-left for rectangle drawing
-            rect_x = x - config.diode_width/2
-            rect_y = y - config.diode_height/2
-            svg_content += f'''  <!-- {diode_name} -->
-  <rect x="{rect_x:.1f}" y="{rect_y:.1f}" 
-        width="{config.diode_width:.1f}" height="{config.diode_height:.1f}"
-        fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.1"/>
-  <text x="{x:.1f}" y="{y + 0.5:.1f}" 
-        text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
-        fill="{text_color}" font-weight="bold">{diode_name}</text>
-'''
+            # Add diode rectangle
+            dwg.add(dwg.rect(
+                insert=(x - config.diode_width/2, y - config.diode_height/2),
+                size=(config.diode_width, config.diode_height),
+                fill=fill_color,
+                stroke=stroke_color,
+                stroke_width=0.1
+            ))
+            # Add label
+            dwg.add(dwg.text(
+                diode_name,
+                insert=(x, y + 0.5),
+                text_anchor='middle',
+                font_family='Arial, sans-serif',
+                font_size='1.5',
+                fill=text_color,
+                font_weight='bold'
+            ))
         else:  # Rotated thumb diodes
-            # Convert center coordinates to top-left for rectangle drawing
-            rect_x = -config.diode_width/2
-            rect_y = -config.diode_height/2
-            svg_content += f'''  <!-- {diode_name} -->
-  <g transform="translate({x:.1f},{y:.1f}) rotate({rotation:.1f})">
-    <rect x="{rect_x:.1f}" y="{rect_y:.1f}" 
-          width="{config.diode_width:.1f}" height="{config.diode_height:.1f}"
-          fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.1"/>
-    <text x="0" y="0.5" 
-          text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
-          fill="{text_color}" font-weight="bold">{diode_name}</text>
-  </g>
-'''
+            group = dwg.g(transform=f'translate({x:.1f},{y:.1f}) rotate({rotation:.1f})')
+            group.add(dwg.rect(
+                insert=(-config.diode_width/2, -config.diode_height/2),
+                size=(config.diode_width, config.diode_height),
+                fill=fill_color,
+                stroke=stroke_color,
+                stroke_width=0.1
+            ))
+            group.add(dwg.text(
+                diode_name,
+                insert=(0, 0.5),
+                text_anchor='middle',
+                font_family='Arial, sans-serif',
+                font_size='1.5',
+                fill=text_color,
+                font_weight='bold'
+            ))
+            dwg.add(group)
     
     # Add key rectangles and labels for right half
     for key_name, x, y, rotation in positions['right']['switches']:
@@ -231,31 +284,43 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
         text_color = "#7b1fa2"
         
         if abs(rotation) < 0.1:  # No rotation for main keys
-            # Convert center coordinates to top-left for rectangle drawing
-            rect_x = x - config.footprint_width/2
-            rect_y = y - config.footprint_height/2
-            svg_content += f'''  <!-- {key_name} -->
-  <rect x="{rect_x:.1f}" y="{rect_y:.1f}" 
-        width="{config.footprint_width:.1f}" height="{config.footprint_height:.1f}"
-        fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.01"/>
-  <text x="{x:.1f}" y="{y + 1:.1f}" 
-        text-anchor="middle" font-family="Arial, sans-serif" font-size="2.5" 
-        fill="{text_color}" font-weight="bold">{key_name}</text>
-'''
+            # Add switch rectangle
+            dwg.add(dwg.rect(
+                insert=(x - config.footprint_width/2, y - config.footprint_height/2),
+                size=(config.footprint_width, config.footprint_height),
+                fill=fill_color,
+                stroke=stroke_color,
+                stroke_width=0.01
+            ))
+            # Add label
+            dwg.add(dwg.text(
+                key_name,
+                insert=(x, y + 1),
+                text_anchor='middle',
+                font_family='Arial, sans-serif',
+                font_size='2.5',
+                fill=text_color,
+                font_weight='bold'
+            ))
         else:  # Rotated thumb keys
-            # Convert center coordinates to top-left for rectangle drawing
-            rect_x = -config.footprint_width/2
-            rect_y = -config.footprint_height/2
-            svg_content += f'''  <!-- {key_name} -->
-  <g transform="translate({x:.1f},{y:.1f}) rotate({rotation:.1f})">
-    <rect x="{rect_x:.1f}" y="{rect_y:.1f}" 
-          width="{config.footprint_width:.1f}" height="{config.footprint_height:.1f}"
-          fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.01"/>
-    <text x="0" y="1" 
-          text-anchor="middle" font-family="Arial, sans-serif" font-size="2.5" 
-          fill="{text_color}" font-weight="bold">{key_name}</text>
-  </g>
-'''
+            group = dwg.g(transform=f'translate({x:.1f},{y:.1f}) rotate({rotation:.1f})')
+            group.add(dwg.rect(
+                insert=(-config.footprint_width/2, -config.footprint_height/2),
+                size=(config.footprint_width, config.footprint_height),
+                fill=fill_color,
+                stroke=stroke_color,
+                stroke_width=0.01
+            ))
+            group.add(dwg.text(
+                key_name,
+                insert=(0, 1),
+                text_anchor='middle',
+                font_family='Arial, sans-serif',
+                font_size='2.5',
+                fill=text_color,
+                font_weight='bold'
+            ))
+            dwg.add(group)
     
     # Add diode rectangles and labels for right half
     for diode_name, x, y, rotation in positions['right']['diodes']:
@@ -265,31 +330,43 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
         text_color = "#5f0a87"
         
         if abs(rotation) < 0.1:  # No rotation for main keys
-            # Convert center coordinates to top-left for rectangle drawing
-            rect_x = x - config.diode_width/2
-            rect_y = y - config.diode_height/2
-            svg_content += f'''  <!-- {diode_name} -->
-  <rect x="{rect_x:.1f}" y="{rect_y:.1f}" 
-        width="{config.diode_width:.1f}" height="{config.diode_height:.1f}"
-        fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.1"/>
-  <text x="{x:.1f}" y="{y + 0.5:.1f}" 
-        text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
-        fill="{text_color}" font-weight="bold">{diode_name}</text>
-'''
+            # Add diode rectangle
+            dwg.add(dwg.rect(
+                insert=(x - config.diode_width/2, y - config.diode_height/2),
+                size=(config.diode_width, config.diode_height),
+                fill=fill_color,
+                stroke=stroke_color,
+                stroke_width=0.1
+            ))
+            # Add label
+            dwg.add(dwg.text(
+                diode_name,
+                insert=(x, y + 0.5),
+                text_anchor='middle',
+                font_family='Arial, sans-serif',
+                font_size='1.5',
+                fill=text_color,
+                font_weight='bold'
+            ))
         else:  # Rotated thumb diodes
-            # Convert center coordinates to top-left for rectangle drawing
-            rect_x = -config.diode_width/2
-            rect_y = -config.diode_height/2
-            svg_content += f'''  <!-- {diode_name} -->
-  <g transform="translate({x:.1f},{y:.1f}) rotate({rotation:.1f})">
-    <rect x="{rect_x:.1f}" y="{rect_y:.1f}" 
-          width="{config.diode_width:.1f}" height="{config.diode_height:.1f}"
-          fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.1"/>
-    <text x="0" y="0.5" 
-          text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
-          fill="{text_color}" font-weight="bold">{diode_name}</text>
-  </g>
-'''
+            group = dwg.g(transform=f'translate({x:.1f},{y:.1f}) rotate({rotation:.1f})')
+            group.add(dwg.rect(
+                insert=(-config.diode_width/2, -config.diode_height/2),
+                size=(config.diode_width, config.diode_height),
+                fill=fill_color,
+                stroke=stroke_color,
+                stroke_width=0.1
+            ))
+            group.add(dwg.text(
+                diode_name,
+                insert=(0, 0.5),
+                text_anchor='middle',
+                font_family='Arial, sans-serif',
+                font_size='1.5',
+                fill=text_color,
+                font_weight='bold'
+            ))
+            dwg.add(group)
     
     # Add specific components for both halves
     for half in ['left', 'right']:
@@ -320,22 +397,40 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
                 for component_name, x, y, rotation in components:
                     if component_type == 'HOLE':
                         # Make holes 3mm circles (radius = 1.5mm)
-                        svg_content += f'''  <!-- {component_name} -->
-  <circle cx="{x:.1f}" cy="{y:.1f}" r="1.5" 
-          fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.1"/>
-  <text x="{x:.1f}" y="{y - 3:.1f}" 
-        text-anchor="middle" font-family="Arial, sans-serif" font-size="2" 
-        fill="{text_color}" font-weight="bold">{component_name}</text>
-'''
+                        dwg.add(dwg.circle(
+                            center=(x, y),
+                            r=1.5,
+                            fill=fill_color,
+                            stroke=stroke_color,
+                            stroke_width=0.1
+                        ))
+                        dwg.add(dwg.text(
+                            component_name,
+                            insert=(x, y - 3),
+                            text_anchor='middle',
+                            font_family='Arial, sans-serif',
+                            font_size='2',
+                            fill=text_color,
+                            font_weight='bold'
+                        ))
                     else:
                         # Make all other components small dots (radius = 0.5mm)
-                        svg_content += f'''  <!-- {component_name} -->
-  <circle cx="{x:.1f}" cy="{y:.1f}" r="0.5" 
-          fill="{fill_color}" stroke="{stroke_color}" stroke-width="0.1"/>
-  <text x="{x:.1f}" y="{y - 2:.1f}" 
-        text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
-        fill="{text_color}" font-weight="bold">{component_name}</text>
-'''
+                        dwg.add(dwg.circle(
+                            center=(x, y),
+                            r=0.5,
+                            fill=fill_color,
+                            stroke=stroke_color,
+                            stroke_width=0.1
+                        ))
+                        dwg.add(dwg.text(
+                            component_name,
+                            insert=(x, y - 2),
+                            text_anchor='middle',
+                            font_family='Arial, sans-serif',
+                            font_size='1.5',
+                            fill=text_color,
+                            font_weight='bold'
+                        ))
     
     # Add thumb arc origins
     # Calculate left thumb arc origin
@@ -347,50 +442,107 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
     right_origin_x, right_origin_y = KeyboardLayoutCalculator.mirror_position(config, left_origin_x, left_origin_y)
     
     # Add left thumb arc origin marker
-    svg_content += f'''  <!-- Left Thumb Arc Origin -->
-  <circle cx="{left_origin_x:.1f}" cy="{left_origin_y:.1f}" r="0.5" 
-          fill="#d32f2f" stroke="#b71c1c" stroke-width="0.1"/>
-  <circle cx="{left_origin_x:.1f}" cy="{left_origin_y:.1f}" r="3" 
-          fill="none" stroke="#d32f2f" stroke-width="0.05" stroke-dasharray="0.5,0.5"/>
-  <text x="{left_origin_x:.1f}" y="{left_origin_y - 4:.1f}" 
-        text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
-        fill="#d32f2f" font-weight="bold">L-ARC</text>
-'''
+    dwg.add(dwg.circle(
+        center=(left_origin_x, left_origin_y),
+        r=0.5,
+        fill='#d32f2f',
+        stroke='#b71c1c',
+        stroke_width=0.1
+    ))
+    dwg.add(dwg.circle(
+        center=(left_origin_x, left_origin_y),
+        r=3,
+        fill='none',
+        stroke='#d32f2f',
+        stroke_width=0.05,
+        stroke_dasharray='0.5,0.5'
+    ))
+    dwg.add(dwg.text(
+        'L-ARC',
+        insert=(left_origin_x, left_origin_y - 4),
+        text_anchor='middle',
+        font_family='Arial, sans-serif',
+        font_size='1.5',
+        fill='#d32f2f',
+        font_weight='bold'
+    ))
     
     # Add right thumb arc origin marker
-    svg_content += f'''  <!-- Right Thumb Arc Origin -->
-  <circle cx="{right_origin_x:.1f}" cy="{right_origin_y:.1f}" r="0.5" 
-          fill="#d32f2f" stroke="#b71c1c" stroke-width="0.1"/>
-  <circle cx="{right_origin_x:.1f}" cy="{right_origin_y:.1f}" r="3" 
-          fill="none" stroke="#d32f2f" stroke-width="0.05" stroke-dasharray="0.5,0.5"/>
-  <text x="{right_origin_x:.1f}" y="{right_origin_y - 4:.1f}" 
-        text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
-        fill="#d32f2f" font-weight="bold">R-ARC</text>
-  
-  <!-- Coordinate Origin (0,0) -->
-  <g>
-    <circle cx="0" cy="0" r="0.5" 
-            fill="#ff4444" stroke="#cc0000" stroke-width="0.1"/>
-    <circle cx="0" cy="0" r="5" 
-            fill="none" stroke="#ff4444" stroke-width="0.05" stroke-dasharray="1,1"/>
-    <line x1="-10" y1="0" 
-          x2="10" y2="0" 
-          stroke="#ff4444" stroke-width="0.1"/>
-    <line x1="0" y1="-10" 
-          x2="0" y2="10" 
-          stroke="#ff4444" stroke-width="0.1"/>
-    <text x="0" y="-7" 
-          text-anchor="middle" font-family="Arial, sans-serif" font-size="2" 
-          fill="#ff4444" font-weight="bold">ORIGIN</text>
-    <text x="0" y="10" 
-          text-anchor="middle" font-family="Arial, sans-serif" font-size="1.5" 
-          fill="#666666">(0.0, 0.0)</text>
-  </g>
-</svg>'''
+    dwg.add(dwg.circle(
+        center=(right_origin_x, right_origin_y),
+        r=0.5,
+        fill='#d32f2f',
+        stroke='#b71c1c',
+        stroke_width=0.1
+    ))
+    dwg.add(dwg.circle(
+        center=(right_origin_x, right_origin_y),
+        r=3,
+        fill='none',
+        stroke='#d32f2f',
+        stroke_width=0.05,
+        stroke_dasharray='0.5,0.5'
+    ))
+    dwg.add(dwg.text(
+        'R-ARC',
+        insert=(right_origin_x, right_origin_y - 4),
+        text_anchor='middle',
+        font_family='Arial, sans-serif',
+        font_size='1.5',
+        fill='#d32f2f',
+        font_weight='bold'
+    ))
     
-    with open(filename, 'w') as f:
-        f.write(svg_content)
+    # Add coordinate origin (0,0)
+    origin_group = dwg.g()
+    origin_group.add(dwg.circle(
+        center=(0, 0),
+        r=0.5,
+        fill='#ff4444',
+        stroke='#cc0000',
+        stroke_width=0.1
+    ))
+    origin_group.add(dwg.circle(
+        center=(0, 0),
+        r=5,
+        fill='none',
+        stroke='#ff4444',
+        stroke_width=0.05,
+        stroke_dasharray='1,1'
+    ))
+    origin_group.add(dwg.line(
+        start=(-10, 0),
+        end=(10, 0),
+        stroke='#ff4444',
+        stroke_width=0.1
+    ))
+    origin_group.add(dwg.line(
+        start=(0, -10),
+        end=(0, 10),
+        stroke='#ff4444',
+        stroke_width=0.1
+    ))
+    origin_group.add(dwg.text(
+        'ORIGIN',
+        insert=(0, -7),
+        text_anchor='middle',
+        font_family='Arial, sans-serif',
+        font_size='2',
+        fill='#ff4444',
+        font_weight='bold'
+    ))
+    origin_group.add(dwg.text(
+        '(0.0, 0.0)',
+        insert=(0, 10),
+        text_anchor='middle',
+        font_family='Arial, sans-serif',
+        font_size='1.5',
+        fill='#666666'
+    ))
+    dwg.add(origin_group)
     
+    # Save the SVG
+    dwg.save()
     print(f"SVG visualization exported to {filename}")
 
 
@@ -427,21 +579,17 @@ def export_svg_for_cad(config: KeyboardLayoutConfig, positions: Dict[str, Dict[s
     
     # Convert to pixels for Fusion 360 compatibility
     min_x_px = min_x_mm * mm_to_px
-    max_x_px = max_x_mm * mm_to_px
     min_y_px = min_y_mm * mm_to_px
-    max_y_px = max_y_mm * mm_to_px
     width_px = width_mm * mm_to_px
     height_px = height_mm * mm_to_px
     
-    # Create clean SVG content for CAD (using pixels for Fusion 360)
-    svg_content = f'''<?xml version="1.0" encoding="UTF-8"?>
-<svg width="{width_px:.3f}" height="{height_px:.3f}" 
-     viewBox="{min_x_px:.3f} {min_y_px:.3f} {width_px:.3f} {height_px:.3f}"
-     xmlns="http://www.w3.org/2000/svg">
-  
-  <!-- Switch outlines for CAD import (scaled for Fusion 360 at 96 DPI) -->
-'''
-    
+    # Create SVG drawing with pixel units for Fusion 360 compatibility
+    dwg = svgwrite.Drawing(
+        filename,
+        size=(f'{width_px:.3f}px', f'{height_px:.3f}px'),
+        viewBox=f'{min_x_px:.3f} {min_y_px:.3f} {width_px:.3f} {height_px:.3f}'
+    )
+
     # Add switch rectangles for both halves
     for half in ['left', 'right']:
         for key_name, x, y, rotation in positions[half]['switches']:
@@ -452,23 +600,25 @@ def export_svg_for_cad(config: KeyboardLayoutConfig, positions: Dict[str, Dict[s
             height_px_rect = config.footprint_height * mm_to_px
             
             if abs(rotation) < 0.1:  # No rotation for main keys
-                # Convert center coordinates to top-left for rectangle drawing
-                rect_x_px = x_px - width_px_rect/2
-                rect_y_px = y_px - height_px_rect/2
-                svg_content += f'''  <rect x="{rect_x_px:.3f}" y="{rect_y_px:.3f}" 
-        width="{width_px_rect:.3f}" height="{height_px_rect:.3f}"
-        fill="none" stroke="#000000" stroke-width="0.38"/>
-'''
+                # Add switch outline rectangle
+                dwg.add(dwg.rect(
+                    insert=(x_px - width_px_rect/2, y_px - height_px_rect/2),
+                    size=(width_px_rect, height_px_rect),
+                    fill='none',
+                    stroke='#000000',
+                    stroke_width='0.38'
+                ))
             else:  # Rotated thumb keys
-                # Convert center coordinates to top-left for rectangle drawing
-                rect_x_px = -width_px_rect/2
-                rect_y_px = -height_px_rect/2
-                svg_content += f'''  <g transform="translate({x_px:.3f},{y_px:.3f}) rotate({rotation:.3f})">
-    <rect x="{rect_x_px:.3f}" y="{rect_y_px:.3f}" 
-          width="{width_px_rect:.3f}" height="{height_px_rect:.3f}"
-          fill="none" stroke="#000000" stroke-width="0.38"/>
-  </g>
-'''
+                # Create group for rotation
+                group = dwg.g(transform=f'translate({x_px:.3f},{y_px:.3f}) rotate({rotation:.3f})')
+                group.add(dwg.rect(
+                    insert=(-width_px_rect/2, -height_px_rect/2),
+                    size=(width_px_rect, height_px_rect),
+                    fill='none',
+                    stroke='#000000',
+                    stroke_width='0.38'
+                ))
+                dwg.add(group)
     
     # Calculate the midpoint between the two halves
     left_switches = positions['left']['switches']
@@ -484,29 +634,40 @@ def export_svg_for_cad(config: KeyboardLayoutConfig, positions: Dict[str, Dict[s
     midpoint_x_mm = (left_max_x_mm + right_min_x_mm) / 2
     midpoint_x_px = midpoint_x_mm * mm_to_px
     
-    # Add midpoint separation line and coordinate origin marker
-    svg_content += f'''  
-  <!-- Midpoint separation line -->
-  <line x1="{midpoint_x_px:.3f}" y1="{min_y_px:.3f}" 
-        x2="{midpoint_x_px:.3f}" y2="{max_y_px:.3f}" 
-        stroke="#0066cc" stroke-width="0.57" stroke-dasharray="7.56,3.78"/>
-  
-  <!-- Coordinate Origin (0,0) -->
-  <g>
-    <circle cx="0" cy="0" r="3.78" 
-            fill="none" stroke="#ff0000" stroke-width="0.76"/>
-    <line x1="-18.9" y1="0" 
-          x2="18.9" y2="0" 
-          stroke="#ff0000" stroke-width="0.76"/>
-    <line x1="0" y1="-18.9" 
-          x2="0" y2="18.9" 
-          stroke="#ff0000" stroke-width="0.76"/>
-  </g>
-</svg>'''
+    # Add midpoint separation line
+    dwg.add(dwg.line(
+        start=(midpoint_x_px, min_y_px),
+        end=(midpoint_x_px, min_y_px + height_px),
+        stroke='#0066cc',
+        stroke_width='0.57',
+        stroke_dasharray='7.56,3.78'
+    ))
     
-    with open(filename, 'w') as f:
-        f.write(svg_content)
+    # Add coordinate origin marker
+    origin_group = dwg.g()
+    origin_group.add(dwg.circle(
+        center=(0, 0),
+        r=3.78,
+        fill='none',
+        stroke='#ff0000',
+        stroke_width='0.76'
+    ))
+    origin_group.add(dwg.line(
+        start=(-18.9, 0),
+        end=(18.9, 0),
+        stroke='#ff0000',
+        stroke_width='0.76'
+    ))
+    origin_group.add(dwg.line(
+        start=(0, -18.9),
+        end=(0, 18.9),
+        stroke='#ff0000',
+        stroke_width='0.76'
+    ))
+    dwg.add(origin_group)
     
+    # Save the SVG
+    dwg.save()
     print(f"CAD-ready SVG exported to {filename}")
 
 
@@ -550,13 +711,13 @@ def export_svg_switch_plate(config: KeyboardLayoutConfig, positions: Dict[str, D
     width_px = width_mm * mm_to_px
     height_px = height_mm * mm_to_px
     
-    # Create minimal SVG content for CAD (using pixels for Fusion 360)
-    svg_content = f'''<?xml version="1.0" encoding="UTF-8"?>
-<svg width="{width_px:.3f}" height="{height_px:.3f}" 
-     viewBox="{min_x_px:.3f} {min_y_px:.3f} {width_px:.3f} {height_px:.3f}"
-     xmlns="http://www.w3.org/2000/svg">
-'''
-    
+    # Create SVG drawing with pixel units for Fusion 360 compatibility
+    dwg = svgwrite.Drawing(
+        filename,
+        size=(f'{width_px:.3f}px', f'{height_px:.3f}px'),
+        viewBox=f'{min_x_px:.3f} {min_y_px:.3f} {width_px:.3f} {height_px:.3f}'
+    )
+
     # Add switch plate holes and recesses for both halves
     for half in ['left', 'right']:
         for key_name, x, y, rotation in positions[half]['switches']:
@@ -569,40 +730,70 @@ def export_svg_switch_plate(config: KeyboardLayoutConfig, positions: Dict[str, D
             recess_16_px = 16.0 * mm_to_px
             
             if abs(rotation) < 0.1:  # No rotation for main keys
-                # 14mm hole (center coordinates to top-left)
-                hole_14_x_px = x_px - hole_14_px/2
-                hole_14_y_px = y_px - hole_14_px/2
+                # 16mm recess (outer rectangle)
+                dwg.add(dwg.rect(
+                    insert=(x_px - recess_16_px/2, y_px - recess_16_px/2),
+                    size=(recess_16_px, recess_16_px),
+                    fill='none',
+                    stroke='#000000',
+                    stroke_width='0.1'
+                ))
                 
-                # 16mm recess (center coordinates to top-left)
-                recess_16_x_px = x_px - recess_16_px/2
-                recess_16_y_px = y_px - recess_16_px/2
-                
-                svg_content += f'''  <rect x="{recess_16_x_px:.3f}" y="{recess_16_y_px:.3f}" width="{recess_16_px:.3f}" height="{recess_16_px:.3f}" fill="none" stroke="#000000" stroke-width="0.1"/>
-  <rect x="{hole_14_x_px:.3f}" y="{hole_14_y_px:.3f}" width="{hole_14_px:.3f}" height="{hole_14_px:.3f}" fill="none" stroke="#000000" stroke-width="0.1"/>
-'''
+                # 14mm hole (inner rectangle)
+                dwg.add(dwg.rect(
+                    insert=(x_px - hole_14_px/2, y_px - hole_14_px/2),
+                    size=(hole_14_px, hole_14_px),
+                    fill='none',
+                    stroke='#000000',
+                    stroke_width='0.1'
+                ))
             else:  # Rotated thumb keys
-                # All rectangles relative to center for rotation
-                hole_14_x_px = -hole_14_px/2
-                hole_14_y_px = -hole_14_px/2
-                recess_16_x_px = -recess_16_px/2
-                recess_16_y_px = -recess_16_px/2
+                # Create group for rotation
+                group = dwg.g(transform=f'translate({x_px:.3f},{y_px:.3f}) rotate({rotation:.3f})')
                 
-                svg_content += f'''  <g transform="translate({x_px:.3f},{y_px:.3f}) rotate({rotation:.3f})">
-    <rect x="{recess_16_x_px:.3f}" y="{recess_16_y_px:.3f}" width="{recess_16_px:.3f}" height="{recess_16_px:.3f}" fill="none" stroke="#000000" stroke-width="0.1"/>
-    <rect x="{hole_14_x_px:.3f}" y="{hole_14_y_px:.3f}" width="{hole_14_px:.3f}" height="{hole_14_px:.3f}" fill="none" stroke="#000000" stroke-width="0.1"/>
-  </g>
-'''
-    
+                # 16mm recess (outer rectangle)
+                group.add(dwg.rect(
+                    insert=(-recess_16_px/2, -recess_16_px/2),
+                    size=(recess_16_px, recess_16_px),
+                    fill='none',
+                    stroke='#000000',
+                    stroke_width='0.1'
+                ))
+                
+                # 14mm hole (inner rectangle)
+                group.add(dwg.rect(
+                    insert=(-hole_14_px/2, -hole_14_px/2),
+                    size=(hole_14_px, hole_14_px),
+                    fill='none',
+                    stroke='#000000',
+                    stroke_width='0.1'
+                ))
+                
+                dwg.add(group)
     
     # Add coordinate origin marker
-    svg_content += '''  <g>
-    <circle cx="0" cy="0" r="3.78" fill="none" stroke="#000000" stroke-width="0.1"/>
-    <line x1="-18.9" y1="0" x2="18.9" y2="0" stroke="#000000" stroke-width="0.1"/>
-    <line x1="0" y1="-18.9" x2="0" y2="18.9" stroke="#000000" stroke-width="0.1"/>
-  </g>
-</svg>'''
+    origin_group = dwg.g()
+    origin_group.add(dwg.circle(
+        center=(0, 0),
+        r=3.78,
+        fill='none',
+        stroke='#000000',
+        stroke_width='0.1'
+    ))
+    origin_group.add(dwg.line(
+        start=(-18.9, 0),
+        end=(18.9, 0),
+        stroke='#000000',
+        stroke_width='0.1'
+    ))
+    origin_group.add(dwg.line(
+        start=(0, -18.9),
+        end=(0, 18.9),
+        stroke='#000000',
+        stroke_width='0.1'
+    ))
+    dwg.add(origin_group)
     
-    with open(filename, 'w') as f:
-        f.write(svg_content)
-    
+    # Save the SVG
+    dwg.save()
     print(f"Switch plate SVG exported to {filename}")
