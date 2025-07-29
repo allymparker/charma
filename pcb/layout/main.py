@@ -13,8 +13,7 @@ from output import (
     export_svg,
     export_svg_for_footprints,
     export_svg_switch_plate,
-    export_svg_mounting_holes,
-    export_svg_hotswap_profile,
+    export_svg_bottom_plate_recesses,
 )
 
 
@@ -57,21 +56,11 @@ def main():
     print_positions(config, positions)
 
     # Export files
-    export_csv(positions, "outputs/keyboard_positions.csv")
+    # export_csv(positions, "outputs/keyboard_positions.csv")
     export_svg(config, positions, "outputs/keyboard_layout.svg")
     export_svg_for_footprints(config, positions, "outputs/keyboard_switch_footprints.svg")
     export_svg_switch_plate(config, positions, "outputs/keyboard_switch_plate.svg")
-    export_svg_mounting_holes(config, positions, "outputs/keyboard_mounting_holes.svg")
-    export_svg_hotswap_profile(config, positions, "outputs/keyboard_hotswap_profile.svg")
-
-    print("\nFiles generated:")
-    print("- keyboard_positions.csv (CSV format)")
-    print("- keyboard_layout.svg (SVG visualization)")
-    print("- keyboard_switches_cad.svg (CAD-ready switch outlines)")
-    print("- keyboard_switch_plate.svg (Switch plate holes and recesses)")
-    print("- keyboard_mounting_holes.svg (Mounting holes for assembly)")
-    print("- keyboard_hotswap_profile.svg (Hotswap socket profiles for CAD)")
-
+    export_svg_bottom_plate_recesses(config, positions, "outputs/keyboard_bottom_plate.svg")
 
 if __name__ == "__main__":
     main()

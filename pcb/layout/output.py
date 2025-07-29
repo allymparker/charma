@@ -543,79 +543,10 @@ def export_svg_switch_plate(config: KeyboardLayoutConfig, positions: Dict[str, D
     print(f"Switch plate SVG exported to {filename}")
 
 
-def export_svg_mounting_holes(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_mounting_holes.svg"):
+def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_hotswap_profile.svg"):
     """
-    Export mounting hole positions for CAD import (e.g., Fusion 360).
-    Creates 3mm circles at each switch center and 2.2mm circles at x ± 5.22mm offsets.
-    Minimal SVG with black hairline strokes for clean CAD import.
-
-    Args:
-        config: KeyboardLayoutConfig instance with layout parameters
-        positions: Positions dictionary from generate_all_positions
-        filename: Output SVG filename
-    """
-    # Calculate SVG dimensions with offset zones
-    offset_distance = 5.22  # mm
-    center_radius = 1.5  # mm (3mm diameter / 2)
-    side_radius = 1.1  # mm (2.2mm diameter / 2)
-    total_reach = offset_distance + side_radius
-
-    extra_bounds = {
-        "min_x_offset": -total_reach + config.footprint_width / 2,
-        "max_x_offset": total_reach - config.footprint_width / 2,
-        "min_y_offset": -center_radius + config.footprint_height / 2,
-        "max_y_offset": center_radius - config.footprint_height / 2,
-    }
-    dimensions = _calculate_cad_svg_dimensions(positions, config, extra_bounds)
-
-    # Create SVG drawing
-    dwg = _create_cad_svg_drawing(filename, dimensions)
-
-    # Add mounting holes for both halves
-    for half in ["left", "right"]:
-        for key_name, x, y, rotation in positions[half]["switches"]:
-            # Convert mm coordinates to pixels
-            x_px = x * FUSION_360_MM_TO_PX
-            y_px = y * FUSION_360_MM_TO_PX
-
-            # Circle dimensions in pixels
-            center_diameter_px = 3.0 * FUSION_360_MM_TO_PX
-            side_diameter_px = 2.2 * FUSION_360_MM_TO_PX
-            offset_distance_px = offset_distance * FUSION_360_MM_TO_PX
-
-            if abs(rotation) < 0.1:  # No rotation for main keys
-                # 3mm circle at center
-                dwg.add(dwg.circle(center=(x_px, y_px), r=center_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
-
-                # 2.2mm circles at x ± 5.22mm
-                dwg.add(dwg.circle(center=(x_px - offset_distance_px, y_px), r=side_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
-
-                dwg.add(dwg.circle(center=(x_px + offset_distance_px, y_px), r=side_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
-            else:  # Rotated thumb keys
-                # Create group for rotation
-                group = dwg.g(transform=f"translate({x_px:.3f},{y_px:.3f}) rotate({rotation:.3f})")
-
-                # 3mm circle at center
-                group.add(dwg.circle(center=(0, 0), r=center_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
-
-                # 2.2mm circles at x ± 5.22mm (relative to rotated coordinate system)
-                group.add(dwg.circle(center=(-offset_distance_px, 0), r=side_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
-
-                group.add(dwg.circle(center=(offset_distance_px, 0), r=side_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
-
-                dwg.add(group)
-
-    # Add coordinate origin marker
-    _add_coordinate_origin_marker(dwg)
-
-    # Save the SVG
-    dwg.save()
-    print(f"Mounting holes SVG exported to {filename}")
-
-
-def export_svg_hotswap_profile(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_hotswap_profile.svg"):
-    """
-    Export hotswap socket profiles positioned relative to switch centers for CAD import (e.g., Fusion 360).
+    Export hotswap socket profiles and mounting holes positioned relative to switch centers for CAD import (e.g., Fusion 360).
+    Includes hotswap profiles, 3mm center mounting holes, and 2.2mm right-side mounting holes (x+ 5.22mm offset).
 
     Args:
         config: KeyboardLayoutConfig instance with layout parameters
@@ -630,8 +561,37 @@ def export_svg_hotswap_profile(config: KeyboardLayoutConfig, positions: Dict[str
     hotswap_width = 13.4  # mm
     hotswap_height = 9.45  # mm
 
-    # Calculate SVG dimensions
-    dimensions = _calculate_hotswap_svg_dimensions(positions, hotswap_offset_x, hotswap_offset_y, hotswap_width, hotswap_height)
+    # Mounting hole dimensions
+    offset_distance = 5.22  # mm
+    center_radius = 1.5  # mm (3mm diameter / 2)
+    side_radius = 1.1  # mm (2.2mm diameter / 2)
+    total_reach = offset_distance + side_radius
+
+    # Calculate SVG dimensions considering both hotswap profiles and mounting holes
+    hotswap_dimensions = _calculate_hotswap_svg_dimensions(positions, hotswap_offset_x, hotswap_offset_y, hotswap_width, hotswap_height)
+    
+    # Extend bounds to include mounting holes
+    mounting_extra_bounds = {
+        "min_x_offset": -total_reach + config.footprint_width / 2,
+        "max_x_offset": total_reach - config.footprint_width / 2,
+        "min_y_offset": -center_radius + config.footprint_height / 2,
+        "max_y_offset": center_radius - config.footprint_height / 2,
+    }
+    mounting_dimensions = _calculate_cad_svg_dimensions(positions, config, mounting_extra_bounds)
+    
+    # Use the larger dimensions to encompass both hotswap profiles and mounting holes
+    dimensions = {
+        "min_x_mm": min(hotswap_dimensions["min_x_mm"], mounting_dimensions["min_x_mm"]),
+        "max_x_mm": max(hotswap_dimensions["max_x_mm"], mounting_dimensions["max_x_mm"]),
+        "min_y_mm": min(hotswap_dimensions["min_y_mm"], mounting_dimensions["min_y_mm"]),
+        "max_y_mm": max(hotswap_dimensions["max_y_mm"], mounting_dimensions["max_y_mm"]),
+    }
+    dimensions["width_mm"] = dimensions["max_x_mm"] - dimensions["min_x_mm"]
+    dimensions["height_mm"] = dimensions["max_y_mm"] - dimensions["min_y_mm"]
+    dimensions["min_x_px"] = dimensions["min_x_mm"] * FUSION_360_MM_TO_PX
+    dimensions["min_y_px"] = dimensions["min_y_mm"] * FUSION_360_MM_TO_PX
+    dimensions["width_px"] = dimensions["width_mm"] * FUSION_360_MM_TO_PX
+    dimensions["height_px"] = dimensions["height_mm"] * FUSION_360_MM_TO_PX
 
     # Create SVG drawing
     dwg = _create_cad_svg_drawing(filename, dimensions)
@@ -681,15 +641,15 @@ def export_svg_hotswap_profile(config: KeyboardLayoutConfig, positions: Dict[str
                      a {1.05 * FUSION_360_MM_TO_PX:.3f},{1.05 * FUSION_360_MM_TO_PX:.3f} 0 0 1 {1.05 * FUSION_360_MM_TO_PX:.3f},{-1.05 * FUSION_360_MM_TO_PX:.3f} 
                      h {0.23 * FUSION_360_MM_TO_PX:.3f} {2.1999999 * FUSION_360_MM_TO_PX:.3f} z"""
 
-        group.add(dwg.path(d=path1_d, fill="none", stroke="#000000", stroke_width="0.26458334", stroke_linecap="round", stroke_linejoin="round"))
+        group.add(dwg.path(d=path1_d, fill="none", stroke="#000000", stroke_width="0.1", stroke_linecap="round", stroke_linejoin="round"))
 
-        # Secondary path (USB connector cutout)
+        # Secondary path (left switch mount)
         path2_d = f"""m {(5.130002 - 6.7) * FUSION_360_MM_TO_PX:.3f},{(2.0998362 - 4.725) * FUSION_360_MM_TO_PX:.3f} 
                      v {-1 * FUSION_360_MM_TO_PX:.3f} 
                      a {1.1 * FUSION_360_MM_TO_PX:.3f},{1.1 * FUSION_360_MM_TO_PX:.3f} 0 0 0 {-2.1999999 * FUSION_360_MM_TO_PX:.3f},0 
                      v {1 * FUSION_360_MM_TO_PX:.3f} z"""
 
-        group.add(dwg.path(d=path2_d, fill="none", stroke="#000000", stroke_width="0.26458334", stroke_linecap="round", stroke_linejoin="round"))
+        group.add(dwg.path(d=path2_d, fill="none", stroke="#000000", stroke_width="0.1", stroke_linecap="round", stroke_linejoin="round"))
 
         dwg.add(group)
 
@@ -707,6 +667,36 @@ def export_svg_hotswap_profile(config: KeyboardLayoutConfig, positions: Dict[str
             # Add hotswap profile
             add_hotswap_profile(dwg, hotswap_x_px, hotswap_y_px, rotation)
 
+    # Add mounting holes for both halves
+    for half in ["left", "right"]:
+        for key_name, x, y, rotation in positions[half]["switches"]:
+            # Convert mm coordinates to pixels
+            x_px = x * FUSION_360_MM_TO_PX
+            y_px = y * FUSION_360_MM_TO_PX
+
+            # Circle dimensions in pixels
+            center_diameter_px = 3.0 * FUSION_360_MM_TO_PX
+            side_diameter_px = 2.2 * FUSION_360_MM_TO_PX
+            offset_distance_px = offset_distance * FUSION_360_MM_TO_PX
+
+            if abs(rotation) < 0.1:  # No rotation for main keys
+                # 3mm circle at center
+                dwg.add(dwg.circle(center=(x_px, y_px), r=center_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
+
+                # 2.2mm circle at x + 5.22mm (only right side, removed left side as requested)
+                dwg.add(dwg.circle(center=(x_px + offset_distance_px, y_px), r=side_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
+            else:  # Rotated thumb keys
+                # Create group for rotation
+                group = dwg.g(transform=f"translate({x_px:.3f},{y_px:.3f}) rotate({rotation:.3f})")
+
+                # 3mm circle at center
+                group.add(dwg.circle(center=(0, 0), r=center_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
+
+                # 2.2mm circle at x + 5.22mm (only right side, removed left side as requested)
+                group.add(dwg.circle(center=(offset_distance_px, 0), r=side_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
+
+                dwg.add(group)
+
     # Add midpoint separation line
     _add_midpoint_separation_line(dwg, positions, config, dimensions)
 
@@ -715,4 +705,4 @@ def export_svg_hotswap_profile(config: KeyboardLayoutConfig, positions: Dict[str
 
     # Save the SVG
     dwg.save()
-    print(f"Hotswap profile SVG exported to {filename}")
+    print(f"Hotswap profile with mounting holes SVG exported to {filename}")
