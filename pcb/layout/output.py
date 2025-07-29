@@ -797,3 +797,152 @@ def export_svg_switch_plate(config: KeyboardLayoutConfig, positions: Dict[str, D
     # Save the SVG
     dwg.save()
     print(f"Switch plate SVG exported to {filename}")
+
+
+def export_svg_mounting_holes(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_mounting_holes.svg"):
+    """
+    Export mounting hole positions for CAD import (e.g., Fusion 360).
+    Creates 3mm circles at each switch center and 2.2mm circles at x ± 5.22mm offsets.
+    Minimal SVG with black hairline strokes for clean CAD import.
+    
+    Args:
+        config: KeyboardLayoutConfig instance with layout parameters
+        positions: Positions dictionary from generate_all_positions
+        filename: Output SVG filename
+    """
+    # Conversion factor for Fusion 360: 1mm = 96/25.4 pixels (96 DPI)
+    mm_to_px = 96.0 / 25.4
+    
+    # Calculate SVG dimensions based on switch positions with offset zones
+    all_switch_positions = positions['left']['switches'] + positions['right']['switches']
+    
+    # Calculate bounds considering switches and 5.22mm offsets plus circle radii
+    offset_distance = 5.22  # mm
+    center_radius = 1.5  # mm (3mm diameter / 2)
+    side_radius = 1.1  # mm (2.2mm diameter / 2)
+    total_reach = offset_distance + side_radius
+    
+    switch_min_x = min(x - total_reach for _, x, y, r in all_switch_positions)
+    switch_max_x = max(x + total_reach for _, x, y, r in all_switch_positions)
+    switch_min_y = min(y - center_radius for _, x, y, r in all_switch_positions)
+    switch_max_y = max(y + center_radius for _, x, y, r in all_switch_positions)
+    
+    # Add margin for clean viewing (in mm)
+    margin = 20
+    min_x_mm = switch_min_x - margin
+    max_x_mm = switch_max_x + margin
+    min_y_mm = switch_min_y - margin
+    max_y_mm = switch_max_y + margin
+    
+    width_mm = max_x_mm - min_x_mm
+    height_mm = max_y_mm - min_y_mm
+    
+    # Convert to pixels for Fusion 360 compatibility
+    min_x_px = min_x_mm * mm_to_px
+    min_y_px = min_y_mm * mm_to_px
+    width_px = width_mm * mm_to_px
+    height_px = height_mm * mm_to_px
+    
+    # Create SVG drawing with pixel units for Fusion 360 compatibility
+    dwg = svgwrite.Drawing(
+        filename,
+        size=(f'{width_px:.3f}px', f'{height_px:.3f}px'),
+        viewBox=f'{min_x_px:.3f} {min_y_px:.3f} {width_px:.3f} {height_px:.3f}'
+    )
+
+    # Add mounting holes for both halves
+    for half in ['left', 'right']:
+        for key_name, x, y, rotation in positions[half]['switches']:
+            # Convert mm coordinates to pixels
+            x_px = x * mm_to_px
+            y_px = y * mm_to_px
+            
+            # Circle dimensions in pixels
+            center_diameter_px = 3.0 * mm_to_px
+            side_diameter_px = 2.2 * mm_to_px
+            offset_distance_px = offset_distance * mm_to_px
+            
+            if abs(rotation) < 0.1:  # No rotation for main keys
+                # 3mm circle at center
+                dwg.add(dwg.circle(
+                    center=(x_px, y_px),
+                    r=center_diameter_px/2,
+                    fill='none',
+                    stroke='#000000',
+                    stroke_width='0.1'
+                ))
+                
+                # 2.2mm circles at x ± 5.22mm
+                dwg.add(dwg.circle(
+                    center=(x_px - offset_distance_px, y_px),
+                    r=side_diameter_px/2,
+                    fill='none',
+                    stroke='#000000',
+                    stroke_width='0.1'
+                ))
+                
+                dwg.add(dwg.circle(
+                    center=(x_px + offset_distance_px, y_px),
+                    r=side_diameter_px/2,
+                    fill='none',
+                    stroke='#000000',
+                    stroke_width='0.1'
+                ))
+            else:  # Rotated thumb keys
+                # Create group for rotation
+                group = dwg.g(transform=f'translate({x_px:.3f},{y_px:.3f}) rotate({rotation:.3f})')
+                
+                # 3mm circle at center
+                group.add(dwg.circle(
+                    center=(0, 0),
+                    r=center_diameter_px/2,
+                    fill='none',
+                    stroke='#000000',
+                    stroke_width='0.1'
+                ))
+                
+                # 2.2mm circles at x ± 5.22mm (relative to rotated coordinate system)
+                group.add(dwg.circle(
+                    center=(-offset_distance_px, 0),
+                    r=side_diameter_px/2,
+                    fill='none',
+                    stroke='#000000',
+                    stroke_width='0.1'
+                ))
+                
+                group.add(dwg.circle(
+                    center=(offset_distance_px, 0),
+                    r=side_diameter_px/2,
+                    fill='none',
+                    stroke='#000000',
+                    stroke_width='0.1'
+                ))
+                
+                dwg.add(group)
+    
+    # Add coordinate origin marker
+    origin_group = dwg.g()
+    origin_group.add(dwg.circle(
+        center=(0, 0),
+        r=3.78,
+        fill='none',
+        stroke='#000000',
+        stroke_width='0.1'
+    ))
+    origin_group.add(dwg.line(
+        start=(-18.9, 0),
+        end=(18.9, 0),
+        stroke='#000000',
+        stroke_width='0.1'
+    ))
+    origin_group.add(dwg.line(
+        start=(0, -18.9),
+        end=(0, 18.9),
+        stroke='#000000',
+        stroke_width='0.1'
+    ))
+    dwg.add(origin_group)
+    
+    # Save the SVG
+    dwg.save()
+    print(f"Mounting holes SVG exported to {filename}")
