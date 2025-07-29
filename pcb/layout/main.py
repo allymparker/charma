@@ -57,12 +57,12 @@ def main():
     print_positions(config, positions)
 
     # Export files
-    export_csv(positions)
-    export_svg(config, positions, "keyboard_layout.svg")
-    export_svg_for_footprints(config, positions, "keyboard_switches_cad.svg")
-    export_svg_switch_plate(config, positions, "keyboard_switch_plate.svg")
-    export_svg_mounting_holes(config, positions, "keyboard_mounting_holes.svg")
-    export_svg_hotswap_profile(config, positions, "keyboard_hotswap_profile.svg")
+    export_csv(positions, "outputs/keyboard_positions.csv")
+    export_svg(config, positions, "outputs/keyboard_layout.svg")
+    export_svg_for_footprints(config, positions, "outputs/keyboard_switch_footprints.svg")
+    export_svg_switch_plate(config, positions, "outputs/keyboard_switch_plate.svg")
+    export_svg_mounting_holes(config, positions, "outputs/keyboard_mounting_holes.svg")
+    export_svg_hotswap_profile(config, positions, "outputs/keyboard_hotswap_profile.svg")
 
     print("\nFiles generated:")
     print("- keyboard_positions.csv (CSV format)")
