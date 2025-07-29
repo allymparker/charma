@@ -14,228 +14,173 @@ FUSION_360_MM_TO_PX = 96.0 / 25.4  # Conversion factor for Fusion 360: 1mm = 96/
 CAD_MARGIN = 20  # mm
 
 
-def _calculate_cad_svg_dimensions(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], 
-                                config: KeyboardLayoutConfig, 
-                                extra_bounds: Optional[Dict[str, float]] = None) -> Dict[str, float]:
+def _calculate_cad_svg_dimensions(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], config: KeyboardLayoutConfig, extra_bounds: Optional[Dict[str, float]] = None) -> Dict[str, float]:
     """
     Calculate SVG dimensions for CAD export based on switch positions.
-    
+
     Args:
         positions: Positions dictionary from generate_all_positions
         config: KeyboardLayoutConfig instance with layout parameters
         extra_bounds: Optional dict with keys 'min_x_offset', 'max_x_offset', 'min_y_offset', 'max_y_offset'
                      to extend bounds beyond switches (e.g., for keepout zones)
-    
+
     Returns:
         Dict with keys: min_x_mm, max_x_mm, min_y_mm, max_y_mm, width_mm, height_mm,
                        min_x_px, min_y_px, width_px, height_px
     """
-    all_switch_positions = positions['left']['switches'] + positions['right']['switches']
-    
+    all_switch_positions = positions["left"]["switches"] + positions["right"]["switches"]
+
     # Default switch bounds (in mm)
-    switch_min_x = min(x - config.footprint_width/2 for _, x, y, r in all_switch_positions)
-    switch_max_x = max(x + config.footprint_width/2 for _, x, y, r in all_switch_positions)
-    switch_min_y = min(y - config.footprint_height/2 for _, x, y, r in all_switch_positions)
-    switch_max_y = max(y + config.footprint_height/2 for _, x, y, r in all_switch_positions)
-    
+    switch_min_x = min(x - config.footprint_width / 2 for _, x, y, r in all_switch_positions)
+    switch_max_x = max(x + config.footprint_width / 2 for _, x, y, r in all_switch_positions)
+    switch_min_y = min(y - config.footprint_height / 2 for _, x, y, r in all_switch_positions)
+    switch_max_y = max(y + config.footprint_height / 2 for _, x, y, r in all_switch_positions)
+
     # Apply extra bounds if provided
     if extra_bounds:
-        switch_min_x += extra_bounds.get('min_x_offset', 0)
-        switch_max_x += extra_bounds.get('max_x_offset', 0)
-        switch_min_y += extra_bounds.get('min_y_offset', 0)
-        switch_max_y += extra_bounds.get('max_y_offset', 0)
-    
+        switch_min_x += extra_bounds.get("min_x_offset", 0)
+        switch_max_x += extra_bounds.get("max_x_offset", 0)
+        switch_min_y += extra_bounds.get("min_y_offset", 0)
+        switch_max_y += extra_bounds.get("max_y_offset", 0)
+
     # Add margin for clean viewing (in mm)
     min_x_mm = switch_min_x - CAD_MARGIN
     max_x_mm = switch_max_x + CAD_MARGIN
     min_y_mm = switch_min_y - CAD_MARGIN
     max_y_mm = switch_max_y + CAD_MARGIN
-    
+
     width_mm = max_x_mm - min_x_mm
     height_mm = max_y_mm - min_y_mm
-    
+
     # Convert to pixels for Fusion 360 compatibility
     min_x_px = min_x_mm * FUSION_360_MM_TO_PX
     min_y_px = min_y_mm * FUSION_360_MM_TO_PX
     width_px = width_mm * FUSION_360_MM_TO_PX
     height_px = height_mm * FUSION_360_MM_TO_PX
-    
-    return {
-        'min_x_mm': min_x_mm,
-        'max_x_mm': max_x_mm,
-        'min_y_mm': min_y_mm,
-        'max_y_mm': max_y_mm,
-        'width_mm': width_mm,
-        'height_mm': height_mm,
-        'min_x_px': min_x_px,
-        'min_y_px': min_y_px,
-        'width_px': width_px,
-        'height_px': height_px
-    }
+
+    return {"min_x_mm": min_x_mm, "max_x_mm": max_x_mm, "min_y_mm": min_y_mm, "max_y_mm": max_y_mm, "width_mm": width_mm, "height_mm": height_mm, "min_x_px": min_x_px, "min_y_px": min_y_px, "width_px": width_px, "height_px": height_px}
 
 
 def _create_cad_svg_drawing(filename: str, dimensions: Dict[str, float]) -> svgwrite.Drawing:
     """
     Create SVG drawing with pixel units for Fusion 360 compatibility.
-    
+
     Args:
         filename: Output SVG filename
         dimensions: Dictionary from _calculate_cad_svg_dimensions
-    
+
     Returns:
         svgwrite.Drawing instance
     """
-    return svgwrite.Drawing(
-        filename,
-        size=(f'{dimensions["width_px"]:.3f}px', f'{dimensions["height_px"]:.3f}px'),
-        viewBox=f'{dimensions["min_x_px"]:.3f} {dimensions["min_y_px"]:.3f} {dimensions["width_px"]:.3f} {dimensions["height_px"]:.3f}'
-    )
+    return svgwrite.Drawing(filename, size=(f"{dimensions['width_px']:.3f}px", f"{dimensions['height_px']:.3f}px"), viewBox=f"{dimensions['min_x_px']:.3f} {dimensions['min_y_px']:.3f} {dimensions['width_px']:.3f} {dimensions['height_px']:.3f}")
 
 
-def _calculate_hotswap_svg_dimensions(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], 
-                                     hotswap_offset_x: float, hotswap_offset_y: float,
-                                     hotswap_width: float, hotswap_height: float) -> Dict[str, float]:
+def _calculate_hotswap_svg_dimensions(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], hotswap_offset_x: float, hotswap_offset_y: float, hotswap_width: float, hotswap_height: float) -> Dict[str, float]:
     """
     Calculate SVG dimensions for hotswap profiles.
-    
+
     Args:
         positions: Positions dictionary from generate_all_positions
         hotswap_offset_x: X offset from switch center to hotswap center (mm)
         hotswap_offset_y: Y offset from switch center to hotswap center (mm)
         hotswap_width: Width of hotswap profile (mm)
         hotswap_height: Height of hotswap profile (mm)
-    
+
     Returns:
         Dict with keys: min_x_mm, max_x_mm, min_y_mm, max_y_mm, width_mm, height_mm,
                        min_x_px, min_y_px, width_px, height_px
     """
-    all_switch_positions = positions['left']['switches'] + positions['right']['switches']
-    
+    all_switch_positions = positions["left"]["switches"] + positions["right"]["switches"]
+
     # Calculate bounds considering hotswap profiles at offset positions
     hotswap_positions = []
     for _, x, y, rotation in all_switch_positions:
         hotswap_x = x + hotswap_offset_x
         hotswap_y = y + hotswap_offset_y
         hotswap_positions.append((hotswap_x, hotswap_y, rotation))
-    
+
     # Calculate bounds (in mm)
-    hotswap_min_x = min(x - hotswap_width/2 for x, y, r in hotswap_positions)
-    hotswap_max_x = max(x + hotswap_width/2 for x, y, r in hotswap_positions)
-    hotswap_min_y = min(y - hotswap_height/2 for x, y, r in hotswap_positions)
-    hotswap_max_y = max(y + hotswap_height/2 for x, y, r in hotswap_positions)
-    
+    hotswap_min_x = min(x - hotswap_width / 2 for x, y, r in hotswap_positions)
+    hotswap_max_x = max(x + hotswap_width / 2 for x, y, r in hotswap_positions)
+    hotswap_min_y = min(y - hotswap_height / 2 for x, y, r in hotswap_positions)
+    hotswap_max_y = max(y + hotswap_height / 2 for x, y, r in hotswap_positions)
+
     # Add margin for clean viewing (in mm)
     min_x_mm = hotswap_min_x - CAD_MARGIN
     max_x_mm = hotswap_max_x + CAD_MARGIN
     min_y_mm = hotswap_min_y - CAD_MARGIN
     max_y_mm = hotswap_max_y + CAD_MARGIN
-    
+
     width_mm = max_x_mm - min_x_mm
     height_mm = max_y_mm - min_y_mm
-    
+
     # Convert to pixels for Fusion 360 compatibility
     min_x_px = min_x_mm * FUSION_360_MM_TO_PX
     min_y_px = min_y_mm * FUSION_360_MM_TO_PX
     width_px = width_mm * FUSION_360_MM_TO_PX
     height_px = height_mm * FUSION_360_MM_TO_PX
-    
-    return {
-        'min_x_mm': min_x_mm,
-        'max_x_mm': max_x_mm,
-        'min_y_mm': min_y_mm,
-        'max_y_mm': max_y_mm,
-        'width_mm': width_mm,
-        'height_mm': height_mm,
-        'min_x_px': min_x_px,
-        'min_y_px': min_y_px,
-        'width_px': width_px,
-        'height_px': height_px
-    }
+
+    return {"min_x_mm": min_x_mm, "max_x_mm": max_x_mm, "min_y_mm": min_y_mm, "max_y_mm": max_y_mm, "width_mm": width_mm, "height_mm": height_mm, "min_x_px": min_x_px, "min_y_px": min_y_px, "width_px": width_px, "height_px": height_px}
 
 
-def _add_coordinate_origin_marker(dwg: svgwrite.Drawing, stroke_color: str = '#000000', stroke_width: str = '0.1'):
+def _add_coordinate_origin_marker(dwg: svgwrite.Drawing, stroke_color: str = "#000000", stroke_width: str = "0.1"):
     """
     Add coordinate origin marker to SVG drawing.
-    
+
     Args:
         dwg: svgwrite.Drawing instance
         stroke_color: Color for the origin marker
         stroke_width: Width of the origin marker strokes
     """
     origin_group = dwg.g()
-    origin_group.add(dwg.circle(
-        center=(0, 0),
-        r=3.78,
-        fill='none',
-        stroke=stroke_color,
-        stroke_width=stroke_width
-    ))
-    origin_group.add(dwg.line(
-        start=(-18.9, 0),
-        end=(18.9, 0),
-        stroke=stroke_color,
-        stroke_width=stroke_width
-    ))
-    origin_group.add(dwg.line(
-        start=(0, -18.9),
-        end=(0, 18.9),
-        stroke=stroke_color,
-        stroke_width=stroke_width
-    ))
+    origin_group.add(dwg.circle(center=(0, 0), r=3.78, fill="none", stroke=stroke_color, stroke_width=stroke_width))
+    origin_group.add(dwg.line(start=(-18.9, 0), end=(18.9, 0), stroke=stroke_color, stroke_width=stroke_width))
+    origin_group.add(dwg.line(start=(0, -18.9), end=(0, 18.9), stroke=stroke_color, stroke_width=stroke_width))
     dwg.add(origin_group)
 
 
-def _add_midpoint_separation_line(dwg: svgwrite.Drawing, 
-                                 positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], 
-                                 config: KeyboardLayoutConfig, 
-                                 dimensions: Dict[str, float]):
+def _add_midpoint_separation_line(dwg: svgwrite.Drawing, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], config: KeyboardLayoutConfig, dimensions: Dict[str, float]):
     """
     Add midpoint separation line between left and right halves.
-    
+
     Args:
         dwg: svgwrite.Drawing instance
         positions: Positions dictionary from generate_all_positions
         config: KeyboardLayoutConfig instance
         dimensions: Dictionary from _calculate_cad_svg_dimensions
     """
-    left_switches = positions['left']['switches']
-    right_switches = positions['right']['switches']
-    
+    left_switches = positions["left"]["switches"]
+    right_switches = positions["right"]["switches"]
+
     # Find the rightmost x coordinate of left switches (in mm)
-    left_max_x_mm = max(x + config.footprint_width/2 for _, x, y, r in left_switches)
-    
+    left_max_x_mm = max(x + config.footprint_width / 2 for _, x, y, r in left_switches)
+
     # Find the leftmost x coordinate of right switches (in mm)
-    right_min_x_mm = min(x - config.footprint_width/2 for _, x, y, r in right_switches)
-    
+    right_min_x_mm = min(x - config.footprint_width / 2 for _, x, y, r in right_switches)
+
     # Calculate the midpoint (in mm, then convert to pixels)
     midpoint_x_mm = (left_max_x_mm + right_min_x_mm) / 2
     midpoint_x_px = midpoint_x_mm * FUSION_360_MM_TO_PX
-    
+
     # Add midpoint separation line
-    dwg.add(dwg.line(
-        start=(midpoint_x_px, dimensions['min_y_px']),
-        end=(midpoint_x_px, dimensions['min_y_px'] + dimensions['height_px']),
-        stroke='#0066cc',
-        stroke_width='0.57',
-        stroke_dasharray='7.56,3.78'
-    ))
+    dwg.add(dwg.line(start=(midpoint_x_px, dimensions["min_y_px"]), end=(midpoint_x_px, dimensions["min_y_px"] + dimensions["height_px"]), stroke="#0066cc", stroke_width="0.57", stroke_dasharray="7.56,3.78"))
 
 
 def print_positions(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]]):
     """Print all key and diode positions in a readable format."""
     print("Keyboard Layout Positions (center coordinates in mm)")
     print("=" * 70)
-    
+
     print("\nLeft Half:")
     print("-" * 45)
-    for component_type, components in positions['left'].items():
+    for component_type, components in positions["left"].items():
         print(f"{component_type.capitalize()}:")
         for component_name, x, y, rotation in components:
             print(f"  {component_name}: ({x:6.2f}, {y:6.2f}, {rotation:6.1f}°)")
-    
+
     print("\nRight Half:")
     print("-" * 45)
-    for component_type, components in positions['right'].items():
+    for component_type, components in positions["right"].items():
         print(f"{component_type.capitalize()}:")
         for component_name, x, y, rotation in components:
             print(f"  {component_name}: ({x:6.2f}, {y:6.2f}, {rotation:6.1f}°)")
@@ -244,79 +189,79 @@ def print_positions(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str,
 def export_csv(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_positions.csv"):
     """
     Export positions in CSV format.
-    
+
     Args:
         positions: Positions dictionary from generate_all_positions
         filename: Output CSV filename
     """
-    with open(filename, 'w') as f:
+    with open(filename, "w") as f:
         f.write("Reference,X(mm),Y(mm),Rotation(degrees),Half,Type\n")
-        
-        for key_name, x, y, rotation in positions['left']['switches']:
+
+        for key_name, x, y, rotation in positions["left"]["switches"]:
             f.write(f"{key_name},{x:.3f},{y:.3f},{rotation:.1f},Left,Switch\n")
-        
-        for diode_name, x, y, rotation in positions['left']['diodes']:
+
+        for diode_name, x, y, rotation in positions["left"]["diodes"]:
             f.write(f"{diode_name},{x:.3f},{y:.3f},{rotation:.1f},Left,Diode\n")
-        
+
         # Add specific components for left half
-        for component_type, components in positions['left'].items():
-            if component_type not in ['switches', 'diodes']:
+        for component_type, components in positions["left"].items():
+            if component_type not in ["switches", "diodes"]:
                 for component_name, x, y, rotation in components:
                     f.write(f"{component_name},{x:.3f},{y:.3f},{rotation:.1f},Left,{component_type}\n")
-        
-        for key_name, x, y, rotation in positions['right']['switches']:
+
+        for key_name, x, y, rotation in positions["right"]["switches"]:
             f.write(f"{key_name},{x:.3f},{y:.3f},{rotation:.1f},Right,Switch\n")
-        
-        for diode_name, x, y, rotation in positions['right']['diodes']:
+
+        for diode_name, x, y, rotation in positions["right"]["diodes"]:
             f.write(f"{diode_name},{x:.3f},{y:.3f},{rotation:.1f},Right,Diode\n")
-        
+
         # Add specific components for right half
-        for component_type, components in positions['right'].items():
-            if component_type not in ['switches', 'diodes']:
+        for component_type, components in positions["right"].items():
+            if component_type not in ["switches", "diodes"]:
                 for component_name, x, y, rotation in components:
                     f.write(f"{component_name},{x:.3f},{y:.3f},{rotation:.1f},Right,{component_type}\n")
-    
+
     print(f"Positions exported to {filename}")
 
 
 def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_layout.svg"):
     """
     Export positions as an SVG visualization.
-    
+
     Args:
         config: KeyboardLayoutConfig instance with layout parameters
         positions: Positions dictionary from generate_all_positions
         filename: Output SVG filename
     """
     # Calculate SVG dimensions (accounting for center coordinates and rotation)
-    all_switch_positions = positions['left']['switches'] + positions['right']['switches']
-    all_diode_positions = positions['left']['diodes'] + positions['right']['diodes']
-    
+    all_switch_positions = positions["left"]["switches"] + positions["right"]["switches"]
+    all_diode_positions = positions["left"]["diodes"] + positions["right"]["diodes"]
+
     # Collect all specific component positions
     all_specific_positions = []
-    for half in ['left', 'right']:
+    for half in ["left", "right"]:
         for component_type, components in positions[half].items():
-            if component_type not in ['switches', 'diodes']:
+            if component_type not in ["switches", "diodes"]:
                 all_specific_positions.extend(components)
-    
+
     # Calculate bounds considering switches, diodes, and specific components
-    switch_min_x = min(x - config.footprint_width/2 for _, x, y, r in all_switch_positions)
-    switch_max_x = max(x + config.footprint_width/2 for _, x, y, r in all_switch_positions)
-    switch_min_y = min(y - config.footprint_height/2 for _, x, y, r in all_switch_positions)
-    switch_max_y = max(y + config.footprint_height/2 for _, x, y, r in all_switch_positions)
-    
-    diode_min_x = min(x - config.diode_width/2 for _, x, y, r in all_diode_positions)
-    diode_max_x = max(x + config.diode_width/2 for _, x, y, r in all_diode_positions)
-    diode_min_y = min(y - config.diode_height/2 for _, x, y, r in all_diode_positions)
-    diode_max_y = max(y + config.diode_height/2 for _, x, y, r in all_diode_positions)
-    
+    switch_min_x = min(x - config.footprint_width / 2 for _, x, y, r in all_switch_positions)
+    switch_max_x = max(x + config.footprint_width / 2 for _, x, y, r in all_switch_positions)
+    switch_min_y = min(y - config.footprint_height / 2 for _, x, y, r in all_switch_positions)
+    switch_max_y = max(y + config.footprint_height / 2 for _, x, y, r in all_switch_positions)
+
+    diode_min_x = min(x - config.diode_width / 2 for _, x, y, r in all_diode_positions)
+    diode_max_x = max(x + config.diode_width / 2 for _, x, y, r in all_diode_positions)
+    diode_min_y = min(y - config.diode_height / 2 for _, x, y, r in all_diode_positions)
+    diode_max_y = max(y + config.diode_height / 2 for _, x, y, r in all_diode_positions)
+
     # Include specific components in bounds calculation
     if all_specific_positions:
         specific_min_x = min(x - 2 for _, x, y, r in all_specific_positions)  # 2mm margin for dot
         specific_max_x = max(x + 2 for _, x, y, r in all_specific_positions)
         specific_min_y = min(y - 2 for _, x, y, r in all_specific_positions)
         specific_max_y = max(y + 2 for _, x, y, r in all_specific_positions)
-        
+
         min_x = min(switch_min_x, diode_min_x, specific_min_x) - 10
         max_x = max(switch_max_x, diode_max_x, specific_max_x) + 10
         min_y = min(switch_min_y, diode_min_y, specific_min_y) - 25  # More space at top
@@ -326,277 +271,121 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
         max_x = max(switch_max_x, diode_max_x) + 10
         min_y = min(switch_min_y, diode_min_y) - 25  # More space at top
         max_y = max(switch_max_y, diode_max_y) + 10  # Less space at bottom (no legend)
-    
+
     width = max_x - min_x
     height = max_y - min_y
-    
+
     # Create SVG drawing (using mm units for visualization)
-    dwg = svgwrite.Drawing(
-        filename,
-        size=(f'{width:.1f}mm', f'{height:.1f}mm'),
-        viewBox=f'{min_x:.1f} {min_y:.1f} {width:.1f} {height:.1f}'
-    )
-    
+    dwg = svgwrite.Drawing(filename, size=(f"{width:.1f}mm", f"{height:.1f}mm"), viewBox=f"{min_x:.1f} {min_y:.1f} {width:.1f} {height:.1f}")
+
     # Add background
-    dwg.add(dwg.rect(
-        insert=(min_x, min_y),
-        size=(width, height),
-        fill='#f8f9fa',
-        stroke='none'
-    ))
-    
+    dwg.add(dwg.rect(insert=(min_x, min_y), size=(width, height), fill="#f8f9fa", stroke="none"))
+
     # Add grid pattern
-    grid_pattern = dwg.defs.add(dwg.pattern(
-        id='grid',
-        patternUnits='userSpaceOnUse',
-        size=(10, 10)
-    ))
-    grid_pattern.add(dwg.path(
-        d='M 10 0 L 0 0 0 10',
-        fill='none',
-        stroke='#e9ecef',
-        stroke_width=0.5
-    ))
-    
+    grid_pattern = dwg.defs.add(dwg.pattern(id="grid", patternUnits="userSpaceOnUse", size=(10, 10)))
+    grid_pattern.add(dwg.path(d="M 10 0 L 0 0 0 10", fill="none", stroke="#e9ecef", stroke_width=0.5))
+
     # Apply grid to background
-    dwg.add(dwg.rect(
-        insert=(min_x, min_y),
-        size=(width, height),
-        fill='url(#grid)'
-    ))
-    
+    dwg.add(dwg.rect(insert=(min_x, min_y), size=(width, height), fill="url(#grid)"))
+
     # Add title
-    dwg.add(dwg.text(
-        'Split Column Staggered Keyboard Layout',
-        insert=((min_x + max_x) / 2, min_y + 8),
-        text_anchor='middle',
-        font_family='Arial, sans-serif',
-        font_size='4',
-        fill='#212529',
-        font_weight='bold'
-    ))
-    
+    dwg.add(dwg.text("Split Column Staggered Keyboard Layout", insert=((min_x + max_x) / 2, min_y + 8), text_anchor="middle", font_family="Arial, sans-serif", font_size="4", fill="#212529", font_weight="bold"))
+
     # Add half labels
-    dwg.add(dwg.text(
-        'Left Half',
-        insert=(36, min_y + 18),
-        text_anchor='middle',
-        font_family='Arial, sans-serif',
-        font_size='3',
-        fill='#6c757d'
-    ))
-    
-    dwg.add(dwg.text(
-        'Right Half',
-        insert=(155, min_y + 18),
-        text_anchor='middle',
-        font_family='Arial, sans-serif',
-        font_size='3',
-        fill='#6c757d'
-    ))
-    
+    dwg.add(dwg.text("Left Half", insert=(36, min_y + 18), text_anchor="middle", font_family="Arial, sans-serif", font_size="3", fill="#6c757d"))
+
+    dwg.add(dwg.text("Right Half", insert=(155, min_y + 18), text_anchor="middle", font_family="Arial, sans-serif", font_size="3", fill="#6c757d"))
+
     # Add key rectangles and labels for left half
-    for key_name, x, y, rotation in positions['left']['switches']:
+    for key_name, x, y, rotation in positions["left"]["switches"]:
         # Use same color for all left switches
         fill_color = "#e3f2fd"
         stroke_color = "#1976d2"
         text_color = "#1976d2"
-        
+
         if abs(rotation) < 0.1:  # No rotation for main keys
             # Add switch rectangle
-            dwg.add(dwg.rect(
-                insert=(x - config.footprint_width/2, y - config.footprint_height/2),
-                size=(config.footprint_width, config.footprint_height),
-                fill=fill_color,
-                stroke=stroke_color,
-                stroke_width=0.01
-            ))
+            dwg.add(dwg.rect(insert=(x - config.footprint_width / 2, y - config.footprint_height / 2), size=(config.footprint_width, config.footprint_height), fill=fill_color, stroke=stroke_color, stroke_width=0.01))
             # Add label
-            dwg.add(dwg.text(
-                key_name,
-                insert=(x, y + 1),
-                text_anchor='middle',
-                font_family='Arial, sans-serif',
-                font_size='2.5',
-                fill=text_color,
-                font_weight='bold'
-            ))
+            dwg.add(dwg.text(key_name, insert=(x, y + 1), text_anchor="middle", font_family="Arial, sans-serif", font_size="2.5", fill=text_color, font_weight="bold"))
         else:  # Rotated thumb keys
-            group = dwg.g(transform=f'translate({x:.1f},{y:.1f}) rotate({rotation:.1f})')
-            group.add(dwg.rect(
-                insert=(-config.footprint_width/2, -config.footprint_height/2),
-                size=(config.footprint_width, config.footprint_height),
-                fill=fill_color,
-                stroke=stroke_color,
-                stroke_width=0.01
-            ))
-            group.add(dwg.text(
-                key_name,
-                insert=(0, 1),
-                text_anchor='middle',
-                font_family='Arial, sans-serif',
-                font_size='2.5',
-                fill=text_color,
-                font_weight='bold'
-            ))
+            group = dwg.g(transform=f"translate({x:.1f},{y:.1f}) rotate({rotation:.1f})")
+            group.add(dwg.rect(insert=(-config.footprint_width / 2, -config.footprint_height / 2), size=(config.footprint_width, config.footprint_height), fill=fill_color, stroke=stroke_color, stroke_width=0.01))
+            group.add(dwg.text(key_name, insert=(0, 1), text_anchor="middle", font_family="Arial, sans-serif", font_size="2.5", fill=text_color, font_weight="bold"))
             dwg.add(group)
-    
+
     # Add diode rectangles and labels for left half
-    for diode_name, x, y, rotation in positions['left']['diodes']:
+    for diode_name, x, y, rotation in positions["left"]["diodes"]:
         # Use same color for all left diodes
         fill_color = "#a8dadc"
         stroke_color = "#457b9d"
         text_color = "#1d3557"
-        
+
         if abs(rotation) < 0.1:  # No rotation for main keys
             # Add diode rectangle
-            dwg.add(dwg.rect(
-                insert=(x - config.diode_width/2, y - config.diode_height/2),
-                size=(config.diode_width, config.diode_height),
-                fill=fill_color,
-                stroke=stroke_color,
-                stroke_width=0.1
-            ))
+            dwg.add(dwg.rect(insert=(x - config.diode_width / 2, y - config.diode_height / 2), size=(config.diode_width, config.diode_height), fill=fill_color, stroke=stroke_color, stroke_width=0.1))
             # Add label
-            dwg.add(dwg.text(
-                diode_name,
-                insert=(x, y + 0.5),
-                text_anchor='middle',
-                font_family='Arial, sans-serif',
-                font_size='1.5',
-                fill=text_color,
-                font_weight='bold'
-            ))
+            dwg.add(dwg.text(diode_name, insert=(x, y + 0.5), text_anchor="middle", font_family="Arial, sans-serif", font_size="1.5", fill=text_color, font_weight="bold"))
         else:  # Rotated thumb diodes
-            group = dwg.g(transform=f'translate({x:.1f},{y:.1f}) rotate({rotation:.1f})')
-            group.add(dwg.rect(
-                insert=(-config.diode_width/2, -config.diode_height/2),
-                size=(config.diode_width, config.diode_height),
-                fill=fill_color,
-                stroke=stroke_color,
-                stroke_width=0.1
-            ))
-            group.add(dwg.text(
-                diode_name,
-                insert=(0, 0.5),
-                text_anchor='middle',
-                font_family='Arial, sans-serif',
-                font_size='1.5',
-                fill=text_color,
-                font_weight='bold'
-            ))
+            group = dwg.g(transform=f"translate({x:.1f},{y:.1f}) rotate({rotation:.1f})")
+            group.add(dwg.rect(insert=(-config.diode_width / 2, -config.diode_height / 2), size=(config.diode_width, config.diode_height), fill=fill_color, stroke=stroke_color, stroke_width=0.1))
+            group.add(dwg.text(diode_name, insert=(0, 0.5), text_anchor="middle", font_family="Arial, sans-serif", font_size="1.5", fill=text_color, font_weight="bold"))
             dwg.add(group)
-    
+
     # Add key rectangles and labels for right half
-    for key_name, x, y, rotation in positions['right']['switches']:
+    for key_name, x, y, rotation in positions["right"]["switches"]:
         # Use same color for all right switches
         fill_color = "#f3e5f5"
         stroke_color = "#7b1fa2"
         text_color = "#7b1fa2"
-        
+
         if abs(rotation) < 0.1:  # No rotation for main keys
             # Add switch rectangle
-            dwg.add(dwg.rect(
-                insert=(x - config.footprint_width/2, y - config.footprint_height/2),
-                size=(config.footprint_width, config.footprint_height),
-                fill=fill_color,
-                stroke=stroke_color,
-                stroke_width=0.01
-            ))
+            dwg.add(dwg.rect(insert=(x - config.footprint_width / 2, y - config.footprint_height / 2), size=(config.footprint_width, config.footprint_height), fill=fill_color, stroke=stroke_color, stroke_width=0.01))
             # Add label
-            dwg.add(dwg.text(
-                key_name,
-                insert=(x, y + 1),
-                text_anchor='middle',
-                font_family='Arial, sans-serif',
-                font_size='2.5',
-                fill=text_color,
-                font_weight='bold'
-            ))
+            dwg.add(dwg.text(key_name, insert=(x, y + 1), text_anchor="middle", font_family="Arial, sans-serif", font_size="2.5", fill=text_color, font_weight="bold"))
         else:  # Rotated thumb keys
-            group = dwg.g(transform=f'translate({x:.1f},{y:.1f}) rotate({rotation:.1f})')
-            group.add(dwg.rect(
-                insert=(-config.footprint_width/2, -config.footprint_height/2),
-                size=(config.footprint_width, config.footprint_height),
-                fill=fill_color,
-                stroke=stroke_color,
-                stroke_width=0.01
-            ))
-            group.add(dwg.text(
-                key_name,
-                insert=(0, 1),
-                text_anchor='middle',
-                font_family='Arial, sans-serif',
-                font_size='2.5',
-                fill=text_color,
-                font_weight='bold'
-            ))
+            group = dwg.g(transform=f"translate({x:.1f},{y:.1f}) rotate({rotation:.1f})")
+            group.add(dwg.rect(insert=(-config.footprint_width / 2, -config.footprint_height / 2), size=(config.footprint_width, config.footprint_height), fill=fill_color, stroke=stroke_color, stroke_width=0.01))
+            group.add(dwg.text(key_name, insert=(0, 1), text_anchor="middle", font_family="Arial, sans-serif", font_size="2.5", fill=text_color, font_weight="bold"))
             dwg.add(group)
-    
+
     # Add diode rectangles and labels for right half
-    for diode_name, x, y, rotation in positions['right']['diodes']:
+    for diode_name, x, y, rotation in positions["right"]["diodes"]:
         # Use same color for all right diodes
         fill_color = "#dda0dd"
         stroke_color = "#9a031e"
         text_color = "#5f0a87"
-        
+
         if abs(rotation) < 0.1:  # No rotation for main keys
             # Add diode rectangle
-            dwg.add(dwg.rect(
-                insert=(x - config.diode_width/2, y - config.diode_height/2),
-                size=(config.diode_width, config.diode_height),
-                fill=fill_color,
-                stroke=stroke_color,
-                stroke_width=0.1
-            ))
+            dwg.add(dwg.rect(insert=(x - config.diode_width / 2, y - config.diode_height / 2), size=(config.diode_width, config.diode_height), fill=fill_color, stroke=stroke_color, stroke_width=0.1))
             # Add label
-            dwg.add(dwg.text(
-                diode_name,
-                insert=(x, y + 0.5),
-                text_anchor='middle',
-                font_family='Arial, sans-serif',
-                font_size='1.5',
-                fill=text_color,
-                font_weight='bold'
-            ))
+            dwg.add(dwg.text(diode_name, insert=(x, y + 0.5), text_anchor="middle", font_family="Arial, sans-serif", font_size="1.5", fill=text_color, font_weight="bold"))
         else:  # Rotated thumb diodes
-            group = dwg.g(transform=f'translate({x:.1f},{y:.1f}) rotate({rotation:.1f})')
-            group.add(dwg.rect(
-                insert=(-config.diode_width/2, -config.diode_height/2),
-                size=(config.diode_width, config.diode_height),
-                fill=fill_color,
-                stroke=stroke_color,
-                stroke_width=0.1
-            ))
-            group.add(dwg.text(
-                diode_name,
-                insert=(0, 0.5),
-                text_anchor='middle',
-                font_family='Arial, sans-serif',
-                font_size='1.5',
-                fill=text_color,
-                font_weight='bold'
-            ))
+            group = dwg.g(transform=f"translate({x:.1f},{y:.1f}) rotate({rotation:.1f})")
+            group.add(dwg.rect(insert=(-config.diode_width / 2, -config.diode_height / 2), size=(config.diode_width, config.diode_height), fill=fill_color, stroke=stroke_color, stroke_width=0.1))
+            group.add(dwg.text(diode_name, insert=(0, 0.5), text_anchor="middle", font_family="Arial, sans-serif", font_size="1.5", fill=text_color, font_weight="bold"))
             dwg.add(group)
-    
+
     # Add specific components for both halves
-    for half in ['left', 'right']:
+    for half in ["left", "right"]:
         for component_type, components in positions[half].items():
-            if component_type not in ['switches', 'diodes']:
+            if component_type not in ["switches", "diodes"]:
                 # Choose color based on component type
-                if component_type == 'MCU':
+                if component_type == "MCU":
                     fill_color = "#ff6b35"
                     stroke_color = "#d63031"
                     text_color = "#2d3436"
-                elif component_type == 'HOLE':
+                elif component_type == "HOLE":
                     fill_color = "#636e72"
                     stroke_color = "#2d3436"
                     text_color = "#2d3436"
-                elif component_type == 'BAT':
+                elif component_type == "BAT":
                     fill_color = "#00b894"
                     stroke_color = "#00a085"
                     text_color = "#2d3436"
-                elif component_type == 'RSW':
+                elif component_type == "RSW":
                     fill_color = "#e17055"
                     stroke_color = "#d63031"
                     text_color = "#2d3436"
@@ -604,154 +393,46 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
                     fill_color = "#74b9ff"
                     stroke_color = "#0984e3"
                     text_color = "#2d3436"
-                
+
                 for component_name, x, y, rotation in components:
-                    if component_type == 'HOLE':
+                    if component_type == "HOLE":
                         # Make holes 3mm circles (radius = 1.5mm)
-                        dwg.add(dwg.circle(
-                            center=(x, y),
-                            r=1.5,
-                            fill=fill_color,
-                            stroke=stroke_color,
-                            stroke_width=0.1
-                        ))
-                        dwg.add(dwg.text(
-                            component_name,
-                            insert=(x, y - 3),
-                            text_anchor='middle',
-                            font_family='Arial, sans-serif',
-                            font_size='2',
-                            fill=text_color,
-                            font_weight='bold'
-                        ))
+                        dwg.add(dwg.circle(center=(x, y), r=1.5, fill=fill_color, stroke=stroke_color, stroke_width=0.1))
+                        dwg.add(dwg.text(component_name, insert=(x, y - 3), text_anchor="middle", font_family="Arial, sans-serif", font_size="2", fill=text_color, font_weight="bold"))
                     else:
                         # Make all other components small dots (radius = 0.5mm)
-                        dwg.add(dwg.circle(
-                            center=(x, y),
-                            r=0.5,
-                            fill=fill_color,
-                            stroke=stroke_color,
-                            stroke_width=0.1
-                        ))
-                        dwg.add(dwg.text(
-                            component_name,
-                            insert=(x, y - 2),
-                            text_anchor='middle',
-                            font_family='Arial, sans-serif',
-                            font_size='1.5',
-                            fill=text_color,
-                            font_weight='bold'
-                        ))
-    
+                        dwg.add(dwg.circle(center=(x, y), r=0.5, fill=fill_color, stroke=stroke_color, stroke_width=0.1))
+                        dwg.add(dwg.text(component_name, insert=(x, y - 2), text_anchor="middle", font_family="Arial, sans-serif", font_size="1.5", fill=text_color, font_weight="bold"))
+
     # Add thumb arc origins
     # Calculate left thumb arc origin
     ref_x, ref_y = KeyboardLayoutCalculator.calculate_left_position(config, config.num_rows - 1, config.thumb_arc_col_start)
     left_origin_x = ref_x + config.thumb_arc_config.offset_x
     left_origin_y = ref_y + config.thumb_arc_config.offset_y + config.thumb_arc_config.radius
-    
+
     # Calculate right thumb arc origin by mirroring the left origin
     right_origin_x, right_origin_y = KeyboardLayoutCalculator.mirror_position(config, left_origin_x, left_origin_y)
-    
+
     # Add left thumb arc origin marker
-    dwg.add(dwg.circle(
-        center=(left_origin_x, left_origin_y),
-        r=0.5,
-        fill='#d32f2f',
-        stroke='#b71c1c',
-        stroke_width=0.1
-    ))
-    dwg.add(dwg.circle(
-        center=(left_origin_x, left_origin_y),
-        r=3,
-        fill='none',
-        stroke='#d32f2f',
-        stroke_width=0.05,
-        stroke_dasharray='0.5,0.5'
-    ))
-    dwg.add(dwg.text(
-        'L-ARC',
-        insert=(left_origin_x, left_origin_y - 4),
-        text_anchor='middle',
-        font_family='Arial, sans-serif',
-        font_size='1.5',
-        fill='#d32f2f',
-        font_weight='bold'
-    ))
-    
+    dwg.add(dwg.circle(center=(left_origin_x, left_origin_y), r=0.5, fill="#d32f2f", stroke="#b71c1c", stroke_width=0.1))
+    dwg.add(dwg.circle(center=(left_origin_x, left_origin_y), r=3, fill="none", stroke="#d32f2f", stroke_width=0.05, stroke_dasharray="0.5,0.5"))
+    dwg.add(dwg.text("L-ARC", insert=(left_origin_x, left_origin_y - 4), text_anchor="middle", font_family="Arial, sans-serif", font_size="1.5", fill="#d32f2f", font_weight="bold"))
+
     # Add right thumb arc origin marker
-    dwg.add(dwg.circle(
-        center=(right_origin_x, right_origin_y),
-        r=0.5,
-        fill='#d32f2f',
-        stroke='#b71c1c',
-        stroke_width=0.1
-    ))
-    dwg.add(dwg.circle(
-        center=(right_origin_x, right_origin_y),
-        r=3,
-        fill='none',
-        stroke='#d32f2f',
-        stroke_width=0.05,
-        stroke_dasharray='0.5,0.5'
-    ))
-    dwg.add(dwg.text(
-        'R-ARC',
-        insert=(right_origin_x, right_origin_y - 4),
-        text_anchor='middle',
-        font_family='Arial, sans-serif',
-        font_size='1.5',
-        fill='#d32f2f',
-        font_weight='bold'
-    ))
-    
+    dwg.add(dwg.circle(center=(right_origin_x, right_origin_y), r=0.5, fill="#d32f2f", stroke="#b71c1c", stroke_width=0.1))
+    dwg.add(dwg.circle(center=(right_origin_x, right_origin_y), r=3, fill="none", stroke="#d32f2f", stroke_width=0.05, stroke_dasharray="0.5,0.5"))
+    dwg.add(dwg.text("R-ARC", insert=(right_origin_x, right_origin_y - 4), text_anchor="middle", font_family="Arial, sans-serif", font_size="1.5", fill="#d32f2f", font_weight="bold"))
+
     # Add coordinate origin (0,0)
     origin_group = dwg.g()
-    origin_group.add(dwg.circle(
-        center=(0, 0),
-        r=0.5,
-        fill='#ff4444',
-        stroke='#cc0000',
-        stroke_width=0.1
-    ))
-    origin_group.add(dwg.circle(
-        center=(0, 0),
-        r=5,
-        fill='none',
-        stroke='#ff4444',
-        stroke_width=0.05,
-        stroke_dasharray='1,1'
-    ))
-    origin_group.add(dwg.line(
-        start=(-10, 0),
-        end=(10, 0),
-        stroke='#ff4444',
-        stroke_width=0.1
-    ))
-    origin_group.add(dwg.line(
-        start=(0, -10),
-        end=(0, 10),
-        stroke='#ff4444',
-        stroke_width=0.1
-    ))
-    origin_group.add(dwg.text(
-        'ORIGIN',
-        insert=(0, -7),
-        text_anchor='middle',
-        font_family='Arial, sans-serif',
-        font_size='2',
-        fill='#ff4444',
-        font_weight='bold'
-    ))
-    origin_group.add(dwg.text(
-        '(0.0, 0.0)',
-        insert=(0, 10),
-        text_anchor='middle',
-        font_family='Arial, sans-serif',
-        font_size='1.5',
-        fill='#666666'
-    ))
+    origin_group.add(dwg.circle(center=(0, 0), r=0.5, fill="#ff4444", stroke="#cc0000", stroke_width=0.1))
+    origin_group.add(dwg.circle(center=(0, 0), r=5, fill="none", stroke="#ff4444", stroke_width=0.05, stroke_dasharray="1,1"))
+    origin_group.add(dwg.line(start=(-10, 0), end=(10, 0), stroke="#ff4444", stroke_width=0.1))
+    origin_group.add(dwg.line(start=(0, -10), end=(0, 10), stroke="#ff4444", stroke_width=0.1))
+    origin_group.add(dwg.text("ORIGIN", insert=(0, -7), text_anchor="middle", font_family="Arial, sans-serif", font_size="2", fill="#ff4444", font_weight="bold"))
+    origin_group.add(dwg.text("(0.0, 0.0)", insert=(0, 10), text_anchor="middle", font_family="Arial, sans-serif", font_size="1.5", fill="#666666"))
     dwg.add(origin_group)
-    
+
     # Save the SVG
     dwg.save()
     print(f"SVG visualization exported to {filename}")
@@ -760,7 +441,7 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
 def export_svg_for_footprints(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_switches_cad.svg"):
     """
     Export switch outlines and origin as a clean SVG for CAD import (e.g., Fusion 360).
-    
+
     Args:
         config: KeyboardLayoutConfig instance with layout parameters
         positions: Positions dictionary from generate_all_positions
@@ -768,46 +449,34 @@ def export_svg_for_footprints(config: KeyboardLayoutConfig, positions: Dict[str,
     """
     # Calculate SVG dimensions
     dimensions = _calculate_cad_svg_dimensions(positions, config)
-    
+
     # Create SVG drawing
     dwg = _create_cad_svg_drawing(filename, dimensions)
 
     # Add switch rectangles for both halves
-    for half in ['left', 'right']:
-        for key_name, x, y, rotation in positions[half]['switches']:
+    for half in ["left", "right"]:
+        for key_name, x, y, rotation in positions[half]["switches"]:
             # Convert mm coordinates to pixels
             x_px = x * FUSION_360_MM_TO_PX
             y_px = y * FUSION_360_MM_TO_PX
             width_px_rect = config.footprint_width * FUSION_360_MM_TO_PX
             height_px_rect = config.footprint_height * FUSION_360_MM_TO_PX
-            
+
             if abs(rotation) < 0.1:  # No rotation for main keys
                 # Add switch outline rectangle
-                dwg.add(dwg.rect(
-                    insert=(x_px - width_px_rect/2, y_px - height_px_rect/2),
-                    size=(width_px_rect, height_px_rect),
-                    fill='none',
-                    stroke='#000000',
-                    stroke_width='0.38'
-                ))
+                dwg.add(dwg.rect(insert=(x_px - width_px_rect / 2, y_px - height_px_rect / 2), size=(width_px_rect, height_px_rect), fill="none", stroke="#000000", stroke_width="0.38"))
             else:  # Rotated thumb keys
                 # Create group for rotation
-                group = dwg.g(transform=f'translate({x_px:.3f},{y_px:.3f}) rotate({rotation:.3f})')
-                group.add(dwg.rect(
-                    insert=(-width_px_rect/2, -height_px_rect/2),
-                    size=(width_px_rect, height_px_rect),
-                    fill='none',
-                    stroke='#000000',
-                    stroke_width='0.38'
-                ))
+                group = dwg.g(transform=f"translate({x_px:.3f},{y_px:.3f}) rotate({rotation:.3f})")
+                group.add(dwg.rect(insert=(-width_px_rect / 2, -height_px_rect / 2), size=(width_px_rect, height_px_rect), fill="none", stroke="#000000", stroke_width="0.38"))
                 dwg.add(group)
-    
+
     # Add midpoint separation line
     _add_midpoint_separation_line(dwg, positions, config, dimensions)
-    
+
     # Add coordinate origin marker
-    _add_coordinate_origin_marker(dwg, '#ff0000', '0.76')
-    
+    _add_coordinate_origin_marker(dwg, "#ff0000", "0.76")
+
     # Save the SVG
     dwg.save()
     print(f"CAD-ready SVG exported to {filename}")
@@ -818,7 +487,7 @@ def export_svg_switch_plate(config: KeyboardLayoutConfig, positions: Dict[str, D
     Export switch plate hole and recess positions for CAD import (e.g., Fusion 360).
     Creates 14mm (hole) and 16mm (recess) squares centered on each switch position.
     Minimal SVG with black hairline strokes for clean CAD import.
-    
+
     Args:
         config: KeyboardLayoutConfig instance with layout parameters
         positions: Positions dictionary from generate_all_positions
@@ -827,72 +496,48 @@ def export_svg_switch_plate(config: KeyboardLayoutConfig, positions: Dict[str, D
     # Calculate SVG dimensions with keepout zones (16mm is the largest)
     keepout_size = 16.0  # mm
     extra_bounds = {
-        'min_x_offset': -keepout_size/2 + config.footprint_width/2,
-        'max_x_offset': keepout_size/2 - config.footprint_width/2,
-        'min_y_offset': -keepout_size/2 + config.footprint_height/2,
-        'max_y_offset': keepout_size/2 - config.footprint_height/2
+        "min_x_offset": -keepout_size / 2 + config.footprint_width / 2,
+        "max_x_offset": keepout_size / 2 - config.footprint_width / 2,
+        "min_y_offset": -keepout_size / 2 + config.footprint_height / 2,
+        "max_y_offset": keepout_size / 2 - config.footprint_height / 2,
     }
     dimensions = _calculate_cad_svg_dimensions(positions, config, extra_bounds)
-    
+
     # Create SVG drawing
     dwg = _create_cad_svg_drawing(filename, dimensions)
 
     # Add switch plate holes and recesses for both halves
-    for half in ['left', 'right']:
-        for key_name, x, y, rotation in positions[half]['switches']:
+    for half in ["left", "right"]:
+        for key_name, x, y, rotation in positions[half]["switches"]:
             # Convert mm coordinates to pixels
             x_px = x * FUSION_360_MM_TO_PX
             y_px = y * FUSION_360_MM_TO_PX
-            
+
             # Hole and recess dimensions in pixels
             hole_14_px = 14.0 * FUSION_360_MM_TO_PX
             recess_16_px = 16.0 * FUSION_360_MM_TO_PX
-            
+
             if abs(rotation) < 0.1:  # No rotation for main keys
                 # 16mm recess (outer rectangle)
-                dwg.add(dwg.rect(
-                    insert=(x_px - recess_16_px/2, y_px - recess_16_px/2),
-                    size=(recess_16_px, recess_16_px),
-                    fill='none',
-                    stroke='#000000',
-                    stroke_width='0.1'
-                ))
-                
+                dwg.add(dwg.rect(insert=(x_px - recess_16_px / 2, y_px - recess_16_px / 2), size=(recess_16_px, recess_16_px), fill="none", stroke="#000000", stroke_width="0.1"))
+
                 # 14mm hole (inner rectangle)
-                dwg.add(dwg.rect(
-                    insert=(x_px - hole_14_px/2, y_px - hole_14_px/2),
-                    size=(hole_14_px, hole_14_px),
-                    fill='none',
-                    stroke='#000000',
-                    stroke_width='0.1'
-                ))
+                dwg.add(dwg.rect(insert=(x_px - hole_14_px / 2, y_px - hole_14_px / 2), size=(hole_14_px, hole_14_px), fill="none", stroke="#000000", stroke_width="0.1"))
             else:  # Rotated thumb keys
                 # Create group for rotation
-                group = dwg.g(transform=f'translate({x_px:.3f},{y_px:.3f}) rotate({rotation:.3f})')
-                
+                group = dwg.g(transform=f"translate({x_px:.3f},{y_px:.3f}) rotate({rotation:.3f})")
+
                 # 16mm recess (outer rectangle)
-                group.add(dwg.rect(
-                    insert=(-recess_16_px/2, -recess_16_px/2),
-                    size=(recess_16_px, recess_16_px),
-                    fill='none',
-                    stroke='#000000',
-                    stroke_width='0.1'
-                ))
-                
+                group.add(dwg.rect(insert=(-recess_16_px / 2, -recess_16_px / 2), size=(recess_16_px, recess_16_px), fill="none", stroke="#000000", stroke_width="0.1"))
+
                 # 14mm hole (inner rectangle)
-                group.add(dwg.rect(
-                    insert=(-hole_14_px/2, -hole_14_px/2),
-                    size=(hole_14_px, hole_14_px),
-                    fill='none',
-                    stroke='#000000',
-                    stroke_width='0.1'
-                ))
-                
+                group.add(dwg.rect(insert=(-hole_14_px / 2, -hole_14_px / 2), size=(hole_14_px, hole_14_px), fill="none", stroke="#000000", stroke_width="0.1"))
+
                 dwg.add(group)
-    
+
     # Add coordinate origin marker
     _add_coordinate_origin_marker(dwg)
-    
+
     # Save the SVG
     dwg.save()
     print(f"Switch plate SVG exported to {filename}")
@@ -903,7 +548,7 @@ def export_svg_mounting_holes(config: KeyboardLayoutConfig, positions: Dict[str,
     Export mounting hole positions for CAD import (e.g., Fusion 360).
     Creates 3mm circles at each switch center and 2.2mm circles at x ± 5.22mm offsets.
     Minimal SVG with black hairline strokes for clean CAD import.
-    
+
     Args:
         config: KeyboardLayoutConfig instance with layout parameters
         positions: Positions dictionary from generate_all_positions
@@ -914,91 +559,55 @@ def export_svg_mounting_holes(config: KeyboardLayoutConfig, positions: Dict[str,
     center_radius = 1.5  # mm (3mm diameter / 2)
     side_radius = 1.1  # mm (2.2mm diameter / 2)
     total_reach = offset_distance + side_radius
-    
+
     extra_bounds = {
-        'min_x_offset': -total_reach + config.footprint_width/2,
-        'max_x_offset': total_reach - config.footprint_width/2,
-        'min_y_offset': -center_radius + config.footprint_height/2,
-        'max_y_offset': center_radius - config.footprint_height/2
+        "min_x_offset": -total_reach + config.footprint_width / 2,
+        "max_x_offset": total_reach - config.footprint_width / 2,
+        "min_y_offset": -center_radius + config.footprint_height / 2,
+        "max_y_offset": center_radius - config.footprint_height / 2,
     }
     dimensions = _calculate_cad_svg_dimensions(positions, config, extra_bounds)
-    
+
     # Create SVG drawing
     dwg = _create_cad_svg_drawing(filename, dimensions)
 
     # Add mounting holes for both halves
-    for half in ['left', 'right']:
-        for key_name, x, y, rotation in positions[half]['switches']:
+    for half in ["left", "right"]:
+        for key_name, x, y, rotation in positions[half]["switches"]:
             # Convert mm coordinates to pixels
             x_px = x * FUSION_360_MM_TO_PX
             y_px = y * FUSION_360_MM_TO_PX
-            
+
             # Circle dimensions in pixels
             center_diameter_px = 3.0 * FUSION_360_MM_TO_PX
             side_diameter_px = 2.2 * FUSION_360_MM_TO_PX
             offset_distance_px = offset_distance * FUSION_360_MM_TO_PX
-            
+
             if abs(rotation) < 0.1:  # No rotation for main keys
                 # 3mm circle at center
-                dwg.add(dwg.circle(
-                    center=(x_px, y_px),
-                    r=center_diameter_px/2,
-                    fill='none',
-                    stroke='#000000',
-                    stroke_width='0.1'
-                ))
-                
+                dwg.add(dwg.circle(center=(x_px, y_px), r=center_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
+
                 # 2.2mm circles at x ± 5.22mm
-                dwg.add(dwg.circle(
-                    center=(x_px - offset_distance_px, y_px),
-                    r=side_diameter_px/2,
-                    fill='none',
-                    stroke='#000000',
-                    stroke_width='0.1'
-                ))
-                
-                dwg.add(dwg.circle(
-                    center=(x_px + offset_distance_px, y_px),
-                    r=side_diameter_px/2,
-                    fill='none',
-                    stroke='#000000',
-                    stroke_width='0.1'
-                ))
+                dwg.add(dwg.circle(center=(x_px - offset_distance_px, y_px), r=side_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
+
+                dwg.add(dwg.circle(center=(x_px + offset_distance_px, y_px), r=side_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
             else:  # Rotated thumb keys
                 # Create group for rotation
-                group = dwg.g(transform=f'translate({x_px:.3f},{y_px:.3f}) rotate({rotation:.3f})')
-                
+                group = dwg.g(transform=f"translate({x_px:.3f},{y_px:.3f}) rotate({rotation:.3f})")
+
                 # 3mm circle at center
-                group.add(dwg.circle(
-                    center=(0, 0),
-                    r=center_diameter_px/2,
-                    fill='none',
-                    stroke='#000000',
-                    stroke_width='0.1'
-                ))
-                
+                group.add(dwg.circle(center=(0, 0), r=center_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
+
                 # 2.2mm circles at x ± 5.22mm (relative to rotated coordinate system)
-                group.add(dwg.circle(
-                    center=(-offset_distance_px, 0),
-                    r=side_diameter_px/2,
-                    fill='none',
-                    stroke='#000000',
-                    stroke_width='0.1'
-                ))
-                
-                group.add(dwg.circle(
-                    center=(offset_distance_px, 0),
-                    r=side_diameter_px/2,
-                    fill='none',
-                    stroke='#000000',
-                    stroke_width='0.1'
-                ))
-                
+                group.add(dwg.circle(center=(-offset_distance_px, 0), r=side_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
+
+                group.add(dwg.circle(center=(offset_distance_px, 0), r=side_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
+
                 dwg.add(group)
-    
+
     # Add coordinate origin marker
     _add_coordinate_origin_marker(dwg)
-    
+
     # Save the SVG
     dwg.save()
     print(f"Mounting holes SVG exported to {filename}")
@@ -1007,7 +616,7 @@ def export_svg_mounting_holes(config: KeyboardLayoutConfig, positions: Dict[str,
 def export_svg_hotswap_profile(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_hotswap_profile.svg"):
     """
     Export hotswap socket profiles positioned relative to switch centers for CAD import (e.g., Fusion 360).
-    
+
     Args:
         config: KeyboardLayoutConfig instance with layout parameters
         positions: Positions dictionary from generate_all_positions
@@ -1015,32 +624,31 @@ def export_svg_hotswap_profile(config: KeyboardLayoutConfig, positions: Dict[str
     """
     # Hotswap profile offset from switch center (in mm)
     hotswap_offset_x = -1.413  # x - 1.413 mm
-    hotswap_offset_y = 3.625   # y + 3.625 mm
-    
+    hotswap_offset_y = 3.625  # y + 3.625 mm
+
     # Hotswap profile dimensions (from original SVG)
     hotswap_width = 13.4  # mm
     hotswap_height = 9.45  # mm
-    
+
     # Calculate SVG dimensions
-    dimensions = _calculate_hotswap_svg_dimensions(positions, hotswap_offset_x, hotswap_offset_y, 
-                                                  hotswap_width, hotswap_height)
-    
+    dimensions = _calculate_hotswap_svg_dimensions(positions, hotswap_offset_x, hotswap_offset_y, hotswap_width, hotswap_height)
+
     # Create SVG drawing
     dwg = _create_cad_svg_drawing(filename, dimensions)
-    
+
     # Define the hotswap profile paths (converted from the original SVG)
     # These paths are relative to the center of the hotswap profile
     def add_hotswap_profile(dwg, center_x_px, center_y_px, rotation=0):
         """Add a hotswap profile centered at the given pixel coordinates."""
-        
+
         # Create group for rotation and positioning
         if abs(rotation) < 0.1:
             # No rotation
-            group = dwg.g(transform=f'translate({center_x_px:.3f},{center_y_px:.3f})')
+            group = dwg.g(transform=f"translate({center_x_px:.3f},{center_y_px:.3f})")
         else:
             # With rotation
-            group = dwg.g(transform=f'translate({center_x_px:.3f},{center_y_px:.3f}) rotate({rotation:.3f})')
-        
+            group = dwg.g(transform=f"translate({center_x_px:.3f},{center_y_px:.3f}) rotate({rotation:.3f})")
+
         # Main hotswap socket body path (scaled to pixels and centered)
         path1_d = f"""m {(6.000002 - 6.7) * FUSION_360_MM_TO_PX:.3f},{(2.0998362 - 4.725) * FUSION_360_MM_TO_PX:.3f} 
                      a {1.251812 * FUSION_360_MM_TO_PX:.3f},{1.251812 * FUSION_360_MM_TO_PX:.3f} 0 0 1 {1.1936531 * FUSION_360_MM_TO_PX:.3f},{0.87468 * FUSION_360_MM_TO_PX:.3f} 
@@ -1072,53 +680,39 @@ def export_svg_hotswap_profile(config: KeyboardLayoutConfig, positions: Dict[str
                      v {-0.4 * FUSION_360_MM_TO_PX:.3f} 
                      a {1.05 * FUSION_360_MM_TO_PX:.3f},{1.05 * FUSION_360_MM_TO_PX:.3f} 0 0 1 {1.05 * FUSION_360_MM_TO_PX:.3f},{-1.05 * FUSION_360_MM_TO_PX:.3f} 
                      h {0.23 * FUSION_360_MM_TO_PX:.3f} {2.1999999 * FUSION_360_MM_TO_PX:.3f} z"""
-        
-        group.add(dwg.path(
-            d=path1_d,
-            fill='none',
-            stroke='#000000',
-            stroke_width='0.26458334',
-            stroke_linecap='round',
-            stroke_linejoin='round'
-        ))
-        
+
+        group.add(dwg.path(d=path1_d, fill="none", stroke="#000000", stroke_width="0.26458334", stroke_linecap="round", stroke_linejoin="round"))
+
         # Secondary path (USB connector cutout)
         path2_d = f"""m {(5.130002 - 6.7) * FUSION_360_MM_TO_PX:.3f},{(2.0998362 - 4.725) * FUSION_360_MM_TO_PX:.3f} 
                      v {-1 * FUSION_360_MM_TO_PX:.3f} 
                      a {1.1 * FUSION_360_MM_TO_PX:.3f},{1.1 * FUSION_360_MM_TO_PX:.3f} 0 0 0 {-2.1999999 * FUSION_360_MM_TO_PX:.3f},0 
                      v {1 * FUSION_360_MM_TO_PX:.3f} z"""
-        
-        group.add(dwg.path(
-            d=path2_d,
-            fill='none',
-            stroke='#000000',
-            stroke_width='0.26458334',
-            stroke_linecap='round',
-            stroke_linejoin='round'
-        ))
-        
+
+        group.add(dwg.path(d=path2_d, fill="none", stroke="#000000", stroke_width="0.26458334", stroke_linecap="round", stroke_linejoin="round"))
+
         dwg.add(group)
-    
+
     # Add hotswap profiles for both halves
-    for half in ['left', 'right']:
-        for key_name, x, y, rotation in positions[half]['switches']:
+    for half in ["left", "right"]:
+        for key_name, x, y, rotation in positions[half]["switches"]:
             # Calculate hotswap center position
             hotswap_x = x + hotswap_offset_x
             hotswap_y = y + hotswap_offset_y
-            
+
             # Convert mm coordinates to pixels
             hotswap_x_px = hotswap_x * FUSION_360_MM_TO_PX
             hotswap_y_px = hotswap_y * FUSION_360_MM_TO_PX
-            
+
             # Add hotswap profile
             add_hotswap_profile(dwg, hotswap_x_px, hotswap_y_px, rotation)
-    
+
     # Add midpoint separation line
     _add_midpoint_separation_line(dwg, positions, config, dimensions)
-    
+
     # Add coordinate origin marker
-    _add_coordinate_origin_marker(dwg, '#000000', '0.38')
-    
+    _add_coordinate_origin_marker(dwg, "#000000", "0.38")
+
     # Save the SVG
     dwg.save()
     print(f"Hotswap profile SVG exported to {filename}")

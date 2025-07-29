@@ -29,15 +29,11 @@ except NameError:
     # Fallback: assume we're in the layout directory or use current working directory
     script_dir = os.getcwd()
     # If we're not in the layout directory, try to find it
-    if not os.path.exists(os.path.join(script_dir, 'layout.py')):
+    if not os.path.exists(os.path.join(script_dir, "layout.py")):
         # Try common locations
-        possible_dirs = [
-            os.path.join(script_dir, 'layout'),
-            os.path.join(script_dir, 'pcb', 'layout'),
-            '/workspaces/charma/pcb/layout'
-        ]
+        possible_dirs = [os.path.join(script_dir, "layout"), os.path.join(script_dir, "pcb", "layout"), "/workspaces/charma/pcb/layout"]
         for dir_path in possible_dirs:
-            if os.path.exists(os.path.join(dir_path, 'layout.py')):
+            if os.path.exists(os.path.join(dir_path, "layout.py")):
                 script_dir = dir_path
                 break
         else:
@@ -68,65 +64,65 @@ except ImportError:
 def position_keyboard_footprints_from_positions(positions, x_origin=0, y_origin=0):
     """
     Position keyboard footprints based on calculated positions.
-    
+
     Args:
         positions: Dictionary from KeyboardLayoutCalculator.generate_all_positions()
     """
     if pcbnew is None:
         print("Error: pcbnew module not available. This script must be run within KiCad.")
         return
-        
+
     # Get the current board
     board = pcbnew.GetBoard()
-    
+
     if not board:
         print("Error: No PCB board loaded!")
         return
-    
+
     # Convert positions to flat dictionary format
     position_dict = {}
     for half_name, half_data in positions.items():
         for component_type, components in half_data.items():
             for ref, x_mm, y_mm, rotation in components:
                 position_dict[ref] = (x_mm, y_mm, rotation)
-    
+
     print(f"Loaded {len(position_dict)} positions from calculator")
-    
+
     # Position footprints
     positioned_count = 0
     missing_footprints = []
-    
+
     for ref, (x_mm, y_mm, rotation) in position_dict.items():
         # Find the footprint by reference
         footprint = board.FindFootprintByReference(ref)
-        
+
         if footprint:
             # Convert mm to KiCad internal units (nanometers)
-            x_nm = pcbnew.FromMM(x_mm+x_origin)
-            y_nm = pcbnew.FromMM(y_mm+y_origin)
-            
+            x_nm = pcbnew.FromMM(x_mm + x_origin)
+            y_nm = pcbnew.FromMM(y_mm + y_origin)
+
             # Set position (KiCad uses VECTOR2I for position)
             footprint.SetPosition(pcbnew.VECTOR2I(int(x_nm), int(y_nm)))
-            
+
             # Set rotation (KiCad uses degrees)
             footprint.SetOrientationDegrees(-rotation)
-            
+
             positioned_count += 1
         else:
             missing_footprints.append(ref)
-    
+
     print(f"\nSummary:")
     print(f"- Successfully positioned: {positioned_count} footprints")
     print(f"- Missing footprints: {len(missing_footprints)}")
-    
+
     if missing_footprints:
         # Group missing footprints by type
-        switches = [r for r in missing_footprints if r.startswith('SW')]
-        diodes = [r for r in missing_footprints if r.startswith('D') and not r.startswith('DL')]
-        diodes_left = [r for r in missing_footprints if r.startswith('DL')]
-        diodes_right = [r for r in missing_footprints if r.startswith('DR')]
-        other = [r for r in missing_footprints if not r.startswith('SW') and not r.startswith('D')]
-        
+        switches = [r for r in missing_footprints if r.startswith("SW")]
+        diodes = [r for r in missing_footprints if r.startswith("D") and not r.startswith("DL")]
+        diodes_left = [r for r in missing_footprints if r.startswith("DL")]
+        diodes_right = [r for r in missing_footprints if r.startswith("DR")]
+        other = [r for r in missing_footprints if not r.startswith("SW") and not r.startswith("D")]
+
         if switches:
             print(f"Missing switches: {', '.join(switches)}")
         if diodes_left:
@@ -136,7 +132,7 @@ def position_keyboard_footprints_from_positions(positions, x_origin=0, y_origin=
         if other:
             print(f"Missing other components: {', '.join(other)}")
         print("Make sure your footprints have the correct reference designators.")
-    
+
     # Refresh the display
     pcbnew.Refresh()
     print("Layout complete! The display has been refreshed.")
@@ -145,17 +141,17 @@ def position_keyboard_footprints_from_positions(positions, x_origin=0, y_origin=
 def position_keyboard_footprints_direct(config=None):
     """
     Position keyboard footprints by calculating positions directly.
-    
+
     Args:
         config: KeyboardLayoutConfig instance. If None, uses Charma default configuration.
     """
     # Use Charma configuration if none provided
     if config is None:
         config = get_charma_config()
-    
+
     # Calculate positions
     positions = KeyboardLayoutCalculator.generate_all_positions(config)
-    
+
     print_positions(config, positions)
 
     # Position the footprints
