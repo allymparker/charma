@@ -81,7 +81,8 @@ def _create_cad_svg_drawing(filename: str, dimensions: Dict[str, float]) -> svgw
     return svgwrite.Drawing(filename, size=(f"{dimensions['width_px']:.3f}px", f"{dimensions['height_px']:.3f}px"), viewBox=f"{dimensions['min_x_px']:.3f} {dimensions['min_y_px']:.3f} {dimensions['width_px']:.3f} {dimensions['height_px']:.3f}")
 
 
-def _add_coordinate_origin_marker(dwg: svgwrite.Drawing, stroke_color: str = "#000000", stroke_width: str = "0.1"):
+def _add_coordinate_origin_marker(dwg: svgwrite.Drawing):
+
     """
     Add coordinate origin marker to SVG drawing.
 
@@ -90,6 +91,8 @@ def _add_coordinate_origin_marker(dwg: svgwrite.Drawing, stroke_color: str = "#0
         stroke_color: Color for the origin marker
         stroke_width: Width of the origin marker strokes
     """
+    stroke_color: str = "#000000"
+    stroke_width: str = "0.1"
     origin_group = dwg.g()
     origin_group.add(dwg.circle(center=(0, 0), r=3.78, fill="none", stroke=stroke_color, stroke_width=stroke_width))
     origin_group.add(dwg.line(start=(-18.9, 0), end=(18.9, 0), stroke=stroke_color, stroke_width=stroke_width))
@@ -438,7 +441,7 @@ def export_svg_for_footprints(config: KeyboardLayoutConfig, positions: Dict[str,
     _add_midpoint_separation_line(dwg, positions, config, dimensions)
 
     # Add coordinate origin marker
-    _add_coordinate_origin_marker(dwg, "#ff0000", "0.76")
+    _add_coordinate_origin_marker(dwg)
 
     # Save the SVG
     dwg.save()
@@ -634,7 +637,7 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
     _add_midpoint_separation_line(dwg, positions, config, dimensions)
 
     # Add coordinate origin marker
-    _add_coordinate_origin_marker(dwg, "#000000", "0.38")
+    _add_coordinate_origin_marker(dwg)
 
     # Save the SVG
     dwg.save()
