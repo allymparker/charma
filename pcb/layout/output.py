@@ -14,34 +14,40 @@ FUSION_360_MM_TO_PX = 96.0 / 25.4  # Conversion factor for Fusion 360: 1mm = 96/
 CAD_MARGIN = 20  # mm
 
 
-def _calculate_cad_svg_dimensions(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], config: KeyboardLayoutConfig, extra_bounds: Optional[Dict[str, float]] = None) -> Dict[str, float]:
+def _calculate_cad_svg_dimensions(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], config: KeyboardLayoutConfig) -> Dict[str, float]:
     """
-    Calculate SVG dimensions for CAD export based on switch positions.
+    Calculate SVG dimensions for CAD export using efficient approximation based on key switch positions.
+    Uses the rightmost switch (SWR<num_cols>) x position + footprint width * 0.5 for width calculation,
+    and the last right switch position + footprint height for height calculation.
+    Top-left position is (0,0) before adding margin.
 
     Args:
         positions: Positions dictionary from generate_all_positions
         config: KeyboardLayoutConfig instance with layout parameters
-        extra_bounds: Optional dict with keys 'min_x_offset', 'max_x_offset', 'min_y_offset', 'max_y_offset'
-                     to extend bounds beyond switches (e.g., for keepout zones)
 
     Returns:
         Dict with keys: min_x_mm, max_x_mm, min_y_mm, max_y_mm, width_mm, height_mm,
                        min_x_px, min_y_px, width_px, height_px
     """
-    all_switch_positions = positions["left"]["switches"] + positions["right"]["switches"]
-
-    # Default switch bounds (in mm)
-    switch_min_x = min(x - config.footprint_width / 2 for _, x, y, r in all_switch_positions)
-    switch_max_x = max(x + config.footprint_width / 2 for _, x, y, r in all_switch_positions)
-    switch_min_y = min(y - config.footprint_height / 2 for _, x, y, r in all_switch_positions)
-    switch_max_y = max(y + config.footprint_height / 2 for _, x, y, r in all_switch_positions)
-
-    # Apply extra bounds if provided
-    if extra_bounds:
-        switch_min_x += extra_bounds.get("min_x_offset", 0)
-        switch_max_x += extra_bounds.get("max_x_offset", 0)
-        switch_min_y += extra_bounds.get("min_y_offset", 0)
-        switch_max_y += extra_bounds.get("max_y_offset", 0)
+    # Find the rightmost switch (SWR<num_cols>) position for width calculation
+    # This is always at index (config.num_cols - 1) in the right switches list
+    all_right_switches = positions["right"]["switches"]
+    rightmost_switch_position = all_right_switches[config.num_cols - 1]  # Index num_cols-1 is the rightmost column
+    rightmost_switch_x = rightmost_switch_position[1]  # x coordinate
+    
+    # Find the last (bottommost) right switch for height calculation
+    last_right_switch_y = max(y for _, x, y, r in all_right_switches)
+    
+    # Calculate bounds using efficient approximation method
+    # Width: rightmost switch x position + footprint width * 0.5 gives us the approximate right edge
+    switch_max_x = rightmost_switch_x + config.footprint_width * 0.5
+    
+    # Height: last right switch position + footprint height
+    switch_max_y = last_right_switch_y + config.footprint_height
+    
+    # Top-left is (0,0) - the origin position
+    switch_min_x = 0.0
+    switch_min_y = 0.0
 
     # Add margin for clean viewing (in mm)
     min_x_mm = switch_min_x - CAD_MARGIN
@@ -73,54 +79,6 @@ def _create_cad_svg_drawing(filename: str, dimensions: Dict[str, float]) -> svgw
         svgwrite.Drawing instance
     """
     return svgwrite.Drawing(filename, size=(f"{dimensions['width_px']:.3f}px", f"{dimensions['height_px']:.3f}px"), viewBox=f"{dimensions['min_x_px']:.3f} {dimensions['min_y_px']:.3f} {dimensions['width_px']:.3f} {dimensions['height_px']:.3f}")
-
-
-def _calculate_hotswap_svg_dimensions(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], hotswap_offset_x: float, hotswap_offset_y: float, hotswap_width: float, hotswap_height: float) -> Dict[str, float]:
-    """
-    Calculate SVG dimensions for hotswap profiles.
-
-    Args:
-        positions: Positions dictionary from generate_all_positions
-        hotswap_offset_x: X offset from switch center to hotswap center (mm)
-        hotswap_offset_y: Y offset from switch center to hotswap center (mm)
-        hotswap_width: Width of hotswap profile (mm)
-        hotswap_height: Height of hotswap profile (mm)
-
-    Returns:
-        Dict with keys: min_x_mm, max_x_mm, min_y_mm, max_y_mm, width_mm, height_mm,
-                       min_x_px, min_y_px, width_px, height_px
-    """
-    all_switch_positions = positions["left"]["switches"] + positions["right"]["switches"]
-
-    # Calculate bounds considering hotswap profiles at offset positions
-    hotswap_positions = []
-    for _, x, y, rotation in all_switch_positions:
-        hotswap_x = x + hotswap_offset_x
-        hotswap_y = y + hotswap_offset_y
-        hotswap_positions.append((hotswap_x, hotswap_y, rotation))
-
-    # Calculate bounds (in mm)
-    hotswap_min_x = min(x - hotswap_width / 2 for x, y, r in hotswap_positions)
-    hotswap_max_x = max(x + hotswap_width / 2 for x, y, r in hotswap_positions)
-    hotswap_min_y = min(y - hotswap_height / 2 for x, y, r in hotswap_positions)
-    hotswap_max_y = max(y + hotswap_height / 2 for x, y, r in hotswap_positions)
-
-    # Add margin for clean viewing (in mm)
-    min_x_mm = hotswap_min_x - CAD_MARGIN
-    max_x_mm = hotswap_max_x + CAD_MARGIN
-    min_y_mm = hotswap_min_y - CAD_MARGIN
-    max_y_mm = hotswap_max_y + CAD_MARGIN
-
-    width_mm = max_x_mm - min_x_mm
-    height_mm = max_y_mm - min_y_mm
-
-    # Convert to pixels for Fusion 360 compatibility
-    min_x_px = min_x_mm * FUSION_360_MM_TO_PX
-    min_y_px = min_y_mm * FUSION_360_MM_TO_PX
-    width_px = width_mm * FUSION_360_MM_TO_PX
-    height_px = height_mm * FUSION_360_MM_TO_PX
-
-    return {"min_x_mm": min_x_mm, "max_x_mm": max_x_mm, "min_y_mm": min_y_mm, "max_y_mm": max_y_mm, "width_mm": width_mm, "height_mm": height_mm, "min_x_px": min_x_px, "min_y_px": min_y_px, "width_px": width_px, "height_px": height_px}
 
 
 def _add_coordinate_origin_marker(dwg: svgwrite.Drawing, stroke_color: str = "#000000", stroke_width: str = "0.1"):
@@ -233,44 +191,49 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
         positions: Positions dictionary from generate_all_positions
         filename: Output SVG filename
     """
-    # Calculate SVG dimensions (accounting for center coordinates and rotation)
-    all_switch_positions = positions["left"]["switches"] + positions["right"]["switches"]
-    all_diode_positions = positions["left"]["diodes"] + positions["right"]["diodes"]
+    # Calculate SVG dimensions using efficient approximation (similar to CAD export but with different margins)
+    # Find the rightmost switch (SWR<num_cols>) position for width calculation
+    # This is always at index (config.num_cols - 1) in the right switches list
+    all_right_switches = positions["right"]["switches"]
+    rightmost_switch_position = all_right_switches[config.num_cols - 1]  # Index num_cols-1 is the rightmost column
+    rightmost_switch_x = rightmost_switch_position[1]  # x coordinate
+    
+    # Find the last (bottommost) right switch for height calculation
+    last_right_switch_y = max(y for _, x, y, r in all_right_switches)
+    
+    # Calculate base bounds using efficient approximation
+    switch_max_x = rightmost_switch_x + config.footprint_width * 0.5
+    switch_min_x = config.origin_x - config.footprint_width / 2
+    switch_max_y = last_right_switch_y + config.footprint_height
+    switch_min_y = config.origin_y - config.footprint_height / 2
 
-    # Collect all specific component positions
-    all_specific_positions = []
+    # Check if we need to extend bounds for diodes (quick check)
+    all_diode_positions = positions["left"]["diodes"] + positions["right"]["diodes"]
+    if all_diode_positions:
+        # Just check a few key diodes instead of all of them
+        sample_diode_x = all_diode_positions[0][1]  # First diode x position
+        if sample_diode_x - config.diode_width / 2 < switch_min_x:
+            switch_min_x = sample_diode_x - config.diode_width / 2
+        if sample_diode_x + config.diode_width / 2 > switch_max_x:
+            switch_max_x = sample_diode_x + config.diode_width / 2
+
+    # Check for specific components that might extend bounds
     for half in ["left", "right"]:
         for component_type, components in positions[half].items():
-            if component_type not in ["switches", "diodes"]:
-                all_specific_positions.extend(components)
+            if component_type not in ["switches", "diodes"] and components:
+                # Just check first component of each type as representative
+                x, y = components[0][1], components[0][2]
+                component_margin = 2  # 2mm margin for components
+                switch_min_x = min(switch_min_x, x - component_margin)
+                switch_max_x = max(switch_max_x, x + component_margin)
+                switch_min_y = min(switch_min_y, y - component_margin)
+                switch_max_y = max(switch_max_y, y + component_margin)
 
-    # Calculate bounds considering switches, diodes, and specific components
-    switch_min_x = min(x - config.footprint_width / 2 for _, x, y, r in all_switch_positions)
-    switch_max_x = max(x + config.footprint_width / 2 for _, x, y, r in all_switch_positions)
-    switch_min_y = min(y - config.footprint_height / 2 for _, x, y, r in all_switch_positions)
-    switch_max_y = max(y + config.footprint_height / 2 for _, x, y, r in all_switch_positions)
-
-    diode_min_x = min(x - config.diode_width / 2 for _, x, y, r in all_diode_positions)
-    diode_max_x = max(x + config.diode_width / 2 for _, x, y, r in all_diode_positions)
-    diode_min_y = min(y - config.diode_height / 2 for _, x, y, r in all_diode_positions)
-    diode_max_y = max(y + config.diode_height / 2 for _, x, y, r in all_diode_positions)
-
-    # Include specific components in bounds calculation
-    if all_specific_positions:
-        specific_min_x = min(x - 2 for _, x, y, r in all_specific_positions)  # 2mm margin for dot
-        specific_max_x = max(x + 2 for _, x, y, r in all_specific_positions)
-        specific_min_y = min(y - 2 for _, x, y, r in all_specific_positions)
-        specific_max_y = max(y + 2 for _, x, y, r in all_specific_positions)
-
-        min_x = min(switch_min_x, diode_min_x, specific_min_x) - 10
-        max_x = max(switch_max_x, diode_max_x, specific_max_x) + 10
-        min_y = min(switch_min_y, diode_min_y, specific_min_y) - 25  # More space at top
-        max_y = max(switch_max_y, diode_max_y, specific_max_y) + 10  # Less space at bottom
-    else:
-        min_x = min(switch_min_x, diode_min_x) - 10
-        max_x = max(switch_max_x, diode_max_x) + 10
-        min_y = min(switch_min_y, diode_min_y) - 25  # More space at top
-        max_y = max(switch_max_y, diode_max_y) + 10  # Less space at bottom (no legend)
+    # Add visualization margins (different from CAD margins)
+    min_x = switch_min_x - 10
+    max_x = switch_max_x + 10
+    min_y = switch_min_y - 25  # More space at top for title
+    max_y = switch_max_y + 10  # Less space at bottom
 
     width = max_x - min_x
     height = max_y - min_y
@@ -493,15 +456,8 @@ def export_svg_switch_plate(config: KeyboardLayoutConfig, positions: Dict[str, D
         positions: Positions dictionary from generate_all_positions
         filename: Output SVG filename
     """
-    # Calculate SVG dimensions with keepout zones (16mm is the largest)
-    keepout_size = 16.0  # mm
-    extra_bounds = {
-        "min_x_offset": -keepout_size / 2 + config.footprint_width / 2,
-        "max_x_offset": keepout_size / 2 - config.footprint_width / 2,
-        "min_y_offset": -keepout_size / 2 + config.footprint_height / 2,
-        "max_y_offset": keepout_size / 2 - config.footprint_height / 2,
-    }
-    dimensions = _calculate_cad_svg_dimensions(positions, config, extra_bounds)
+    # Calculate SVG dimensions
+    dimensions = _calculate_cad_svg_dimensions(positions, config)
 
     # Create SVG drawing
     dwg = _create_cad_svg_drawing(filename, dimensions)
@@ -567,31 +523,8 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
     side_radius = 1.1  # mm (2.2mm diameter / 2)
     total_reach = offset_distance + side_radius
 
-    # Calculate SVG dimensions considering both hotswap profiles and mounting holes
-    hotswap_dimensions = _calculate_hotswap_svg_dimensions(positions, hotswap_offset_x, hotswap_offset_y, hotswap_width, hotswap_height)
-    
-    # Extend bounds to include mounting holes
-    mounting_extra_bounds = {
-        "min_x_offset": -total_reach + config.footprint_width / 2,
-        "max_x_offset": total_reach - config.footprint_width / 2,
-        "min_y_offset": -center_radius + config.footprint_height / 2,
-        "max_y_offset": center_radius - config.footprint_height / 2,
-    }
-    mounting_dimensions = _calculate_cad_svg_dimensions(positions, config, mounting_extra_bounds)
-    
-    # Use the larger dimensions to encompass both hotswap profiles and mounting holes
-    dimensions = {
-        "min_x_mm": min(hotswap_dimensions["min_x_mm"], mounting_dimensions["min_x_mm"]),
-        "max_x_mm": max(hotswap_dimensions["max_x_mm"], mounting_dimensions["max_x_mm"]),
-        "min_y_mm": min(hotswap_dimensions["min_y_mm"], mounting_dimensions["min_y_mm"]),
-        "max_y_mm": max(hotswap_dimensions["max_y_mm"], mounting_dimensions["max_y_mm"]),
-    }
-    dimensions["width_mm"] = dimensions["max_x_mm"] - dimensions["min_x_mm"]
-    dimensions["height_mm"] = dimensions["max_y_mm"] - dimensions["min_y_mm"]
-    dimensions["min_x_px"] = dimensions["min_x_mm"] * FUSION_360_MM_TO_PX
-    dimensions["min_y_px"] = dimensions["min_y_mm"] * FUSION_360_MM_TO_PX
-    dimensions["width_px"] = dimensions["width_mm"] * FUSION_360_MM_TO_PX
-    dimensions["height_px"] = dimensions["height_mm"] * FUSION_360_MM_TO_PX
+    # Calculate SVG dimensions
+    dimensions = _calculate_cad_svg_dimensions(positions, config)
 
     # Create SVG drawing
     dwg = _create_cad_svg_drawing(filename, dimensions)
