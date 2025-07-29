@@ -5,9 +5,220 @@ Output utilities for keyboard layout calculator.
 Contains functions for displaying and exporting keyboard layout positions.
 """
 
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
 import svgwrite
 from layout import KeyboardLayoutConfig, KeyboardLayoutCalculator
+
+# Constants for CAD export
+FUSION_360_MM_TO_PX = 96.0 / 25.4  # Conversion factor for Fusion 360: 1mm = 96/25.4 pixels (96 DPI)
+CAD_MARGIN = 20  # mm
+
+
+def _calculate_cad_svg_dimensions(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], 
+                                config: KeyboardLayoutConfig, 
+                                extra_bounds: Optional[Dict[str, float]] = None) -> Dict[str, float]:
+    """
+    Calculate SVG dimensions for CAD export based on switch positions.
+    
+    Args:
+        positions: Positions dictionary from generate_all_positions
+        config: KeyboardLayoutConfig instance with layout parameters
+        extra_bounds: Optional dict with keys 'min_x_offset', 'max_x_offset', 'min_y_offset', 'max_y_offset'
+                     to extend bounds beyond switches (e.g., for keepout zones)
+    
+    Returns:
+        Dict with keys: min_x_mm, max_x_mm, min_y_mm, max_y_mm, width_mm, height_mm,
+                       min_x_px, min_y_px, width_px, height_px
+    """
+    all_switch_positions = positions['left']['switches'] + positions['right']['switches']
+    
+    # Default switch bounds (in mm)
+    switch_min_x = min(x - config.footprint_width/2 for _, x, y, r in all_switch_positions)
+    switch_max_x = max(x + config.footprint_width/2 for _, x, y, r in all_switch_positions)
+    switch_min_y = min(y - config.footprint_height/2 for _, x, y, r in all_switch_positions)
+    switch_max_y = max(y + config.footprint_height/2 for _, x, y, r in all_switch_positions)
+    
+    # Apply extra bounds if provided
+    if extra_bounds:
+        switch_min_x += extra_bounds.get('min_x_offset', 0)
+        switch_max_x += extra_bounds.get('max_x_offset', 0)
+        switch_min_y += extra_bounds.get('min_y_offset', 0)
+        switch_max_y += extra_bounds.get('max_y_offset', 0)
+    
+    # Add margin for clean viewing (in mm)
+    min_x_mm = switch_min_x - CAD_MARGIN
+    max_x_mm = switch_max_x + CAD_MARGIN
+    min_y_mm = switch_min_y - CAD_MARGIN
+    max_y_mm = switch_max_y + CAD_MARGIN
+    
+    width_mm = max_x_mm - min_x_mm
+    height_mm = max_y_mm - min_y_mm
+    
+    # Convert to pixels for Fusion 360 compatibility
+    min_x_px = min_x_mm * FUSION_360_MM_TO_PX
+    min_y_px = min_y_mm * FUSION_360_MM_TO_PX
+    width_px = width_mm * FUSION_360_MM_TO_PX
+    height_px = height_mm * FUSION_360_MM_TO_PX
+    
+    return {
+        'min_x_mm': min_x_mm,
+        'max_x_mm': max_x_mm,
+        'min_y_mm': min_y_mm,
+        'max_y_mm': max_y_mm,
+        'width_mm': width_mm,
+        'height_mm': height_mm,
+        'min_x_px': min_x_px,
+        'min_y_px': min_y_px,
+        'width_px': width_px,
+        'height_px': height_px
+    }
+
+
+def _create_cad_svg_drawing(filename: str, dimensions: Dict[str, float]) -> svgwrite.Drawing:
+    """
+    Create SVG drawing with pixel units for Fusion 360 compatibility.
+    
+    Args:
+        filename: Output SVG filename
+        dimensions: Dictionary from _calculate_cad_svg_dimensions
+    
+    Returns:
+        svgwrite.Drawing instance
+    """
+    return svgwrite.Drawing(
+        filename,
+        size=(f'{dimensions["width_px"]:.3f}px', f'{dimensions["height_px"]:.3f}px'),
+        viewBox=f'{dimensions["min_x_px"]:.3f} {dimensions["min_y_px"]:.3f} {dimensions["width_px"]:.3f} {dimensions["height_px"]:.3f}'
+    )
+
+
+def _calculate_hotswap_svg_dimensions(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], 
+                                     hotswap_offset_x: float, hotswap_offset_y: float,
+                                     hotswap_width: float, hotswap_height: float) -> Dict[str, float]:
+    """
+    Calculate SVG dimensions for hotswap profiles.
+    
+    Args:
+        positions: Positions dictionary from generate_all_positions
+        hotswap_offset_x: X offset from switch center to hotswap center (mm)
+        hotswap_offset_y: Y offset from switch center to hotswap center (mm)
+        hotswap_width: Width of hotswap profile (mm)
+        hotswap_height: Height of hotswap profile (mm)
+    
+    Returns:
+        Dict with keys: min_x_mm, max_x_mm, min_y_mm, max_y_mm, width_mm, height_mm,
+                       min_x_px, min_y_px, width_px, height_px
+    """
+    all_switch_positions = positions['left']['switches'] + positions['right']['switches']
+    
+    # Calculate bounds considering hotswap profiles at offset positions
+    hotswap_positions = []
+    for _, x, y, rotation in all_switch_positions:
+        hotswap_x = x + hotswap_offset_x
+        hotswap_y = y + hotswap_offset_y
+        hotswap_positions.append((hotswap_x, hotswap_y, rotation))
+    
+    # Calculate bounds (in mm)
+    hotswap_min_x = min(x - hotswap_width/2 for x, y, r in hotswap_positions)
+    hotswap_max_x = max(x + hotswap_width/2 for x, y, r in hotswap_positions)
+    hotswap_min_y = min(y - hotswap_height/2 for x, y, r in hotswap_positions)
+    hotswap_max_y = max(y + hotswap_height/2 for x, y, r in hotswap_positions)
+    
+    # Add margin for clean viewing (in mm)
+    min_x_mm = hotswap_min_x - CAD_MARGIN
+    max_x_mm = hotswap_max_x + CAD_MARGIN
+    min_y_mm = hotswap_min_y - CAD_MARGIN
+    max_y_mm = hotswap_max_y + CAD_MARGIN
+    
+    width_mm = max_x_mm - min_x_mm
+    height_mm = max_y_mm - min_y_mm
+    
+    # Convert to pixels for Fusion 360 compatibility
+    min_x_px = min_x_mm * FUSION_360_MM_TO_PX
+    min_y_px = min_y_mm * FUSION_360_MM_TO_PX
+    width_px = width_mm * FUSION_360_MM_TO_PX
+    height_px = height_mm * FUSION_360_MM_TO_PX
+    
+    return {
+        'min_x_mm': min_x_mm,
+        'max_x_mm': max_x_mm,
+        'min_y_mm': min_y_mm,
+        'max_y_mm': max_y_mm,
+        'width_mm': width_mm,
+        'height_mm': height_mm,
+        'min_x_px': min_x_px,
+        'min_y_px': min_y_px,
+        'width_px': width_px,
+        'height_px': height_px
+    }
+
+
+def _add_coordinate_origin_marker(dwg: svgwrite.Drawing, stroke_color: str = '#000000', stroke_width: str = '0.1'):
+    """
+    Add coordinate origin marker to SVG drawing.
+    
+    Args:
+        dwg: svgwrite.Drawing instance
+        stroke_color: Color for the origin marker
+        stroke_width: Width of the origin marker strokes
+    """
+    origin_group = dwg.g()
+    origin_group.add(dwg.circle(
+        center=(0, 0),
+        r=3.78,
+        fill='none',
+        stroke=stroke_color,
+        stroke_width=stroke_width
+    ))
+    origin_group.add(dwg.line(
+        start=(-18.9, 0),
+        end=(18.9, 0),
+        stroke=stroke_color,
+        stroke_width=stroke_width
+    ))
+    origin_group.add(dwg.line(
+        start=(0, -18.9),
+        end=(0, 18.9),
+        stroke=stroke_color,
+        stroke_width=stroke_width
+    ))
+    dwg.add(origin_group)
+
+
+def _add_midpoint_separation_line(dwg: svgwrite.Drawing, 
+                                 positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], 
+                                 config: KeyboardLayoutConfig, 
+                                 dimensions: Dict[str, float]):
+    """
+    Add midpoint separation line between left and right halves.
+    
+    Args:
+        dwg: svgwrite.Drawing instance
+        positions: Positions dictionary from generate_all_positions
+        config: KeyboardLayoutConfig instance
+        dimensions: Dictionary from _calculate_cad_svg_dimensions
+    """
+    left_switches = positions['left']['switches']
+    right_switches = positions['right']['switches']
+    
+    # Find the rightmost x coordinate of left switches (in mm)
+    left_max_x_mm = max(x + config.footprint_width/2 for _, x, y, r in left_switches)
+    
+    # Find the leftmost x coordinate of right switches (in mm)
+    right_min_x_mm = min(x - config.footprint_width/2 for _, x, y, r in right_switches)
+    
+    # Calculate the midpoint (in mm, then convert to pixels)
+    midpoint_x_mm = (left_max_x_mm + right_min_x_mm) / 2
+    midpoint_x_px = midpoint_x_mm * FUSION_360_MM_TO_PX
+    
+    # Add midpoint separation line
+    dwg.add(dwg.line(
+        start=(midpoint_x_px, dimensions['min_y_px']),
+        end=(midpoint_x_px, dimensions['min_y_px'] + dimensions['height_px']),
+        stroke='#0066cc',
+        stroke_width='0.57',
+        stroke_dasharray='7.56,3.78'
+    ))
 
 
 def print_positions(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]]):
@@ -555,49 +766,20 @@ def export_svg_for_footprints(config: KeyboardLayoutConfig, positions: Dict[str,
         positions: Positions dictionary from generate_all_positions
         filename: Output SVG filename
     """
-    # Conversion factor for Fusion 360: 1mm = 96/25.4 pixels (96 DPI)
-    mm_to_px = 96.0 / 25.4
+    # Calculate SVG dimensions
+    dimensions = _calculate_cad_svg_dimensions(positions, config)
     
-    # Calculate SVG dimensions based on switch positions only
-    all_switch_positions = positions['left']['switches'] + positions['right']['switches']
-    
-    # Calculate bounds considering only switches (in mm)
-    switch_min_x = min(x - config.footprint_width/2 for _, x, y, r in all_switch_positions)
-    switch_max_x = max(x + config.footprint_width/2 for _, x, y, r in all_switch_positions)
-    switch_min_y = min(y - config.footprint_height/2 for _, x, y, r in all_switch_positions)
-    switch_max_y = max(y + config.footprint_height/2 for _, x, y, r in all_switch_positions)
-    
-    # Add margin for clean viewing (in mm)
-    margin = 20
-    min_x_mm = switch_min_x - margin
-    max_x_mm = switch_max_x + margin
-    min_y_mm = switch_min_y - margin
-    max_y_mm = switch_max_y + margin
-    
-    width_mm = max_x_mm - min_x_mm
-    height_mm = max_y_mm - min_y_mm
-    
-    # Convert to pixels for Fusion 360 compatibility
-    min_x_px = min_x_mm * mm_to_px
-    min_y_px = min_y_mm * mm_to_px
-    width_px = width_mm * mm_to_px
-    height_px = height_mm * mm_to_px
-    
-    # Create SVG drawing with pixel units for Fusion 360 compatibility
-    dwg = svgwrite.Drawing(
-        filename,
-        size=(f'{width_px:.3f}px', f'{height_px:.3f}px'),
-        viewBox=f'{min_x_px:.3f} {min_y_px:.3f} {width_px:.3f} {height_px:.3f}'
-    )
+    # Create SVG drawing
+    dwg = _create_cad_svg_drawing(filename, dimensions)
 
     # Add switch rectangles for both halves
     for half in ['left', 'right']:
         for key_name, x, y, rotation in positions[half]['switches']:
             # Convert mm coordinates to pixels
-            x_px = x * mm_to_px
-            y_px = y * mm_to_px
-            width_px_rect = config.footprint_width * mm_to_px
-            height_px_rect = config.footprint_height * mm_to_px
+            x_px = x * FUSION_360_MM_TO_PX
+            y_px = y * FUSION_360_MM_TO_PX
+            width_px_rect = config.footprint_width * FUSION_360_MM_TO_PX
+            height_px_rect = config.footprint_height * FUSION_360_MM_TO_PX
             
             if abs(rotation) < 0.1:  # No rotation for main keys
                 # Add switch outline rectangle
@@ -620,51 +802,11 @@ def export_svg_for_footprints(config: KeyboardLayoutConfig, positions: Dict[str,
                 ))
                 dwg.add(group)
     
-    # Calculate the midpoint between the two halves
-    left_switches = positions['left']['switches']
-    right_switches = positions['right']['switches']
-    
-    # Find the rightmost x coordinate of left switches (in mm)
-    left_max_x_mm = max(x + config.footprint_width/2 for _, x, y, r in left_switches)
-    
-    # Find the leftmost x coordinate of right switches (in mm)
-    right_min_x_mm = min(x - config.footprint_width/2 for _, x, y, r in right_switches)
-    
-    # Calculate the midpoint (in mm, then convert to pixels)
-    midpoint_x_mm = (left_max_x_mm + right_min_x_mm) / 2
-    midpoint_x_px = midpoint_x_mm * mm_to_px
-    
     # Add midpoint separation line
-    dwg.add(dwg.line(
-        start=(midpoint_x_px, min_y_px),
-        end=(midpoint_x_px, min_y_px + height_px),
-        stroke='#0066cc',
-        stroke_width='0.57',
-        stroke_dasharray='7.56,3.78'
-    ))
+    _add_midpoint_separation_line(dwg, positions, config, dimensions)
     
     # Add coordinate origin marker
-    origin_group = dwg.g()
-    origin_group.add(dwg.circle(
-        center=(0, 0),
-        r=3.78,
-        fill='none',
-        stroke='#ff0000',
-        stroke_width='0.76'
-    ))
-    origin_group.add(dwg.line(
-        start=(-18.9, 0),
-        end=(18.9, 0),
-        stroke='#ff0000',
-        stroke_width='0.76'
-    ))
-    origin_group.add(dwg.line(
-        start=(0, -18.9),
-        end=(0, 18.9),
-        stroke='#ff0000',
-        stroke_width='0.76'
-    ))
-    dwg.add(origin_group)
+    _add_coordinate_origin_marker(dwg, '#ff0000', '0.76')
     
     # Save the SVG
     dwg.save()
@@ -682,52 +824,29 @@ def export_svg_switch_plate(config: KeyboardLayoutConfig, positions: Dict[str, D
         positions: Positions dictionary from generate_all_positions
         filename: Output SVG filename
     """
-    # Conversion factor for Fusion 360: 1mm = 96/25.4 pixels (96 DPI)
-    mm_to_px = 96.0 / 25.4
-    
-    # Calculate SVG dimensions based on switch positions with keepout zones
-    all_switch_positions = positions['left']['switches'] + positions['right']['switches']
-    
-    # Calculate bounds considering switches and keepout zones (16mm is the largest)
+    # Calculate SVG dimensions with keepout zones (16mm is the largest)
     keepout_size = 16.0  # mm
-    switch_min_x = min(x - keepout_size/2 for _, x, y, r in all_switch_positions)
-    switch_max_x = max(x + keepout_size/2 for _, x, y, r in all_switch_positions)
-    switch_min_y = min(y - keepout_size/2 for _, x, y, r in all_switch_positions)
-    switch_max_y = max(y + keepout_size/2 for _, x, y, r in all_switch_positions)
+    extra_bounds = {
+        'min_x_offset': -keepout_size/2 + config.footprint_width/2,
+        'max_x_offset': keepout_size/2 - config.footprint_width/2,
+        'min_y_offset': -keepout_size/2 + config.footprint_height/2,
+        'max_y_offset': keepout_size/2 - config.footprint_height/2
+    }
+    dimensions = _calculate_cad_svg_dimensions(positions, config, extra_bounds)
     
-    # Add margin for clean viewing (in mm)
-    margin = 20
-    min_x_mm = switch_min_x - margin
-    max_x_mm = switch_max_x + margin
-    min_y_mm = switch_min_y - margin
-    max_y_mm = switch_max_y + margin
-    
-    width_mm = max_x_mm - min_x_mm
-    height_mm = max_y_mm - min_y_mm
-    
-    # Convert to pixels for Fusion 360 compatibility
-    min_x_px = min_x_mm * mm_to_px
-    min_y_px = min_y_mm * mm_to_px
-    width_px = width_mm * mm_to_px
-    height_px = height_mm * mm_to_px
-    
-    # Create SVG drawing with pixel units for Fusion 360 compatibility
-    dwg = svgwrite.Drawing(
-        filename,
-        size=(f'{width_px:.3f}px', f'{height_px:.3f}px'),
-        viewBox=f'{min_x_px:.3f} {min_y_px:.3f} {width_px:.3f} {height_px:.3f}'
-    )
+    # Create SVG drawing
+    dwg = _create_cad_svg_drawing(filename, dimensions)
 
     # Add switch plate holes and recesses for both halves
     for half in ['left', 'right']:
         for key_name, x, y, rotation in positions[half]['switches']:
             # Convert mm coordinates to pixels
-            x_px = x * mm_to_px
-            y_px = y * mm_to_px
+            x_px = x * FUSION_360_MM_TO_PX
+            y_px = y * FUSION_360_MM_TO_PX
             
             # Hole and recess dimensions in pixels
-            hole_14_px = 14.0 * mm_to_px
-            recess_16_px = 16.0 * mm_to_px
+            hole_14_px = 14.0 * FUSION_360_MM_TO_PX
+            recess_16_px = 16.0 * FUSION_360_MM_TO_PX
             
             if abs(rotation) < 0.1:  # No rotation for main keys
                 # 16mm recess (outer rectangle)
@@ -772,27 +891,7 @@ def export_svg_switch_plate(config: KeyboardLayoutConfig, positions: Dict[str, D
                 dwg.add(group)
     
     # Add coordinate origin marker
-    origin_group = dwg.g()
-    origin_group.add(dwg.circle(
-        center=(0, 0),
-        r=3.78,
-        fill='none',
-        stroke='#000000',
-        stroke_width='0.1'
-    ))
-    origin_group.add(dwg.line(
-        start=(-18.9, 0),
-        end=(18.9, 0),
-        stroke='#000000',
-        stroke_width='0.1'
-    ))
-    origin_group.add(dwg.line(
-        start=(0, -18.9),
-        end=(0, 18.9),
-        stroke='#000000',
-        stroke_width='0.1'
-    ))
-    dwg.add(origin_group)
+    _add_coordinate_origin_marker(dwg)
     
     # Save the SVG
     dwg.save()
@@ -810,57 +909,34 @@ def export_svg_mounting_holes(config: KeyboardLayoutConfig, positions: Dict[str,
         positions: Positions dictionary from generate_all_positions
         filename: Output SVG filename
     """
-    # Conversion factor for Fusion 360: 1mm = 96/25.4 pixels (96 DPI)
-    mm_to_px = 96.0 / 25.4
-    
-    # Calculate SVG dimensions based on switch positions with offset zones
-    all_switch_positions = positions['left']['switches'] + positions['right']['switches']
-    
-    # Calculate bounds considering switches and 5.22mm offsets plus circle radii
+    # Calculate SVG dimensions with offset zones
     offset_distance = 5.22  # mm
     center_radius = 1.5  # mm (3mm diameter / 2)
     side_radius = 1.1  # mm (2.2mm diameter / 2)
     total_reach = offset_distance + side_radius
     
-    switch_min_x = min(x - total_reach for _, x, y, r in all_switch_positions)
-    switch_max_x = max(x + total_reach for _, x, y, r in all_switch_positions)
-    switch_min_y = min(y - center_radius for _, x, y, r in all_switch_positions)
-    switch_max_y = max(y + center_radius for _, x, y, r in all_switch_positions)
+    extra_bounds = {
+        'min_x_offset': -total_reach + config.footprint_width/2,
+        'max_x_offset': total_reach - config.footprint_width/2,
+        'min_y_offset': -center_radius + config.footprint_height/2,
+        'max_y_offset': center_radius - config.footprint_height/2
+    }
+    dimensions = _calculate_cad_svg_dimensions(positions, config, extra_bounds)
     
-    # Add margin for clean viewing (in mm)
-    margin = 20
-    min_x_mm = switch_min_x - margin
-    max_x_mm = switch_max_x + margin
-    min_y_mm = switch_min_y - margin
-    max_y_mm = switch_max_y + margin
-    
-    width_mm = max_x_mm - min_x_mm
-    height_mm = max_y_mm - min_y_mm
-    
-    # Convert to pixels for Fusion 360 compatibility
-    min_x_px = min_x_mm * mm_to_px
-    min_y_px = min_y_mm * mm_to_px
-    width_px = width_mm * mm_to_px
-    height_px = height_mm * mm_to_px
-    
-    # Create SVG drawing with pixel units for Fusion 360 compatibility
-    dwg = svgwrite.Drawing(
-        filename,
-        size=(f'{width_px:.3f}px', f'{height_px:.3f}px'),
-        viewBox=f'{min_x_px:.3f} {min_y_px:.3f} {width_px:.3f} {height_px:.3f}'
-    )
+    # Create SVG drawing
+    dwg = _create_cad_svg_drawing(filename, dimensions)
 
     # Add mounting holes for both halves
     for half in ['left', 'right']:
         for key_name, x, y, rotation in positions[half]['switches']:
             # Convert mm coordinates to pixels
-            x_px = x * mm_to_px
-            y_px = y * mm_to_px
+            x_px = x * FUSION_360_MM_TO_PX
+            y_px = y * FUSION_360_MM_TO_PX
             
             # Circle dimensions in pixels
-            center_diameter_px = 3.0 * mm_to_px
-            side_diameter_px = 2.2 * mm_to_px
-            offset_distance_px = offset_distance * mm_to_px
+            center_diameter_px = 3.0 * FUSION_360_MM_TO_PX
+            side_diameter_px = 2.2 * FUSION_360_MM_TO_PX
+            offset_distance_px = offset_distance * FUSION_360_MM_TO_PX
             
             if abs(rotation) < 0.1:  # No rotation for main keys
                 # 3mm circle at center
@@ -921,27 +997,7 @@ def export_svg_mounting_holes(config: KeyboardLayoutConfig, positions: Dict[str,
                 dwg.add(group)
     
     # Add coordinate origin marker
-    origin_group = dwg.g()
-    origin_group.add(dwg.circle(
-        center=(0, 0),
-        r=3.78,
-        fill='none',
-        stroke='#000000',
-        stroke_width='0.1'
-    ))
-    origin_group.add(dwg.line(
-        start=(-18.9, 0),
-        end=(18.9, 0),
-        stroke='#000000',
-        stroke_width='0.1'
-    ))
-    origin_group.add(dwg.line(
-        start=(0, -18.9),
-        end=(0, 18.9),
-        stroke='#000000',
-        stroke_width='0.1'
-    ))
-    dwg.add(origin_group)
+    _add_coordinate_origin_marker(dwg)
     
     # Save the SVG
     dwg.save()
@@ -957,9 +1013,6 @@ def export_svg_hotswap_profile(config: KeyboardLayoutConfig, positions: Dict[str
         positions: Positions dictionary from generate_all_positions
         filename: Output SVG filename
     """
-    # Conversion factor for Fusion 360: 1mm = 96/25.4 pixels (96 DPI)
-    mm_to_px = 96.0 / 25.4
-    
     # Hotswap profile offset from switch center (in mm)
     hotswap_offset_x = -1.413  # x - 1.413 mm
     hotswap_offset_y = 3.625   # y + 3.625 mm
@@ -968,44 +1021,12 @@ def export_svg_hotswap_profile(config: KeyboardLayoutConfig, positions: Dict[str
     hotswap_width = 13.4  # mm
     hotswap_height = 9.45  # mm
     
-    # Calculate SVG dimensions based on switch positions
-    all_switch_positions = positions['left']['switches'] + positions['right']['switches']
+    # Calculate SVG dimensions
+    dimensions = _calculate_hotswap_svg_dimensions(positions, hotswap_offset_x, hotswap_offset_y, 
+                                                  hotswap_width, hotswap_height)
     
-    # Calculate bounds considering hotswap profiles at offset positions
-    hotswap_positions = []
-    for _, x, y, rotation in all_switch_positions:
-        hotswap_x = x + hotswap_offset_x
-        hotswap_y = y + hotswap_offset_y
-        hotswap_positions.append((hotswap_x, hotswap_y, rotation))
-    
-    # Calculate bounds (in mm)
-    hotswap_min_x = min(x - hotswap_width/2 for x, y, r in hotswap_positions)
-    hotswap_max_x = max(x + hotswap_width/2 for x, y, r in hotswap_positions)
-    hotswap_min_y = min(y - hotswap_height/2 for x, y, r in hotswap_positions)
-    hotswap_max_y = max(y + hotswap_height/2 for x, y, r in hotswap_positions)
-    
-    # Add margin for clean viewing (in mm)
-    margin = 20
-    min_x_mm = hotswap_min_x - margin
-    max_x_mm = hotswap_max_x + margin
-    min_y_mm = hotswap_min_y - margin
-    max_y_mm = hotswap_max_y + margin
-    
-    width_mm = max_x_mm - min_x_mm
-    height_mm = max_y_mm - min_y_mm
-    
-    # Convert to pixels for Fusion 360 compatibility
-    min_x_px = min_x_mm * mm_to_px
-    min_y_px = min_y_mm * mm_to_px
-    width_px = width_mm * mm_to_px
-    height_px = height_mm * mm_to_px
-    
-    # Create SVG drawing with pixel units for Fusion 360 compatibility
-    dwg = svgwrite.Drawing(
-        filename,
-        size=(f'{width_px:.3f}px', f'{height_px:.3f}px'),
-        viewBox=f'{min_x_px:.3f} {min_y_px:.3f} {width_px:.3f} {height_px:.3f}'
-    )
+    # Create SVG drawing
+    dwg = _create_cad_svg_drawing(filename, dimensions)
     
     # Define the hotswap profile paths (converted from the original SVG)
     # These paths are relative to the center of the hotswap profile
@@ -1021,36 +1042,36 @@ def export_svg_hotswap_profile(config: KeyboardLayoutConfig, positions: Dict[str
             group = dwg.g(transform=f'translate({center_x_px:.3f},{center_y_px:.3f}) rotate({rotation:.3f})')
         
         # Main hotswap socket body path (scaled to pixels and centered)
-        path1_d = f"""m {(6.000002 - 6.7) * mm_to_px:.3f},{(2.0998362 - 4.725) * mm_to_px:.3f} 
-                     a {1.251812 * mm_to_px:.3f},{1.251812 * mm_to_px:.3f} 0 0 1 {1.1936531 * mm_to_px:.3f},{0.87468 * mm_to_px:.3f} 
-                     {1.859393 * mm_to_px:.3f},{1.859393 * mm_to_px:.3f} 0 0 0 {1.4758169 * mm_to_px:.3f},{1.275316 * mm_to_px:.3f} 
-                     h {1.856266 * mm_to_px:.3f} 
-                     a {0.55 * mm_to_px:.3f},{0.55 * mm_to_px:.3f} 0 0 1 {0.38891 * mm_to_px:.3f},{0.16109 * mm_to_px:.3f} 
-                     l {0.67426 * mm_to_px:.3f},{0.67426 * mm_to_px:.3f} 
-                     a {0.55 * mm_to_px:.3f},{0.55 * mm_to_px:.3f} 0 0 1 {0.16109 * mm_to_px:.3f},{0.38891 * mm_to_px:.3f} 
-                     v {0.27574 * mm_to_px:.3f} 
-                     h {1.65 * mm_to_px:.3f} 
-                     v {2.2 * mm_to_px:.3f} 
-                     h {-1.65 * mm_to_px:.3f} 
-                     v {0.27574 * mm_to_px:.3f} 
-                     a {0.55 * mm_to_px:.3f},{0.55 * mm_to_px:.3f} 0 0 1 {-0.16109 * mm_to_px:.3f},{0.38891 * mm_to_px:.3f} 
-                     l {-0.67426 * mm_to_px:.3f},{0.67426 * mm_to_px:.3f} 
-                     a {0.55 * mm_to_px:.3f},{0.55 * mm_to_px:.3f} 0 0 1 {-0.38891 * mm_to_px:.3f},{0.16109 * mm_to_px:.3f} 
-                     H {(7.7742661 - 6.7) * mm_to_px:.3f} 
-                     a {0.55 * mm_to_px:.3f},{0.55 * mm_to_px:.3f} 0 0 1 {-0.38891 * mm_to_px:.3f},{-0.16109 * mm_to_px:.3f} 
-                     l {-0.67426 * mm_to_px:.3f},{-0.67426 * mm_to_px:.3f} 
-                     a {0.55 * mm_to_px:.3f},{0.55 * mm_to_px:.3f} 0 0 1 {-0.16109 * mm_to_px:.3f},{-0.38891 * mm_to_px:.3f} 
-                     v {-0.16423 * mm_to_px:.3f} 
-                     A {0.954545 * mm_to_px:.3f},{0.954545 * mm_to_px:.3f} 0 0 0 {(5.600006 - 6.7) * mm_to_px:.3f},{(7.1998422 - 4.725) * mm_to_px:.3f} 
-                     H {(2.7000061 - 6.7) * mm_to_px:.3f} 
-                     a {1.05 * mm_to_px:.3f},{1.05 * mm_to_px:.3f} 0 0 1 {-1.05 * mm_to_px:.3f},{-1.05 * mm_to_px:.3f} 
-                     v {-0.4 * mm_to_px:.3f} 
-                     H {(3.1e-6 - 6.7) * mm_to_px:.3f} 
-                     v {-2.2 * mm_to_px:.3f} 
-                     h {1.649999 * mm_to_px:.3f} 
-                     v {-0.4 * mm_to_px:.3f} 
-                     a {1.05 * mm_to_px:.3f},{1.05 * mm_to_px:.3f} 0 0 1 {1.05 * mm_to_px:.3f},{-1.05 * mm_to_px:.3f} 
-                     h {0.23 * mm_to_px:.3f} {2.1999999 * mm_to_px:.3f} z"""
+        path1_d = f"""m {(6.000002 - 6.7) * FUSION_360_MM_TO_PX:.3f},{(2.0998362 - 4.725) * FUSION_360_MM_TO_PX:.3f} 
+                     a {1.251812 * FUSION_360_MM_TO_PX:.3f},{1.251812 * FUSION_360_MM_TO_PX:.3f} 0 0 1 {1.1936531 * FUSION_360_MM_TO_PX:.3f},{0.87468 * FUSION_360_MM_TO_PX:.3f} 
+                     {1.859393 * FUSION_360_MM_TO_PX:.3f},{1.859393 * FUSION_360_MM_TO_PX:.3f} 0 0 0 {1.4758169 * FUSION_360_MM_TO_PX:.3f},{1.275316 * FUSION_360_MM_TO_PX:.3f} 
+                     h {1.856266 * FUSION_360_MM_TO_PX:.3f} 
+                     a {0.55 * FUSION_360_MM_TO_PX:.3f},{0.55 * FUSION_360_MM_TO_PX:.3f} 0 0 1 {0.38891 * FUSION_360_MM_TO_PX:.3f},{0.16109 * FUSION_360_MM_TO_PX:.3f} 
+                     l {0.67426 * FUSION_360_MM_TO_PX:.3f},{0.67426 * FUSION_360_MM_TO_PX:.3f} 
+                     a {0.55 * FUSION_360_MM_TO_PX:.3f},{0.55 * FUSION_360_MM_TO_PX:.3f} 0 0 1 {0.16109 * FUSION_360_MM_TO_PX:.3f},{0.38891 * FUSION_360_MM_TO_PX:.3f} 
+                     v {0.27574 * FUSION_360_MM_TO_PX:.3f} 
+                     h {1.65 * FUSION_360_MM_TO_PX:.3f} 
+                     v {2.2 * FUSION_360_MM_TO_PX:.3f} 
+                     h {-1.65 * FUSION_360_MM_TO_PX:.3f} 
+                     v {0.27574 * FUSION_360_MM_TO_PX:.3f} 
+                     a {0.55 * FUSION_360_MM_TO_PX:.3f},{0.55 * FUSION_360_MM_TO_PX:.3f} 0 0 1 {-0.16109 * FUSION_360_MM_TO_PX:.3f},{0.38891 * FUSION_360_MM_TO_PX:.3f} 
+                     l {-0.67426 * FUSION_360_MM_TO_PX:.3f},{0.67426 * FUSION_360_MM_TO_PX:.3f} 
+                     a {0.55 * FUSION_360_MM_TO_PX:.3f},{0.55 * FUSION_360_MM_TO_PX:.3f} 0 0 1 {-0.38891 * FUSION_360_MM_TO_PX:.3f},{0.16109 * FUSION_360_MM_TO_PX:.3f} 
+                     H {(7.7742661 - 6.7) * FUSION_360_MM_TO_PX:.3f} 
+                     a {0.55 * FUSION_360_MM_TO_PX:.3f},{0.55 * FUSION_360_MM_TO_PX:.3f} 0 0 1 {-0.38891 * FUSION_360_MM_TO_PX:.3f},{-0.16109 * FUSION_360_MM_TO_PX:.3f} 
+                     l {-0.67426 * FUSION_360_MM_TO_PX:.3f},{-0.67426 * FUSION_360_MM_TO_PX:.3f} 
+                     a {0.55 * FUSION_360_MM_TO_PX:.3f},{0.55 * FUSION_360_MM_TO_PX:.3f} 0 0 1 {-0.16109 * FUSION_360_MM_TO_PX:.3f},{-0.38891 * FUSION_360_MM_TO_PX:.3f} 
+                     v {-0.16423 * FUSION_360_MM_TO_PX:.3f} 
+                     A {0.954545 * FUSION_360_MM_TO_PX:.3f},{0.954545 * FUSION_360_MM_TO_PX:.3f} 0 0 0 {(5.600006 - 6.7) * FUSION_360_MM_TO_PX:.3f},{(7.1998422 - 4.725) * FUSION_360_MM_TO_PX:.3f} 
+                     H {(2.7000061 - 6.7) * FUSION_360_MM_TO_PX:.3f} 
+                     a {1.05 * FUSION_360_MM_TO_PX:.3f},{1.05 * FUSION_360_MM_TO_PX:.3f} 0 0 1 {-1.05 * FUSION_360_MM_TO_PX:.3f},{-1.05 * FUSION_360_MM_TO_PX:.3f} 
+                     v {-0.4 * FUSION_360_MM_TO_PX:.3f} 
+                     H {(3.1e-6 - 6.7) * FUSION_360_MM_TO_PX:.3f} 
+                     v {-2.2 * FUSION_360_MM_TO_PX:.3f} 
+                     h {1.649999 * FUSION_360_MM_TO_PX:.3f} 
+                     v {-0.4 * FUSION_360_MM_TO_PX:.3f} 
+                     a {1.05 * FUSION_360_MM_TO_PX:.3f},{1.05 * FUSION_360_MM_TO_PX:.3f} 0 0 1 {1.05 * FUSION_360_MM_TO_PX:.3f},{-1.05 * FUSION_360_MM_TO_PX:.3f} 
+                     h {0.23 * FUSION_360_MM_TO_PX:.3f} {2.1999999 * FUSION_360_MM_TO_PX:.3f} z"""
         
         group.add(dwg.path(
             d=path1_d,
@@ -1062,10 +1083,10 @@ def export_svg_hotswap_profile(config: KeyboardLayoutConfig, positions: Dict[str
         ))
         
         # Secondary path (USB connector cutout)
-        path2_d = f"""m {(5.130002 - 6.7) * mm_to_px:.3f},{(2.0998362 - 4.725) * mm_to_px:.3f} 
-                     v {-1 * mm_to_px:.3f} 
-                     a {1.1 * mm_to_px:.3f},{1.1 * mm_to_px:.3f} 0 0 0 {-2.1999999 * mm_to_px:.3f},0 
-                     v {1 * mm_to_px:.3f} z"""
+        path2_d = f"""m {(5.130002 - 6.7) * FUSION_360_MM_TO_PX:.3f},{(2.0998362 - 4.725) * FUSION_360_MM_TO_PX:.3f} 
+                     v {-1 * FUSION_360_MM_TO_PX:.3f} 
+                     a {1.1 * FUSION_360_MM_TO_PX:.3f},{1.1 * FUSION_360_MM_TO_PX:.3f} 0 0 0 {-2.1999999 * FUSION_360_MM_TO_PX:.3f},0 
+                     v {1 * FUSION_360_MM_TO_PX:.3f} z"""
         
         group.add(dwg.path(
             d=path2_d,
@@ -1086,57 +1107,17 @@ def export_svg_hotswap_profile(config: KeyboardLayoutConfig, positions: Dict[str
             hotswap_y = y + hotswap_offset_y
             
             # Convert mm coordinates to pixels
-            hotswap_x_px = hotswap_x * mm_to_px
-            hotswap_y_px = hotswap_y * mm_to_px
+            hotswap_x_px = hotswap_x * FUSION_360_MM_TO_PX
+            hotswap_y_px = hotswap_y * FUSION_360_MM_TO_PX
             
             # Add hotswap profile
             add_hotswap_profile(dwg, hotswap_x_px, hotswap_y_px, rotation)
     
-    # Calculate the midpoint between the two halves
-    left_switches = positions['left']['switches']
-    right_switches = positions['right']['switches']
-    
-    # Find the rightmost x coordinate of left switches (in mm)
-    left_max_x_mm = max(x + config.footprint_width/2 for _, x, y, r in left_switches)
-    
-    # Find the leftmost x coordinate of right switches (in mm)
-    right_min_x_mm = min(x - config.footprint_width/2 for _, x, y, r in right_switches)
-    
-    # Calculate the midpoint (in mm, then convert to pixels)
-    midpoint_x_mm = (left_max_x_mm + right_min_x_mm) / 2
-    midpoint_x_px = midpoint_x_mm * mm_to_px
-    
     # Add midpoint separation line
-    dwg.add(dwg.line(
-        start=(midpoint_x_px, min_y_px),
-        end=(midpoint_x_px, min_y_px + height_px),
-        stroke='#0066cc',
-        stroke_width='0.57',
-        stroke_dasharray='7.56,3.78'
-    ))
+    _add_midpoint_separation_line(dwg, positions, config, dimensions)
     
     # Add coordinate origin marker
-    origin_group = dwg.g()
-    origin_group.add(dwg.circle(
-        center=(0, 0),
-        r=3.78,
-        fill='none',
-        stroke='#000000',
-        stroke_width='0.38'
-    ))
-    origin_group.add(dwg.line(
-        start=(-18.9, 0),
-        end=(18.9, 0),
-        stroke='#000000',
-        stroke_width='0.1'
-    ))
-    origin_group.add(dwg.line(
-        start=(0, -18.9),
-        end=(0, 18.9),
-        stroke='#000000',
-        stroke_width='0.1'
-    ))
-    dwg.add(origin_group)
+    _add_coordinate_origin_marker(dwg, '#000000', '0.38')
     
     # Save the SVG
     dwg.save()
