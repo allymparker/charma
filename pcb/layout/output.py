@@ -946,3 +946,198 @@ def export_svg_mounting_holes(config: KeyboardLayoutConfig, positions: Dict[str,
     # Save the SVG
     dwg.save()
     print(f"Mounting holes SVG exported to {filename}")
+
+
+def export_svg_hotswap_profile(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_hotswap_profile.svg"):
+    """
+    Export hotswap socket profiles positioned relative to switch centers for CAD import (e.g., Fusion 360).
+    
+    Args:
+        config: KeyboardLayoutConfig instance with layout parameters
+        positions: Positions dictionary from generate_all_positions
+        filename: Output SVG filename
+    """
+    # Conversion factor for Fusion 360: 1mm = 96/25.4 pixels (96 DPI)
+    mm_to_px = 96.0 / 25.4
+    
+    # Hotswap profile offset from switch center (in mm)
+    hotswap_offset_x = -1.413  # x - 1.413 mm
+    hotswap_offset_y = 3.625   # y + 3.625 mm
+    
+    # Hotswap profile dimensions (from original SVG)
+    hotswap_width = 13.4  # mm
+    hotswap_height = 9.45  # mm
+    
+    # Calculate SVG dimensions based on switch positions
+    all_switch_positions = positions['left']['switches'] + positions['right']['switches']
+    
+    # Calculate bounds considering hotswap profiles at offset positions
+    hotswap_positions = []
+    for _, x, y, rotation in all_switch_positions:
+        hotswap_x = x + hotswap_offset_x
+        hotswap_y = y + hotswap_offset_y
+        hotswap_positions.append((hotswap_x, hotswap_y, rotation))
+    
+    # Calculate bounds (in mm)
+    hotswap_min_x = min(x - hotswap_width/2 for x, y, r in hotswap_positions)
+    hotswap_max_x = max(x + hotswap_width/2 for x, y, r in hotswap_positions)
+    hotswap_min_y = min(y - hotswap_height/2 for x, y, r in hotswap_positions)
+    hotswap_max_y = max(y + hotswap_height/2 for x, y, r in hotswap_positions)
+    
+    # Add margin for clean viewing (in mm)
+    margin = 20
+    min_x_mm = hotswap_min_x - margin
+    max_x_mm = hotswap_max_x + margin
+    min_y_mm = hotswap_min_y - margin
+    max_y_mm = hotswap_max_y + margin
+    
+    width_mm = max_x_mm - min_x_mm
+    height_mm = max_y_mm - min_y_mm
+    
+    # Convert to pixels for Fusion 360 compatibility
+    min_x_px = min_x_mm * mm_to_px
+    min_y_px = min_y_mm * mm_to_px
+    width_px = width_mm * mm_to_px
+    height_px = height_mm * mm_to_px
+    
+    # Create SVG drawing with pixel units for Fusion 360 compatibility
+    dwg = svgwrite.Drawing(
+        filename,
+        size=(f'{width_px:.3f}px', f'{height_px:.3f}px'),
+        viewBox=f'{min_x_px:.3f} {min_y_px:.3f} {width_px:.3f} {height_px:.3f}'
+    )
+    
+    # Define the hotswap profile paths (converted from the original SVG)
+    # These paths are relative to the center of the hotswap profile
+    def add_hotswap_profile(dwg, center_x_px, center_y_px, rotation=0):
+        """Add a hotswap profile centered at the given pixel coordinates."""
+        
+        # Create group for rotation and positioning
+        if abs(rotation) < 0.1:
+            # No rotation
+            group = dwg.g(transform=f'translate({center_x_px:.3f},{center_y_px:.3f})')
+        else:
+            # With rotation
+            group = dwg.g(transform=f'translate({center_x_px:.3f},{center_y_px:.3f}) rotate({rotation:.3f})')
+        
+        # Main hotswap socket body path (scaled to pixels and centered)
+        path1_d = f"""m {(6.000002 - 6.7) * mm_to_px:.3f},{(2.0998362 - 4.725) * mm_to_px:.3f} 
+                     a {1.251812 * mm_to_px:.3f},{1.251812 * mm_to_px:.3f} 0 0 1 {1.1936531 * mm_to_px:.3f},{0.87468 * mm_to_px:.3f} 
+                     {1.859393 * mm_to_px:.3f},{1.859393 * mm_to_px:.3f} 0 0 0 {1.4758169 * mm_to_px:.3f},{1.275316 * mm_to_px:.3f} 
+                     h {1.856266 * mm_to_px:.3f} 
+                     a {0.55 * mm_to_px:.3f},{0.55 * mm_to_px:.3f} 0 0 1 {0.38891 * mm_to_px:.3f},{0.16109 * mm_to_px:.3f} 
+                     l {0.67426 * mm_to_px:.3f},{0.67426 * mm_to_px:.3f} 
+                     a {0.55 * mm_to_px:.3f},{0.55 * mm_to_px:.3f} 0 0 1 {0.16109 * mm_to_px:.3f},{0.38891 * mm_to_px:.3f} 
+                     v {0.27574 * mm_to_px:.3f} 
+                     h {1.65 * mm_to_px:.3f} 
+                     v {2.2 * mm_to_px:.3f} 
+                     h {-1.65 * mm_to_px:.3f} 
+                     v {0.27574 * mm_to_px:.3f} 
+                     a {0.55 * mm_to_px:.3f},{0.55 * mm_to_px:.3f} 0 0 1 {-0.16109 * mm_to_px:.3f},{0.38891 * mm_to_px:.3f} 
+                     l {-0.67426 * mm_to_px:.3f},{0.67426 * mm_to_px:.3f} 
+                     a {0.55 * mm_to_px:.3f},{0.55 * mm_to_px:.3f} 0 0 1 {-0.38891 * mm_to_px:.3f},{0.16109 * mm_to_px:.3f} 
+                     H {(7.7742661 - 6.7) * mm_to_px:.3f} 
+                     a {0.55 * mm_to_px:.3f},{0.55 * mm_to_px:.3f} 0 0 1 {-0.38891 * mm_to_px:.3f},{-0.16109 * mm_to_px:.3f} 
+                     l {-0.67426 * mm_to_px:.3f},{-0.67426 * mm_to_px:.3f} 
+                     a {0.55 * mm_to_px:.3f},{0.55 * mm_to_px:.3f} 0 0 1 {-0.16109 * mm_to_px:.3f},{-0.38891 * mm_to_px:.3f} 
+                     v {-0.16423 * mm_to_px:.3f} 
+                     A {0.954545 * mm_to_px:.3f},{0.954545 * mm_to_px:.3f} 0 0 0 {(5.600006 - 6.7) * mm_to_px:.3f},{(7.1998422 - 4.725) * mm_to_px:.3f} 
+                     H {(2.7000061 - 6.7) * mm_to_px:.3f} 
+                     a {1.05 * mm_to_px:.3f},{1.05 * mm_to_px:.3f} 0 0 1 {-1.05 * mm_to_px:.3f},{-1.05 * mm_to_px:.3f} 
+                     v {-0.4 * mm_to_px:.3f} 
+                     H {(3.1e-6 - 6.7) * mm_to_px:.3f} 
+                     v {-2.2 * mm_to_px:.3f} 
+                     h {1.649999 * mm_to_px:.3f} 
+                     v {-0.4 * mm_to_px:.3f} 
+                     a {1.05 * mm_to_px:.3f},{1.05 * mm_to_px:.3f} 0 0 1 {1.05 * mm_to_px:.3f},{-1.05 * mm_to_px:.3f} 
+                     h {0.23 * mm_to_px:.3f} {2.1999999 * mm_to_px:.3f} z"""
+        
+        group.add(dwg.path(
+            d=path1_d,
+            fill='none',
+            stroke='#000000',
+            stroke_width='0.26458334',
+            stroke_linecap='round',
+            stroke_linejoin='round'
+        ))
+        
+        # Secondary path (USB connector cutout)
+        path2_d = f"""m {(5.130002 - 6.7) * mm_to_px:.3f},{(2.0998362 - 4.725) * mm_to_px:.3f} 
+                     v {-1 * mm_to_px:.3f} 
+                     a {1.1 * mm_to_px:.3f},{1.1 * mm_to_px:.3f} 0 0 0 {-2.1999999 * mm_to_px:.3f},0 
+                     v {1 * mm_to_px:.3f} z"""
+        
+        group.add(dwg.path(
+            d=path2_d,
+            fill='none',
+            stroke='#000000',
+            stroke_width='0.26458334',
+            stroke_linecap='round',
+            stroke_linejoin='round'
+        ))
+        
+        dwg.add(group)
+    
+    # Add hotswap profiles for both halves
+    for half in ['left', 'right']:
+        for key_name, x, y, rotation in positions[half]['switches']:
+            # Calculate hotswap center position
+            hotswap_x = x + hotswap_offset_x
+            hotswap_y = y + hotswap_offset_y
+            
+            # Convert mm coordinates to pixels
+            hotswap_x_px = hotswap_x * mm_to_px
+            hotswap_y_px = hotswap_y * mm_to_px
+            
+            # Add hotswap profile
+            add_hotswap_profile(dwg, hotswap_x_px, hotswap_y_px, rotation)
+    
+    # Calculate the midpoint between the two halves
+    left_switches = positions['left']['switches']
+    right_switches = positions['right']['switches']
+    
+    # Find the rightmost x coordinate of left switches (in mm)
+    left_max_x_mm = max(x + config.footprint_width/2 for _, x, y, r in left_switches)
+    
+    # Find the leftmost x coordinate of right switches (in mm)
+    right_min_x_mm = min(x - config.footprint_width/2 for _, x, y, r in right_switches)
+    
+    # Calculate the midpoint (in mm, then convert to pixels)
+    midpoint_x_mm = (left_max_x_mm + right_min_x_mm) / 2
+    midpoint_x_px = midpoint_x_mm * mm_to_px
+    
+    # Add midpoint separation line
+    dwg.add(dwg.line(
+        start=(midpoint_x_px, min_y_px),
+        end=(midpoint_x_px, min_y_px + height_px),
+        stroke='#0066cc',
+        stroke_width='0.57',
+        stroke_dasharray='7.56,3.78'
+    ))
+    
+    # Add coordinate origin marker
+    origin_group = dwg.g()
+    origin_group.add(dwg.circle(
+        center=(0, 0),
+        r=3.78,
+        fill='none',
+        stroke='#000000',
+        stroke_width='0.38'
+    ))
+    origin_group.add(dwg.line(
+        start=(-18.9, 0),
+        end=(18.9, 0),
+        stroke='#000000',
+        stroke_width='0.1'
+    ))
+    origin_group.add(dwg.line(
+        start=(0, -18.9),
+        end=(0, 18.9),
+        stroke='#000000',
+        stroke_width='0.1'
+    ))
+    dwg.add(origin_group)
+    
+    # Save the SVG
+    dwg.save()
+    print(f"Hotswap profile SVG exported to {filename}")
