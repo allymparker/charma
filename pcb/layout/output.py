@@ -546,7 +546,7 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
     print(f"SVG visualization exported to {filename}")
 
 
-def export_svg_for_cad(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_switches_cad.svg"):
+def export_svg_for_footprints(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_switches_cad.svg"):
     """
     Export switch outlines and origin as a clean SVG for CAD import (e.g., Fusion 360).
     
