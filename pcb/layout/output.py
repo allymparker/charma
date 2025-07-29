@@ -392,3 +392,217 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
         f.write(svg_content)
     
     print(f"SVG visualization exported to {filename}")
+
+
+def export_svg_for_cad(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_switches_cad.svg"):
+    """
+    Export switch outlines and origin as a clean SVG for CAD import (e.g., Fusion 360).
+    
+    Args:
+        config: KeyboardLayoutConfig instance with layout parameters
+        positions: Positions dictionary from generate_all_positions
+        filename: Output SVG filename
+    """
+    # Conversion factor for Fusion 360: 1mm = 96/25.4 pixels (96 DPI)
+    mm_to_px = 96.0 / 25.4
+    
+    # Calculate SVG dimensions based on switch positions only
+    all_switch_positions = positions['left']['switches'] + positions['right']['switches']
+    
+    # Calculate bounds considering only switches (in mm)
+    switch_min_x = min(x - config.footprint_width/2 for _, x, y, r in all_switch_positions)
+    switch_max_x = max(x + config.footprint_width/2 for _, x, y, r in all_switch_positions)
+    switch_min_y = min(y - config.footprint_height/2 for _, x, y, r in all_switch_positions)
+    switch_max_y = max(y + config.footprint_height/2 for _, x, y, r in all_switch_positions)
+    
+    # Add margin for clean viewing (in mm)
+    margin = 20
+    min_x_mm = switch_min_x - margin
+    max_x_mm = switch_max_x + margin
+    min_y_mm = switch_min_y - margin
+    max_y_mm = switch_max_y + margin
+    
+    width_mm = max_x_mm - min_x_mm
+    height_mm = max_y_mm - min_y_mm
+    
+    # Convert to pixels for Fusion 360 compatibility
+    min_x_px = min_x_mm * mm_to_px
+    max_x_px = max_x_mm * mm_to_px
+    min_y_px = min_y_mm * mm_to_px
+    max_y_px = max_y_mm * mm_to_px
+    width_px = width_mm * mm_to_px
+    height_px = height_mm * mm_to_px
+    
+    # Create clean SVG content for CAD (using pixels for Fusion 360)
+    svg_content = f'''<?xml version="1.0" encoding="UTF-8"?>
+<svg width="{width_px:.3f}" height="{height_px:.3f}" 
+     viewBox="{min_x_px:.3f} {min_y_px:.3f} {width_px:.3f} {height_px:.3f}"
+     xmlns="http://www.w3.org/2000/svg">
+  
+  <!-- Switch outlines for CAD import (scaled for Fusion 360 at 96 DPI) -->
+'''
+    
+    # Add switch rectangles for both halves
+    for half in ['left', 'right']:
+        for key_name, x, y, rotation in positions[half]['switches']:
+            # Convert mm coordinates to pixels
+            x_px = x * mm_to_px
+            y_px = y * mm_to_px
+            width_px_rect = config.footprint_width * mm_to_px
+            height_px_rect = config.footprint_height * mm_to_px
+            
+            if abs(rotation) < 0.1:  # No rotation for main keys
+                # Convert center coordinates to top-left for rectangle drawing
+                rect_x_px = x_px - width_px_rect/2
+                rect_y_px = y_px - height_px_rect/2
+                svg_content += f'''  <rect x="{rect_x_px:.3f}" y="{rect_y_px:.3f}" 
+        width="{width_px_rect:.3f}" height="{height_px_rect:.3f}"
+        fill="none" stroke="#000000" stroke-width="0.38"/>
+'''
+            else:  # Rotated thumb keys
+                # Convert center coordinates to top-left for rectangle drawing
+                rect_x_px = -width_px_rect/2
+                rect_y_px = -height_px_rect/2
+                svg_content += f'''  <g transform="translate({x_px:.3f},{y_px:.3f}) rotate({rotation:.3f})">
+    <rect x="{rect_x_px:.3f}" y="{rect_y_px:.3f}" 
+          width="{width_px_rect:.3f}" height="{height_px_rect:.3f}"
+          fill="none" stroke="#000000" stroke-width="0.38"/>
+  </g>
+'''
+    
+    # Calculate the midpoint between the two halves
+    left_switches = positions['left']['switches']
+    right_switches = positions['right']['switches']
+    
+    # Find the rightmost x coordinate of left switches (in mm)
+    left_max_x_mm = max(x + config.footprint_width/2 for _, x, y, r in left_switches)
+    
+    # Find the leftmost x coordinate of right switches (in mm)
+    right_min_x_mm = min(x - config.footprint_width/2 for _, x, y, r in right_switches)
+    
+    # Calculate the midpoint (in mm, then convert to pixels)
+    midpoint_x_mm = (left_max_x_mm + right_min_x_mm) / 2
+    midpoint_x_px = midpoint_x_mm * mm_to_px
+    
+    # Add midpoint separation line and coordinate origin marker
+    svg_content += f'''  
+  <!-- Midpoint separation line -->
+  <line x1="{midpoint_x_px:.3f}" y1="{min_y_px:.3f}" 
+        x2="{midpoint_x_px:.3f}" y2="{max_y_px:.3f}" 
+        stroke="#0066cc" stroke-width="0.57" stroke-dasharray="7.56,3.78"/>
+  
+  <!-- Coordinate Origin (0,0) -->
+  <g>
+    <circle cx="0" cy="0" r="3.78" 
+            fill="none" stroke="#ff0000" stroke-width="0.76"/>
+    <line x1="-18.9" y1="0" 
+          x2="18.9" y2="0" 
+          stroke="#ff0000" stroke-width="0.76"/>
+    <line x1="0" y1="-18.9" 
+          x2="0" y2="18.9" 
+          stroke="#ff0000" stroke-width="0.76"/>
+  </g>
+</svg>'''
+    
+    with open(filename, 'w') as f:
+        f.write(svg_content)
+    
+    print(f"CAD-ready SVG exported to {filename}")
+
+
+def export_svg_switch_plate(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_switch_plate.svg"):
+    """
+    Export switch plate hole and recess positions for CAD import (e.g., Fusion 360).
+    Creates 14mm (hole) and 16mm (recess) squares centered on each switch position.
+    Minimal SVG with black hairline strokes for clean CAD import.
+    
+    Args:
+        config: KeyboardLayoutConfig instance with layout parameters
+        positions: Positions dictionary from generate_all_positions
+        filename: Output SVG filename
+    """
+    # Conversion factor for Fusion 360: 1mm = 96/25.4 pixels (96 DPI)
+    mm_to_px = 96.0 / 25.4
+    
+    # Calculate SVG dimensions based on switch positions with keepout zones
+    all_switch_positions = positions['left']['switches'] + positions['right']['switches']
+    
+    # Calculate bounds considering switches and keepout zones (16mm is the largest)
+    keepout_size = 16.0  # mm
+    switch_min_x = min(x - keepout_size/2 for _, x, y, r in all_switch_positions)
+    switch_max_x = max(x + keepout_size/2 for _, x, y, r in all_switch_positions)
+    switch_min_y = min(y - keepout_size/2 for _, x, y, r in all_switch_positions)
+    switch_max_y = max(y + keepout_size/2 for _, x, y, r in all_switch_positions)
+    
+    # Add margin for clean viewing (in mm)
+    margin = 20
+    min_x_mm = switch_min_x - margin
+    max_x_mm = switch_max_x + margin
+    min_y_mm = switch_min_y - margin
+    max_y_mm = switch_max_y + margin
+    
+    width_mm = max_x_mm - min_x_mm
+    height_mm = max_y_mm - min_y_mm
+    
+    # Convert to pixels for Fusion 360 compatibility
+    min_x_px = min_x_mm * mm_to_px
+    min_y_px = min_y_mm * mm_to_px
+    width_px = width_mm * mm_to_px
+    height_px = height_mm * mm_to_px
+    
+    # Create minimal SVG content for CAD (using pixels for Fusion 360)
+    svg_content = f'''<?xml version="1.0" encoding="UTF-8"?>
+<svg width="{width_px:.3f}" height="{height_px:.3f}" 
+     viewBox="{min_x_px:.3f} {min_y_px:.3f} {width_px:.3f} {height_px:.3f}"
+     xmlns="http://www.w3.org/2000/svg">
+'''
+    
+    # Add switch plate holes and recesses for both halves
+    for half in ['left', 'right']:
+        for key_name, x, y, rotation in positions[half]['switches']:
+            # Convert mm coordinates to pixels
+            x_px = x * mm_to_px
+            y_px = y * mm_to_px
+            
+            # Hole and recess dimensions in pixels
+            hole_14_px = 14.0 * mm_to_px
+            recess_16_px = 16.0 * mm_to_px
+            
+            if abs(rotation) < 0.1:  # No rotation for main keys
+                # 14mm hole (center coordinates to top-left)
+                hole_14_x_px = x_px - hole_14_px/2
+                hole_14_y_px = y_px - hole_14_px/2
+                
+                # 16mm recess (center coordinates to top-left)
+                recess_16_x_px = x_px - recess_16_px/2
+                recess_16_y_px = y_px - recess_16_px/2
+                
+                svg_content += f'''  <rect x="{recess_16_x_px:.3f}" y="{recess_16_y_px:.3f}" width="{recess_16_px:.3f}" height="{recess_16_px:.3f}" fill="none" stroke="#000000" stroke-width="0.1"/>
+  <rect x="{hole_14_x_px:.3f}" y="{hole_14_y_px:.3f}" width="{hole_14_px:.3f}" height="{hole_14_px:.3f}" fill="none" stroke="#000000" stroke-width="0.1"/>
+'''
+            else:  # Rotated thumb keys
+                # All rectangles relative to center for rotation
+                hole_14_x_px = -hole_14_px/2
+                hole_14_y_px = -hole_14_px/2
+                recess_16_x_px = -recess_16_px/2
+                recess_16_y_px = -recess_16_px/2
+                
+                svg_content += f'''  <g transform="translate({x_px:.3f},{y_px:.3f}) rotate({rotation:.3f})">
+    <rect x="{recess_16_x_px:.3f}" y="{recess_16_y_px:.3f}" width="{recess_16_px:.3f}" height="{recess_16_px:.3f}" fill="none" stroke="#000000" stroke-width="0.1"/>
+    <rect x="{hole_14_x_px:.3f}" y="{hole_14_y_px:.3f}" width="{hole_14_px:.3f}" height="{hole_14_px:.3f}" fill="none" stroke="#000000" stroke-width="0.1"/>
+  </g>
+'''
+    
+    
+    # Add coordinate origin marker
+    svg_content += '''  <g>
+    <circle cx="0" cy="0" r="3.78" fill="none" stroke="#000000" stroke-width="0.1"/>
+    <line x1="-18.9" y1="0" x2="18.9" y2="0" stroke="#000000" stroke-width="0.1"/>
+    <line x1="0" y1="-18.9" x2="0" y2="18.9" stroke="#000000" stroke-width="0.1"/>
+  </g>
+</svg>'''
+    
+    with open(filename, 'w') as f:
+        f.write(svg_content)
+    
+    print(f"Switch plate SVG exported to {filename}")

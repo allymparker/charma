@@ -7,7 +7,7 @@ to generate positions for a split column staggered keyboard.
 """
 
 from layout import KeyboardLayoutConfig, KeyboardLayoutCalculator, get_charma_config
-from output import print_positions, export_csv, export_svg
+from output import print_positions, export_csv, export_svg, export_svg_for_cad, export_svg_switch_plate
 
 
 def main():
@@ -43,10 +43,14 @@ def main():
     # Export files
     export_csv(positions)
     export_svg(config, positions, "keyboard_layout.svg")
+    export_svg_for_cad(config, positions, "keyboard_switches_cad.svg")
+    export_svg_switch_plate(config, positions, "keyboard_switch_plate.svg")
     
-    print(f"\nFiles generated:")
-    print(f"- keyboard_positions.csv (CSV format)")
-    print(f"- keyboard_layout.svg (SVG visualization)")
+    print("\nFiles generated:")
+    print("- keyboard_positions.csv (CSV format)")
+    print("- keyboard_layout.svg (SVG visualization)")
+    print("- keyboard_switches_cad.svg (CAD-ready switch outlines)")
+    print("- keyboard_switch_plate.svg (Switch plate holes and recesses)")
 
 
 if __name__ == "__main__":
