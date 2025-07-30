@@ -708,7 +708,7 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
             y_px = y * FUSION_360_MM_TO_PX
 
             # Circle dimensions in pixels
-            center_diameter_px = 3.0 * FUSION_360_MM_TO_PX
+            center_diameter_px = 3.5 * FUSION_360_MM_TO_PX
             side_diameter_px = 2.2 * FUSION_360_MM_TO_PX
             offset_distance_px = offset_distance * FUSION_360_MM_TO_PX
 
