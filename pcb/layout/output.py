@@ -602,6 +602,73 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
 
         dwg.add(group)
 
+    def add_diode_recess(dwg, center_x_px, center_y_px, rotation=0):
+        """Add a pill-shaped diode recess centered at the given pixel coordinates.
+        
+        The pill shape consists of:
+        - A rectangular center section (3.4mm tall)
+        - Semicircles at top and bottom (2.4mm diameter)
+        - Total height: 5.8mm
+        - Oriented vertically with semicircles at top and bottom
+        """
+        # Diode recess dimensions in mm
+        box_height = 3.4  # mm
+        semicircle_diameter = 2.4  # mm
+        semicircle_radius = semicircle_diameter / 2  # 1.2 mm
+        total_height = 5.8  # mm (box_height + semicircle_diameter)
+        pill_width = 2.4  # mm (width equals semicircle diameter)
+        
+        # Convert to pixels
+        box_height_px = box_height * FUSION_360_MM_TO_PX
+        radius_px = semicircle_radius * FUSION_360_MM_TO_PX
+        total_height_px = total_height * FUSION_360_MM_TO_PX
+        half_width_px = radius_px  # Half width equals radius
+        
+        # Create group for rotation and positioning
+        # Add 90 degrees to the rotation to align with diode orientation
+        effective_rotation = rotation + 90
+        if abs(effective_rotation) < 0.1:
+            # No rotation
+            group = dwg.g(transform=f"translate({center_x_px:.3f},{center_y_px:.3f})")
+        else:
+            # With rotation
+            group = dwg.g(transform=f"translate({center_x_px:.3f},{center_y_px:.3f}) rotate({effective_rotation:.3f})")
+        
+        # Calculate positions for the pill shape
+        # The box extends from -box_height/2 to +box_height/2
+        # The semicircles are centered at the top and bottom of the box
+        box_half_height = box_height_px / 2
+        top_semicircle_center_y = -box_half_height
+        bottom_semicircle_center_y = box_half_height
+        
+        # Create a single path for the complete pill shape
+        # Start at the leftmost point of the top semicircle
+        path_d = f"M {-half_width_px:.3f},{top_semicircle_center_y:.3f}"
+        
+        # Top semicircle (left to right)
+        path_d += f" A {radius_px:.3f},{radius_px:.3f} 0 0,1 {half_width_px:.3f},{top_semicircle_center_y:.3f}"
+        
+        # Right vertical line down to bottom semicircle
+        path_d += f" L {half_width_px:.3f},{bottom_semicircle_center_y:.3f}"
+        
+        # Bottom semicircle (right to left)
+        path_d += f" A {radius_px:.3f},{radius_px:.3f} 0 0,1 {-half_width_px:.3f},{bottom_semicircle_center_y:.3f}"
+        
+        # Left vertical line back up to complete the shape
+        path_d += f" L {-half_width_px:.3f},{top_semicircle_center_y:.3f} Z"
+        
+        # Add the complete pill shape as a single path
+        group.add(dwg.path(
+            d=path_d,
+            fill="none",
+            stroke="#000000",
+            stroke_width="0.1",
+            stroke_linecap="round",
+            stroke_linejoin="round"
+        ))
+        
+        dwg.add(group)
+
     # Add hotswap profiles for both halves
     for half in ["left", "right"]:
         for key_name, x, y, rotation in positions[half]["switches"]:
@@ -645,6 +712,16 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
                 group.add(dwg.circle(center=(offset_distance_px, 0), r=side_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
 
                 dwg.add(group)
+
+    # Add diode recesses for both halves
+    for half in ["left", "right"]:
+        for diode_name, x, y, rotation in positions[half]["diodes"]:
+            # Convert mm coordinates to pixels
+            x_px = x * FUSION_360_MM_TO_PX
+            y_px = y * FUSION_360_MM_TO_PX
+
+            # Add diode recess
+            add_diode_recess(dwg, x_px, y_px, rotation)
 
     # Add midpoint separation line
     _add_midpoint_separation_line(dwg, positions, config, dimensions)
