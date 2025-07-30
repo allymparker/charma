@@ -672,9 +672,26 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
     # Add hotswap profiles for both halves
     for half in ["left", "right"]:
         for key_name, x, y, rotation in positions[half]["switches"]:
-            # Calculate hotswap center position
-            hotswap_x = x + hotswap_offset_x
-            hotswap_y = y + hotswap_offset_y
+            if abs(rotation) < 0.1:  # No rotation for main keys
+                # Calculate hotswap center position directly
+                hotswap_x = x + hotswap_offset_x
+                hotswap_y = y + hotswap_offset_y
+            else:  # Rotated thumb keys - rotate the offset around switch center
+                import math
+                # Convert rotation to radians
+                rotation_rad = math.radians(rotation)
+                
+                # Rotate the offset vector around the switch center
+                cos_r = math.cos(rotation_rad)
+                sin_r = math.sin(rotation_rad)
+                
+                # Apply rotation matrix to the offset
+                rotated_offset_x = hotswap_offset_x * cos_r - hotswap_offset_y * sin_r
+                rotated_offset_y = hotswap_offset_x * sin_r + hotswap_offset_y * cos_r
+                
+                # Calculate final hotswap position
+                hotswap_x = x + rotated_offset_x
+                hotswap_y = y + rotated_offset_y
 
             # Convert mm coordinates to pixels
             hotswap_x_px = hotswap_x * FUSION_360_MM_TO_PX
@@ -701,14 +718,14 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
 
                 # 2.2mm circle at x + 5.22mm (only right side, removed left side as requested)
                 dwg.add(dwg.circle(center=(x_px + offset_distance_px, y_px), r=side_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
-            else:  # Rotated thumb keys
-                # Create group for rotation
+            else:  # Rotated thumb keys - rotate around switch center
+                # Create group for rotation around the switch center
                 group = dwg.g(transform=f"translate({x_px:.3f},{y_px:.3f}) rotate({rotation:.3f})")
 
-                # 3mm circle at center
+                # 3mm circle at center (switch center)
                 group.add(dwg.circle(center=(0, 0), r=center_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
 
-                # 2.2mm circle at x + 5.22mm (only right side, removed left side as requested)
+                # 2.2mm circle at x + 5.22mm (rotated around switch center, not hotswap center)
                 group.add(dwg.circle(center=(offset_distance_px, 0), r=side_diameter_px / 2, fill="none", stroke="#000000", stroke_width="0.1"))
 
                 dwg.add(group)
