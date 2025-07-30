@@ -5,16 +5,25 @@ Output utilities for keyboard layout calculator.
 Contains functions for displaying and exporting keyboard layout positions.
 """
 
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional, NamedTuple
 import svgwrite
 from layout import KeyboardLayoutConfig, KeyboardLayoutCalculator
 
+
+class CadSvgDimensions(NamedTuple):
+    """Dimensions for CAD SVG export."""
+    min_x_px: float
+    min_y_px: float
+    width_px: float
+    height_px: float
+
 # Constants for CAD export
-FUSION_360_MM_TO_PX = 96.0 / 25.4  # Conversion factor for Fusion 360: 1mm = 96/25.4 pixels (96 DPI)
+# Conversion factor for Fusion 360: 1mm = 96/25.4 pixels (96 DPI)
+FUSION_360_MM_TO_PX = 96.0 / 25.4
 CAD_MARGIN = 20  # mm
 
 
-def _calculate_cad_svg_dimensions(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], config: KeyboardLayoutConfig) -> Dict[str, float]:
+def _calculate_cad_svg_dimensions(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], config: KeyboardLayoutConfig) -> CadSvgDimensions:
     """
     Calculate SVG dimensions for CAD export using efficient approximation based on key switch positions.
     Uses the rightmost switch (SWR<num_cols>) x position + footprint width * 0.5 for width calculation,
@@ -26,25 +35,25 @@ def _calculate_cad_svg_dimensions(positions: Dict[str, Dict[str, List[Tuple[str,
         config: KeyboardLayoutConfig instance with layout parameters
 
     Returns:
-        Dict with keys: min_x_mm, max_x_mm, min_y_mm, max_y_mm, width_mm, height_mm,
-                       min_x_px, min_y_px, width_px, height_px
+        CadSvgDimensions with pixel coordinates for SVG creation
     """
     # Find the rightmost switch (SWR<num_cols>) position for width calculation
     # This is always at index (config.num_cols - 1) in the right switches list
     all_right_switches = positions["right"]["switches"]
-    rightmost_switch_position = all_right_switches[config.num_cols - 1]  # Index num_cols-1 is the rightmost column
+    # Index num_cols-1 is the rightmost column
+    rightmost_switch_position = all_right_switches[config.num_cols - 1]
     rightmost_switch_x = rightmost_switch_position[1]  # x coordinate
-    
+
     # Find the last (bottommost) right switch for height calculation
     last_right_switch_y = max(y for _, x, y, r in all_right_switches)
-    
+
     # Calculate bounds using efficient approximation method
     # Width: rightmost switch x position + footprint width * 0.5 gives us the approximate right edge
     switch_max_x = rightmost_switch_x + config.footprint_width * 0.5
-    
+
     # Height: last right switch position + footprint height
     switch_max_y = last_right_switch_y + config.footprint_height
-    
+
     # Top-left is (0,0) - the origin position
     switch_min_x = 0.0
     switch_min_y = 0.0
@@ -64,25 +73,29 @@ def _calculate_cad_svg_dimensions(positions: Dict[str, Dict[str, List[Tuple[str,
     width_px = width_mm * FUSION_360_MM_TO_PX
     height_px = height_mm * FUSION_360_MM_TO_PX
 
-    return {"min_x_mm": min_x_mm, "max_x_mm": max_x_mm, "min_y_mm": min_y_mm, "max_y_mm": max_y_mm, "width_mm": width_mm, "height_mm": height_mm, "min_x_px": min_x_px, "min_y_px": min_y_px, "width_px": width_px, "height_px": height_px}
+    return CadSvgDimensions(
+        min_x_px=min_x_px,
+        min_y_px=min_y_px,
+        width_px=width_px,
+        height_px=height_px
+    )
 
 
-def _create_cad_svg_drawing(filename: str, dimensions: Dict[str, float]) -> svgwrite.Drawing:
+def _create_cad_svg_drawing(filename: str, dimensions: CadSvgDimensions) -> svgwrite.Drawing:
     """
     Create SVG drawing with pixel units for Fusion 360 compatibility.
 
     Args:
         filename: Output SVG filename
-        dimensions: Dictionary from _calculate_cad_svg_dimensions
+        dimensions: CadSvgDimensions from _calculate_cad_svg_dimensions
 
     Returns:
         svgwrite.Drawing instance
     """
-    return svgwrite.Drawing(filename, size=(f"{dimensions['width_px']:.3f}px", f"{dimensions['height_px']:.3f}px"), viewBox=f"{dimensions['min_x_px']:.3f} {dimensions['min_y_px']:.3f} {dimensions['width_px']:.3f} {dimensions['height_px']:.3f}")
+    return svgwrite.Drawing(filename, size=(f"{dimensions.width_px:.3f}px", f"{dimensions.height_px:.3f}px"), viewBox=f"{dimensions.min_x_px:.3f} {dimensions.min_y_px:.3f} {dimensions.width_px:.3f} {dimensions.height_px:.3f}")
 
 
 def _add_coordinate_origin_marker(dwg: svgwrite.Drawing):
-
     """
     Add coordinate origin marker to SVG drawing.
 
@@ -100,7 +113,7 @@ def _add_coordinate_origin_marker(dwg: svgwrite.Drawing):
     dwg.add(origin_group)
 
 
-def _add_midpoint_separation_line(dwg: svgwrite.Drawing, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], config: KeyboardLayoutConfig, dimensions: Dict[str, float]):
+def _add_midpoint_separation_line(dwg: svgwrite.Drawing, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], config: KeyboardLayoutConfig, dimensions: CadSvgDimensions):
     """
     Add midpoint separation line between left and right halves.
 
@@ -108,7 +121,7 @@ def _add_midpoint_separation_line(dwg: svgwrite.Drawing, positions: Dict[str, Di
         dwg: svgwrite.Drawing instance
         positions: Positions dictionary from generate_all_positions
         config: KeyboardLayoutConfig instance
-        dimensions: Dictionary from _calculate_cad_svg_dimensions
+        dimensions: CadSvgDimensions from _calculate_cad_svg_dimensions
     """
     left_switches = positions["left"]["switches"]
     right_switches = positions["right"]["switches"]
@@ -124,7 +137,7 @@ def _add_midpoint_separation_line(dwg: svgwrite.Drawing, positions: Dict[str, Di
     midpoint_x_px = midpoint_x_mm * FUSION_360_MM_TO_PX
 
     # Add midpoint separation line
-    dwg.add(dwg.line(start=(midpoint_x_px, dimensions["min_y_px"]), end=(midpoint_x_px, dimensions["min_y_px"] + dimensions["height_px"]), stroke="#0066cc", stroke_width="0.57", stroke_dasharray="7.56,3.78"))
+    dwg.add(dwg.line(start=(midpoint_x_px, dimensions.min_y_px), end=(midpoint_x_px, dimensions.min_y_px + dimensions.height_px), stroke="#0066cc", stroke_width="0.57", stroke_dasharray="7.56,3.78"))
 
 
 def print_positions(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]]):
