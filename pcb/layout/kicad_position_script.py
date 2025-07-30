@@ -118,7 +118,6 @@ def position_keyboard_footprints_from_positions(positions, x_origin=0, y_origin=
     if missing_footprints:
         # Group missing footprints by type
         switches = [r for r in missing_footprints if r.startswith("SW")]
-        diodes = [r for r in missing_footprints if r.startswith("D") and not r.startswith("DL")]
         diodes_left = [r for r in missing_footprints if r.startswith("DL")]
         diodes_right = [r for r in missing_footprints if r.startswith("DR")]
         other = [r for r in missing_footprints if not r.startswith("SW") and not r.startswith("D")]
@@ -152,7 +151,7 @@ def position_keyboard_footprints_direct(config=None):
     # Calculate positions
     positions = KeyboardLayoutCalculator.generate_all_positions(config)
 
-    print_positions(config, positions)
+    print_positions(positions)
 
     # Position the footprints
     position_keyboard_footprints_from_positions(positions, 30, 30)

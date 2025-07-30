@@ -53,7 +53,7 @@ def main():
     positions = KeyboardLayoutCalculator.generate_all_positions(config)
 
     # Display all positions
-    print_positions(config, positions)
+    print_positions(positions)
 
     # Export files
     # export_csv(positions, "outputs/keyboard_positions.csv")

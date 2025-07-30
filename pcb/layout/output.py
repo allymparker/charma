@@ -101,8 +101,6 @@ def _add_coordinate_origin_marker(dwg: svgwrite.Drawing):
 
     Args:
         dwg: svgwrite.Drawing instance
-        stroke_color: Color for the origin marker
-        stroke_width: Width of the origin marker strokes
     """
     stroke_color: str = "#000000"
     stroke_width: str = "0.1"
@@ -140,7 +138,7 @@ def _add_midpoint_separation_line(dwg: svgwrite.Drawing, positions: Dict[str, Di
     dwg.add(dwg.line(start=(midpoint_x_px, dimensions.min_y_px), end=(midpoint_x_px, dimensions.min_y_px + dimensions.height_px), stroke="#0066cc", stroke_width="0.57", stroke_dasharray="7.56,3.78"))
 
 
-def print_positions(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]]):
+def print_positions(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]]):
     """Print all key and diode positions in a readable format."""
     print("Keyboard Layout Positions (center coordinates in mm)")
     print("=" * 70)
@@ -282,16 +280,7 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
         stroke_color = "#1976d2"
         text_color = "#1976d2"
 
-        if abs(rotation) < 0.1:  # No rotation for main keys
-            # Add switch rectangle
-            dwg.add(dwg.rect(insert=(x - config.footprint_width / 2, y - config.footprint_height / 2), size=(config.footprint_width, config.footprint_height), fill=fill_color, stroke=stroke_color, stroke_width=0.01))
-            # Add label
-            dwg.add(dwg.text(key_name, insert=(x, y + 1), text_anchor="middle", font_family="Arial, sans-serif", font_size="2.5", fill=text_color, font_weight="bold"))
-        else:  # Rotated thumb keys
-            group = dwg.g(transform=f"translate({x:.1f},{y:.1f}) rotate({rotation:.1f})")
-            group.add(dwg.rect(insert=(-config.footprint_width / 2, -config.footprint_height / 2), size=(config.footprint_width, config.footprint_height), fill=fill_color, stroke=stroke_color, stroke_width=0.01))
-            group.add(dwg.text(key_name, insert=(0, 1), text_anchor="middle", font_family="Arial, sans-serif", font_size="2.5", fill=text_color, font_weight="bold"))
-            dwg.add(group)
+        create_switch_rectangle(config, dwg, fill_color, key_name, rotation, stroke_color, text_color, x, y)
 
     # Add diode rectangles and labels for left half
     for diode_name, x, y, rotation in positions["left"]["diodes"]:
@@ -300,16 +289,7 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
         stroke_color = "#457b9d"
         text_color = "#1d3557"
 
-        if abs(rotation) < 0.1:  # No rotation for main keys
-            # Add diode rectangle
-            dwg.add(dwg.rect(insert=(x - config.diode_width / 2, y - config.diode_height / 2), size=(config.diode_width, config.diode_height), fill=fill_color, stroke=stroke_color, stroke_width=0.1))
-            # Add label
-            dwg.add(dwg.text(diode_name, insert=(x, y + 0.5), text_anchor="middle", font_family="Arial, sans-serif", font_size="1.5", fill=text_color, font_weight="bold"))
-        else:  # Rotated thumb diodes
-            group = dwg.g(transform=f"translate({x:.1f},{y:.1f}) rotate({rotation:.1f})")
-            group.add(dwg.rect(insert=(-config.diode_width / 2, -config.diode_height / 2), size=(config.diode_width, config.diode_height), fill=fill_color, stroke=stroke_color, stroke_width=0.1))
-            group.add(dwg.text(diode_name, insert=(0, 0.5), text_anchor="middle", font_family="Arial, sans-serif", font_size="1.5", fill=text_color, font_weight="bold"))
-            dwg.add(group)
+        create_diode_rectangle(config, diode_name, dwg, fill_color, rotation, stroke_color, text_color, x, y)
 
     # Add key rectangles and labels for right half
     for key_name, x, y, rotation in positions["right"]["switches"]:
@@ -318,16 +298,7 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
         stroke_color = "#7b1fa2"
         text_color = "#7b1fa2"
 
-        if abs(rotation) < 0.1:  # No rotation for main keys
-            # Add switch rectangle
-            dwg.add(dwg.rect(insert=(x - config.footprint_width / 2, y - config.footprint_height / 2), size=(config.footprint_width, config.footprint_height), fill=fill_color, stroke=stroke_color, stroke_width=0.01))
-            # Add label
-            dwg.add(dwg.text(key_name, insert=(x, y + 1), text_anchor="middle", font_family="Arial, sans-serif", font_size="2.5", fill=text_color, font_weight="bold"))
-        else:  # Rotated thumb keys
-            group = dwg.g(transform=f"translate({x:.1f},{y:.1f}) rotate({rotation:.1f})")
-            group.add(dwg.rect(insert=(-config.footprint_width / 2, -config.footprint_height / 2), size=(config.footprint_width, config.footprint_height), fill=fill_color, stroke=stroke_color, stroke_width=0.01))
-            group.add(dwg.text(key_name, insert=(0, 1), text_anchor="middle", font_family="Arial, sans-serif", font_size="2.5", fill=text_color, font_weight="bold"))
-            dwg.add(group)
+        create_switch_rectangle(config, dwg, fill_color, key_name, rotation, stroke_color, text_color, x, y)
 
     # Add diode rectangles and labels for right half
     for diode_name, x, y, rotation in positions["right"]["diodes"]:
@@ -336,16 +307,7 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
         stroke_color = "#9a031e"
         text_color = "#5f0a87"
 
-        if abs(rotation) < 0.1:  # No rotation for main keys
-            # Add diode rectangle
-            dwg.add(dwg.rect(insert=(x - config.diode_width / 2, y - config.diode_height / 2), size=(config.diode_width, config.diode_height), fill=fill_color, stroke=stroke_color, stroke_width=0.1))
-            # Add label
-            dwg.add(dwg.text(diode_name, insert=(x, y + 0.5), text_anchor="middle", font_family="Arial, sans-serif", font_size="1.5", fill=text_color, font_weight="bold"))
-        else:  # Rotated thumb diodes
-            group = dwg.g(transform=f"translate({x:.1f},{y:.1f}) rotate({rotation:.1f})")
-            group.add(dwg.rect(insert=(-config.diode_width / 2, -config.diode_height / 2), size=(config.diode_width, config.diode_height), fill=fill_color, stroke=stroke_color, stroke_width=0.1))
-            group.add(dwg.text(diode_name, insert=(0, 0.5), text_anchor="middle", font_family="Arial, sans-serif", font_size="1.5", fill=text_color, font_weight="bold"))
-            dwg.add(group)
+        create_diode_rectangle(config, diode_name, dwg, fill_color, rotation, stroke_color, text_color, x, y)
 
     # Add specific components for both halves
     for half in ["left", "right"]:
@@ -415,6 +377,45 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
     # Save the SVG
     dwg.save()
     print(f"SVG visualization exported to {filename}")
+
+
+def create_diode_rectangle(config, diode_name, dwg, fill_color, rotation, stroke_color, text_color, x, y):
+    if abs(rotation) < 0.1:  # No rotation for main keys
+        # Add diode rectangle
+        dwg.add(dwg.rect(insert=(x - config.diode_width / 2, y - config.diode_height / 2),
+                         size=(config.diode_width, config.diode_height), fill=fill_color, stroke=stroke_color,
+                         stroke_width=0.1))
+        # Add label
+        dwg.add(dwg.text(diode_name, insert=(x, y + 0.5), text_anchor="middle", font_family="Arial, sans-serif",
+                         font_size="1.5", fill=text_color, font_weight="bold"))
+    else:  # Rotated thumb diodes
+        group = dwg.g(transform=f"translate({x:.1f},{y:.1f}) rotate({rotation:.1f})")
+        group.add(dwg.rect(insert=(-config.diode_width / 2, -config.diode_height / 2),
+                           size=(config.diode_width, config.diode_height), fill=fill_color, stroke=stroke_color,
+                           stroke_width=0.1))
+        group.add(dwg.text(diode_name, insert=(0, 0.5), text_anchor="middle", font_family="Arial, sans-serif",
+                           font_size="1.5", fill=text_color, font_weight="bold"))
+        dwg.add(group)
+
+
+def create_switch_rectangle(config, dwg, fill_color, key_name, rotation, stroke_color, text_color, x, y):
+    if abs(rotation) < 0.1:  # No rotation for main keys
+        # Add switch rectangle
+        dwg.add(dwg.rect(insert=(x - config.footprint_width / 2, y - config.footprint_height / 2),
+                         size=(config.footprint_width, config.footprint_height), fill=fill_color, stroke=stroke_color,
+                         stroke_width=0.01))
+        # Add label
+        dwg.add(dwg.text(key_name, insert=(x, y + 1), text_anchor="middle", font_family="Arial, sans-serif",
+                         font_size="2.5", fill=text_color, font_weight="bold"))
+    else:  # Rotated thumb keys
+        group = dwg.g(transform=f"translate({x:.1f},{y:.1f}) rotate({rotation:.1f})")
+        group.add(dwg.rect(insert=(-config.footprint_width / 2, -config.footprint_height / 2),
+                           size=(config.footprint_width, config.footprint_height), fill=fill_color, stroke=stroke_color,
+                           stroke_width=0.01))
+        group.add(
+            dwg.text(key_name, insert=(0, 1), text_anchor="middle", font_family="Arial, sans-serif", font_size="2.5",
+                     fill=text_color, font_weight="bold"))
+        dwg.add(group)
 
 
 def export_svg_for_footprints(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_switches_cad.svg"):
@@ -530,14 +531,10 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
     hotswap_offset_y = 3.625  # y + 3.625 mm
 
     # Hotswap profile dimensions (from original SVG)
-    hotswap_width = 13.4  # mm
-    hotswap_height = 9.45  # mm
 
     # Mounting hole dimensions
     offset_distance = 5.22  # mm
-    center_radius = 1.5  # mm (3mm diameter / 2)
-    side_radius = 1.1  # mm (2.2mm diameter / 2)
-    total_reach = offset_distance + side_radius
+    1.1
 
     # Calculate SVG dimensions
     dimensions = _calculate_cad_svg_dimensions(positions, config)
@@ -615,13 +612,10 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
         box_height = 3.4  # mm
         semicircle_diameter = 2.4  # mm
         semicircle_radius = semicircle_diameter / 2  # 1.2 mm
-        total_height = 5.8  # mm (box_height + semicircle_diameter)
-        pill_width = 2.4  # mm (width equals semicircle diameter)
-        
+
         # Convert to pixels
         box_height_px = box_height * FUSION_360_MM_TO_PX
         radius_px = semicircle_radius * FUSION_360_MM_TO_PX
-        total_height_px = total_height * FUSION_360_MM_TO_PX
         half_width_px = radius_px  # Half width equals radius
         
         # Create group for rotation and positioning
