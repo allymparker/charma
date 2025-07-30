@@ -4,7 +4,7 @@
 		{
 			"label": "Run Keyboard Layout Calculator",
 			"type": "shell",
-			"command": "python3",
+			"command": "/workspaces/charma/pcb/layout/.venv/bin/python",
 			"args": [
 				"main.py"
 			],
