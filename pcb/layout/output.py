@@ -526,7 +526,7 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
         filename: Output SVG filename
     """
     # Hotswap profile offset from switch center (in mm)
-    hotswap_offset_x = -1.413  # x - 1.413 mm
+    hotswap_offset_x = -2.55
     hotswap_offset_y = 3.625  # y + 3.625 mm
 
     # Hotswap profile dimensions (from original SVG)
