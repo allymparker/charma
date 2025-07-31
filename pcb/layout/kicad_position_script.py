@@ -45,14 +45,11 @@ sys.path.insert(0, script_dir)
 # Import modules with reloading support
 import importlib
 import layout
-import output
 
 # Reload modules to pick up any changes made since last run
 importlib.reload(layout)
-importlib.reload(output)
 
-from layout import KeyboardLayoutConfig, KeyboardLayoutCalculator, get_charma_config
-from output import print_positions
+from layout import KeyboardLayoutCalculator, get_charma_config, print_positions
 
 try:
     import pcbnew

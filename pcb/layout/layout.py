@@ -387,3 +387,22 @@ def get_charma_config() -> KeyboardLayoutConfig:
 
     # Create and return the Charma configuration
     return KeyboardLayoutConfig(origin_x=14, origin_y=28.95, num_rows=3, column_stagger=column_stagger, num_thumb_keys=3, thumb_arc_col_start=3, thumb_arc_config=thumb_arc_config, specific_positions=specific_positions)
+
+def print_positions(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]]):
+    """Print all key and diode positions in a readable format."""
+    print("Keyboard Layout Positions (center coordinates in mm)")
+    print("=" * 70)
+
+    print("\nLeft Half:")
+    print("-" * 45)
+    for component_type, components in positions["left"].items():
+        print(f"{component_type.capitalize()}:")
+        for component_name, x, y, rotation in components:
+            print(f"  {component_name}: ({x:6.2f}, {y:6.2f}, {rotation:6.1f}°)")
+
+    print("\nRight Half:")
+    print("-" * 45)
+    for component_type, components in positions["right"].items():
+        print(f"{component_type.capitalize()}:")
+        for component_name, x, y, rotation in components:
+            print(f"  {component_name}: ({x:6.2f}, {y:6.2f}, {rotation:6.1f}°)")
