@@ -1,172 +1,29 @@
-(footprint "Diode_SOD123"
-	(version 20241229)
-	(generator "pcbnew")
-	(generator_version "9.0")
-	(placed yes)
-	(layer "F.Cu")
-	(descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
-	(tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
-	(property "Reference" "D1"
-		(at 0 1.5 0)
-		(layer "F.SilkS")
-		(hide yes)
-		(uuid "996cc65e-18bf-4de4-8cf4-ba972d9f4711")
-		(effects
-			(font
-				(size 1 1)
-				(thickness 0.15)
-			)
-		)
-	)
-	(property "Value" "D"
-		(at 0 -1.2 0)
-		(layer "F.Fab")
-		(hide yes)
-		(uuid "32a8147c-2bdf-4fe2-9036-aba60561dd93")
-		(effects
-			(font
-				(size 1 1)
-				(thickness 0.15)
-			)
-		)
-	)
-	(property "Datasheet" ""
-		(at 0 0 0)
-		(layer "F.Fab")
-		(hide yes)
-		(uuid "bae56086-246b-4b68-88fe-af9934399149")
-		(effects
-			(font
-				(size 1.27 1.27)
-				(thickness 0.15)
-			)
-		)
-	)
-	(property "Description" ""
-		(at 0 0 0)
-		(layer "F.Fab")
-		(hide yes)
-		(uuid "0ab571f2-b847-4481-8d22-d1828f00bd4c")
-		(effects
-			(font
-				(size 1.27 1.27)
-				(thickness 0.15)
-			)
-		)
-	)
-	(attr through_hole)
-	(fp_line
-		(start -0.5 -0.7)
-		(end -0.5 0.7)
-		(stroke
-			(width 0.15)
-			(type solid)
-		)
-		(layer "F.SilkS")
-		(uuid "85f5a246-4afe-4d0c-a047-86c41a119fa4")
-	)
-	(fp_line
-		(start -0.5 0)
-		(end 0.4 -0.7)
-		(stroke
-			(width 0.15)
-			(type solid)
-		)
-		(layer "F.SilkS")
-		(uuid "e4fdb7cf-72a1-4b97-93b4-b2826582e1fc")
-	)
-	(fp_line
-		(start 0.4 -0.7)
-		(end 0.4 0.7)
-		(stroke
-			(width 0.15)
-			(type solid)
-		)
-		(layer "F.SilkS")
-		(uuid "900e001e-4c1c-424c-843d-edd5c90703ca")
-	)
-	(fp_line
-		(start 0.4 0.7)
-		(end -0.5 0)
-		(stroke
-			(width 0.15)
-			(type solid)
-		)
-		(layer "F.SilkS")
-		(uuid "ecc0ecab-1aee-4b43-b7ae-3554c9fac2a0")
-	)
-	(fp_line
-		(start -0.5 0)
-		(end 0.4 0.7)
-		(stroke
-			(width 0.15)
-			(type solid)
-		)
-		(layer "B.SilkS")
-		(uuid "ec7f3e54-f232-42da-ae46-f0e71389c8e0")
-	)
-	(fp_line
-		(start -0.5 0.7)
-		(end -0.5 -0.7)
-		(stroke
-			(width 0.15)
-			(type solid)
-		)
-		(layer "B.SilkS")
-		(uuid "8d1bbe7a-bef7-45b1-8172-4f82db3572e8")
-	)
-	(fp_line
-		(start 0.4 -0.7)
-		(end -0.5 0)
-		(stroke
-			(width 0.15)
-			(type solid)
-		)
-		(layer "B.SilkS")
-		(uuid "288559f4-cdec-436a-acea-94b5d4fda71a")
-	)
-	(fp_line
-		(start 0.4 0.7)
-		(end 0.4 -0.7)
-		(stroke
-			(width 0.15)
-			(type solid)
-		)
-		(layer "B.SilkS")
-		(uuid "03fe97cb-6ec3-4c6b-8958-827588d642e5")
-	)
-	(pad "1" thru_hole rect
-		(at -1.7 0)
-		(size 1.8 1.5)
-		(drill 0.3)
-		(layers "*.Cu" "*.Mask")
-		(remove_unused_layers no)
-		(uuid "6536f3bd-1ffd-4772-b610-01e504d537c4")
-	)
-	(pad "2" thru_hole rect
-		(at 1.7 0)
-		(size 1.8 1.5)
-		(drill 0.3)
-		(layers "*.Cu" "*.Mask")
-		(remove_unused_layers no)
-		(uuid "3208e064-7ddd-45da-a0d2-cf22f91de845")
-	)
-	(pad "2" smd rect
-		(at 1.7 0)
-		(size 1.8 1.5)
-		(layers "F.Cu" "F.Mask" "F.Paste")
-		(uuid "f83d585b-4500-4163-a4ff-1ca733793bb7")
-	)
-	(embedded_fonts no)
-	(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
-		(offset
-			(xyz 0 0 -0.1)
-		)
-		(scale
-			(xyz 1 1 1)
-		)
-		(rotate
-			(xyz 0 0 0)
-		)
-	)
+(footprint "Diode_SOD123" (version 20221018) (generator pcbnew)
+  placed (layer "F.Cu")
+  (descr "Diode, DO-41, SOD81, Horizontal, RM 10mm,")
+  (tags "Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,")
+  (attr through_hole)
+  (fp_text reference "D1" (at 0 1.5) (layer "F.SilkS") hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    (tstamp 0e8af879-d4bc-486f-9736-1d14495398ab)
+  )
+  (fp_text value "D" (at 0 -1.2) (layer "F.Fab") hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    (tstamp 2b710dbc-41b7-4281-9f1f-79f53f778b14)
+  )
+  (fp_line (start -0.5 -0.7) (end -0.5 0.7)
+    (stroke (width 0.15) (type solid)) (layer "F.SilkS") (tstamp 85f5a246-4afe-4d0c-a047-86c41a119fa4))
+  (fp_line (start -0.5 0) (end 0.4 -0.7)
+    (stroke (width 0.15) (type solid)) (layer "F.SilkS") (tstamp e4fdb7cf-72a1-4b97-93b4-b2826582e1fc))
+  (fp_line (start 0.4 -0.7) (end 0.4 0.7)
+    (stroke (width 0.15) (type solid)) (layer "F.SilkS") (tstamp 900e001e-4c1c-424c-843d-edd5c90703ca))
+  (fp_line (start 0.4 0.7) (end -0.5 0)
+    (stroke (width 0.15) (type solid)) (layer "F.SilkS") (tstamp ecc0ecab-1aee-4b43-b7ae-3554c9fac2a0))
+  (pad "1" smd rect (at -1.7 0) (size 1.8 1.5) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp fd71efeb-8e32-4715-9e6b-160a10304850))
+  (pad "2" smd rect (at 1.7 0) (size 1.8 1.5) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp f83d585b-4500-4163-a4ff-1ca733793bb7))
+  (model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+    (offset (xyz 0 0 -0.1))
+    (scale (xyz 1 1 1))
+    (rotate (xyz 0 0 0))
+  )
 )
