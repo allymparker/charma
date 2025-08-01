@@ -715,6 +715,24 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
             # Add diode recess
             add_diode_recess(dwg, x_px, y_px, rotation)
 
+    # Add HOLE components (mounting holes) for both halves at 2.2mm diameter
+    hole_diameter_px = 2.2 * FUSION_360_MM_TO_PX
+    for half in ["left", "right"]:
+        if "HOLE" in positions[half]:
+            for hole_name, x, y, rotation in positions[half]["HOLE"]:
+                # Convert mm coordinates to pixels
+                x_px = x * FUSION_360_MM_TO_PX
+                y_px = y * FUSION_360_MM_TO_PX
+
+                # Add 2.2mm diameter hole
+                dwg.add(dwg.circle(
+                    center=(x_px, y_px), 
+                    r=hole_diameter_px / 2, 
+                    fill="none", 
+                    stroke="#000000", 
+                    stroke_width="0.1"
+                ))
+
     # Add midpoint separation line
     _add_midpoint_separation_line(dwg, positions, config, dimensions)
 

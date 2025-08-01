@@ -6,6 +6,7 @@ This script demonstrates how to use the keyboard layout calculator
 to generate positions for a split column staggered keyboard.
 """
 
+import os
 from layout import KeyboardLayoutCalculator, get_charma_config, print_positions
 from output import (
     export_svg,
@@ -52,6 +53,9 @@ def main():
 
     # Display all positions
     print_positions(positions)
+
+    # Ensure outputs directory exists
+    os.makedirs("outputs", exist_ok=True)
 
     # Export files
     export_svg(config, positions, "outputs/keyboard_layout.svg")
