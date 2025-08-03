@@ -4,6 +4,6 @@ scratch/**
 *.lck
 **/#auto_saved_files#
 **/*.csv
-**/*.svg
+**/outputs/*.svg
 **/__pycache__/**
 
