@@ -489,6 +489,9 @@ def export_svg_switch_plate(config: KeyboardLayoutConfig, positions: Dict[str, D
 
                 dwg.add(group)
 
+    # Add midpoint separation line
+    _add_midpoint_separation_line(dwg, positions, config, dimensions)
+    
     # Add coordinate origin marker
     _add_coordinate_origin_marker(dwg)
 
