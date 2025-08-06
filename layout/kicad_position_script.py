@@ -31,7 +31,7 @@ except NameError:
     # If we're not in the layout directory, try to find it
     if not os.path.exists(os.path.join(script_dir, "layout.py")):
         # Try common locations
-        possible_dirs = [os.path.join(script_dir, "layout"), os.path.join(script_dir, "pcb", "layout"), "/workspaces/charma/pcb/layout"]
+        possible_dirs = [os.path.join(script_dir, "layout"), os.path.join(script_dir, "..", "layout"), "/workspaces/charma/pcb/layout"]
         for dir_path in possible_dirs:
             if os.path.exists(os.path.join(dir_path, "layout.py")):
                 script_dir = dir_path
