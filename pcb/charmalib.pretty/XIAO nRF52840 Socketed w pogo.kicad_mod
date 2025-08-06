@@ -6927,6 +6927,7 @@
 		)
 	)
 	(model "${KIPRJMOD}/charmalib.step/Official Pi 4 USB-C charger plug.step"
+		(hide yes)
 		(offset
 			(xyz 2.8 12.5 -5.9)
 		)

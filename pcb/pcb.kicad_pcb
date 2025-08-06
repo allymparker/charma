@@ -39987,7 +39987,7 @@
 			(uuid "b63cf79f-29c1-463b-813f-c442be7b6a5f")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -40120,7 +40120,7 @@
 			(uuid "ebfe4944-1a00-4293-9605-0c6f781c6ab1")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -40253,7 +40253,7 @@
 			(uuid "19e6be75-92a3-4b91-b624-0d29918c9b0c")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -40386,7 +40386,7 @@
 			(uuid "eb397c55-2001-46c8-babc-1aa30eddcacb")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -40521,7 +40521,7 @@
 			(uuid "3923d747-a5d0-4161-bbe5-7af070beed61")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -40654,7 +40654,7 @@
 			(uuid "f8963684-8355-4415-a7c5-d1d7b85b8a2d")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -40789,7 +40789,7 @@
 			(uuid "0a7fb154-dc1b-42e3-b4a7-0ba78ff3483d")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -40922,7 +40922,7 @@
 			(uuid "4844e5c7-5ada-47d3-8e7e-77e9441fc083")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -41057,7 +41057,7 @@
 			(uuid "4aa90bc4-8086-4dfe-b5bc-8004444ad467")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -41190,7 +41190,7 @@
 			(uuid "ab0b31ce-e623-408b-90fb-f3280867e9af")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -41325,7 +41325,7 @@
 			(uuid "963e071d-c0a7-4509-b633-e05f3e05ce7a")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -41460,7 +41460,7 @@
 			(uuid "e459336d-56b0-401a-9515-2a17a3f5b974")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -41595,7 +41595,7 @@
 			(uuid "ea794e8c-2c1a-465f-828c-85cd00f99fa7")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -41730,7 +41730,7 @@
 			(uuid "c0fca021-563b-47e4-bc96-b8427a1d7165")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -41863,7 +41863,7 @@
 			(uuid "09b68bf7-afe9-4a3d-939b-e06b4165bb74")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -41996,7 +41996,7 @@
 			(uuid "1996ce67-473e-482c-a4f4-b81da6b20cbc")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -42653,7 +42653,7 @@
 			(uuid "37ecddbc-f170-43b8-9a29-4eea9c52ecc3")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -42788,7 +42788,7 @@
 			(uuid "a55b4624-044c-42d6-ae52-7b4d83fbcc69")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -42921,7 +42921,7 @@
 			(uuid "d68647c1-f6c6-4290-ba80-c33306590db9")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -43056,7 +43056,7 @@
 			(uuid "871f95e3-c5cc-48fe-b43f-4ab2b0f9f036")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -43191,7 +43191,7 @@
 			(uuid "54ccf089-99c4-4d67-bf80-67760f15874e")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -43324,7 +43324,7 @@
 			(uuid "ad1d8cdd-e5c0-4e64-a3d7-2d1d02fee6df")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -43459,7 +43459,7 @@
 			(uuid "b71fb276-6b56-4536-849d-072a639aa5d1")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -43592,7 +43592,7 @@
 			(uuid "82d49c86-0f34-4f8d-aeef-ba98c676c90f")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -43725,7 +43725,7 @@
 			(uuid "bb7be08a-b652-485f-9a60-7fadbfebfce8")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -43860,7 +43860,7 @@
 			(uuid "f007f315-840b-44d5-860a-44aa8cc1fd0d")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -43993,7 +43993,7 @@
 			(uuid "29d1e2c8-8916-4706-97d1-ecf617493503")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -44126,7 +44126,7 @@
 			(uuid "763e74a7-58da-4575-8d15-de4b5366d7dd")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -44261,7 +44261,7 @@
 			(uuid "2bb8f4fa-e07a-4a94-be81-0936ca8304ed")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -44396,7 +44396,7 @@
 			(uuid "62fb31fb-5541-4a00-a3b6-d2c40c9cfe53")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -44531,7 +44531,7 @@
 			(uuid "a29ed50f-5e5c-4fcd-a807-fb62dea6cbaf")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -44664,7 +44664,7 @@
 			(uuid "40e66634-4de2-45e4-84b4-2c2f4f897853")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -44797,7 +44797,7 @@
 			(uuid "1698bf06-1650-43ae-8e07-47c7e0fdfdb0")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -45452,7 +45452,7 @@
 			(uuid "01b59434-8b2d-4840-8e33-96c2b3a7d446")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -45587,7 +45587,7 @@
 			(uuid "9d2763c5-fdb0-45f8-9352-0cc4d980db90")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
@@ -45722,7 +45722,7 @@
 			(uuid "8e90d38a-86ac-4de2-95d2-89513d5f43fa")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/karmalib.step/Diode_SOD123.step"
+		(model "${KIPRJMOD}/charmalib.step/Diode_SOD123.step"
 			(offset
 				(xyz 0 0 -0.1)
 			)
