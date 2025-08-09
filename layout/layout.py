@@ -376,17 +376,17 @@ def get_charma_config() -> KeyboardLayoutConfig:
 
     # Define Charma-specific component positions
     specific_positions = [
-        SpecificPosition("MCU", 1, 10.5, 9.7, -90.0),
-        SpecificPosition("HOLE", 1, 97.5, 2.50, 0.0),
-        SpecificPosition("HOLE", 2, 26.25, 2.50, 0.0),
-        SpecificPosition("HOLE", 3, 2.5, 76.70, 0.0),
-        SpecificPosition("HOLE", 4, 97.8, 61.30, 0.0),
-        SpecificPosition("BAT", 1, 46.725, 56.260, -90.0),
-        SpecificPosition("RSW", 1, 34.0, 3.1, -180.0),
+        SpecificPosition("MCU",  1,  10.0,    9.0,   -90.0),
+        SpecificPosition("HOLE", 1,  98.5,    2.50,    0.0),
+        SpecificPosition("HOLE", 2,  26.25,   2.50,    0.0),
+        SpecificPosition("HOLE", 3,   2.5,   76.70,    0.0),
+        SpecificPosition("HOLE", 4,  98.5,   61.30,    0.0),
+        SpecificPosition("BAT",  1,  46.725, 56.260, -90.0),
+        SpecificPosition("RSW",  1,  34.0,    3.1,   -180.0),
     ]
 
     # Create and return the Charma configuration
-    return KeyboardLayoutConfig(origin_x=14, origin_y=28.95, num_rows=3, column_stagger=column_stagger, num_thumb_keys=3, thumb_arc_col_start=3, thumb_arc_config=thumb_arc_config, specific_positions=specific_positions)
+    return KeyboardLayoutConfig(origin_x=14.5, origin_y=29.45, num_rows=3, column_stagger=column_stagger, num_thumb_keys=3, thumb_arc_col_start=3, thumb_arc_config=thumb_arc_config, specific_positions=specific_positions)
 
 def print_positions(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]]):
     """Print all key and diode positions in a readable format."""

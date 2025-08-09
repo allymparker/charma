@@ -745,3 +745,48 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
     # Save the SVG
     dwg.save()
     print(f"Hotswap profile with mounting holes SVG exported to {filename}")
+
+def export_svg_screw_holes(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_screw_holes.svg"):
+    """
+    Export screw holes for keyboard assembly as an SVG for CAD import (e.g., Fusion 360).
+    Includes 2.2mm diameter holes for mounting screws at specified positions.
+    Args:
+        config: KeyboardLayoutConfig instance with layout parameters
+        positions: Positions dictionary from generate_all_positions
+        filename: Output SVG filename
+    """
+    # Calculate SVG dimensions
+    dimensions = _calculate_cad_svg_dimensions(positions, config)
+
+    # Create SVG drawing
+    dwg = _create_cad_svg_drawing(filename, dimensions)
+
+
+    # Add HOLE components (mounting holes) for both halves at 2.2mm diameter
+    hole_diameter_px = 2.2 * FUSION_360_MM_TO_PX
+    for half in ["left", "right"]:
+        if "HOLE" in positions[half]:
+            for hole_name, x, y, rotation in positions[half]["HOLE"]:
+                # Convert mm coordinates to pixels
+                x_px = x * FUSION_360_MM_TO_PX
+                y_px = y * FUSION_360_MM_TO_PX
+
+                # Add 2.2mm diameter hole
+                dwg.add(dwg.circle(
+                    center=(x_px, y_px), 
+                    r=hole_diameter_px / 2, 
+                    fill="none", 
+                    stroke="#000000", 
+                    stroke_width="0.1"
+                ))
+
+    # Add midpoint separation line
+    _add_midpoint_separation_line(dwg, positions, config, dimensions)
+
+    # Add coordinate origin marker
+    _add_coordinate_origin_marker(dwg)
+
+    # Save the SVG
+    dwg.save()
+    print(f"Screw holes SVG exported to {filename}")
+
