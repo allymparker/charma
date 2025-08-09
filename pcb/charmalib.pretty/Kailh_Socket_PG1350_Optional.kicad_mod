@@ -645,13 +645,13 @@
 	)
 	(model "${KIPRJMOD}/charmalib.step/Kailh_Socket_PG1350_Optional.step"
 		(offset
-			(xyz 5 -3.55 -1.8)
+			(xyz 5 -3.8 -1.8)
 		)
 		(scale
 			(xyz 1 1 1)
 		)
 		(rotate
-			(xyz -90 0 0)
+			(xyz -90 -0 -0)
 		)
 	)
 	(model "${KIPRJMOD}/charmalib.step/Keycap.step"
