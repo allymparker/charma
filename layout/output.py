@@ -5,7 +5,7 @@ Output utilities for keyboard layout calculator.
 Contains functions for displaying and exporting keyboard layout positions.
 """
 
-from typing import Dict, List, Tuple, Optional, NamedTuple
+from typing import Dict, List, Tuple, NamedTuple
 import svgwrite
 from layout import KeyboardLayoutConfig, KeyboardLayoutCalculator
 
@@ -21,6 +21,13 @@ class CadSvgDimensions(NamedTuple):
 # Conversion factor for Fusion 360: 1mm = 96/25.4 pixels (96 DPI)
 FUSION_360_MM_TO_PX = 96.0 / 25.4
 CAD_MARGIN = 20  # mm
+
+# Hotswap profile offset from switch center (in mm)
+hotswap_offset_x = -2.55
+hotswap_offset_y = 3.875
+
+# Mounting hole dimensions
+offset_distance = 5.22  # mm
 
 
 def _calculate_cad_svg_dimensions(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], config: KeyboardLayoutConfig) -> CadSvgDimensions:
@@ -80,7 +87,6 @@ def _calculate_cad_svg_dimensions(positions: Dict[str, Dict[str, List[Tuple[str,
         height_px=height_px
     )
 
-
 def _create_cad_svg_drawing(filename: str, dimensions: CadSvgDimensions) -> svgwrite.Drawing:
     """
     Create SVG drawing with pixel units for Fusion 360 compatibility.
@@ -93,7 +99,6 @@ def _create_cad_svg_drawing(filename: str, dimensions: CadSvgDimensions) -> svgw
         svgwrite.Drawing instance
     """
     return svgwrite.Drawing(filename, size=(f"{dimensions.width_px:.3f}px", f"{dimensions.height_px:.3f}px"), viewBox=f"{dimensions.min_x_px:.3f} {dimensions.min_y_px:.3f} {dimensions.width_px:.3f} {dimensions.height_px:.3f}")
-
 
 def _add_coordinate_origin_marker(dwg: svgwrite.Drawing):
     """
@@ -109,7 +114,6 @@ def _add_coordinate_origin_marker(dwg: svgwrite.Drawing):
     origin_group.add(dwg.line(start=(-18.9, 0), end=(18.9, 0), stroke=stroke_color, stroke_width=stroke_width))
     origin_group.add(dwg.line(start=(0, -18.9), end=(0, 18.9), stroke=stroke_color, stroke_width=stroke_width))
     dwg.add(origin_group)
-
 
 def _add_midpoint_separation_line(dwg: svgwrite.Drawing, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], config: KeyboardLayoutConfig, dimensions: CadSvgDimensions):
     """
@@ -136,8 +140,6 @@ def _add_midpoint_separation_line(dwg: svgwrite.Drawing, positions: Dict[str, Di
 
     # Add midpoint separation line
     dwg.add(dwg.line(start=(midpoint_x_px, dimensions.min_y_px), end=(midpoint_x_px, dimensions.min_y_px + dimensions.height_px), stroke="#0066cc", stroke_width="0.57", stroke_dasharray="7.56,3.78"))
-
-
 
 def export_csv(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_positions.csv"):
     """
@@ -175,7 +177,6 @@ def export_csv(positions: Dict[str, Dict[str, List[Tuple[str, float, float, floa
                     f.write(f"{component_name},{x:.3f},{y:.3f},{rotation:.1f},Right,{component_type}\n")
 
     print(f"Positions exported to {filename}")
-
 
 def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_layout.svg"):
     """
@@ -359,7 +360,6 @@ def export_svg(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List
     dwg.save()
     print(f"SVG visualization exported to {filename}")
 
-
 def create_diode_rectangle(config, diode_name, dwg, fill_color, rotation, stroke_color, text_color, x, y):
     if abs(rotation) < 0.1:  # No rotation for main keys
         # Add diode rectangle
@@ -377,7 +377,6 @@ def create_diode_rectangle(config, diode_name, dwg, fill_color, rotation, stroke
         group.add(dwg.text(diode_name, insert=(0, 0.5), text_anchor="middle", font_family="Arial, sans-serif",
                            font_size="1.5", fill=text_color, font_weight="bold"))
         dwg.add(group)
-
 
 def create_switch_rectangle(config, dwg, fill_color, key_name, rotation, stroke_color, text_color, x, y):
     if abs(rotation) < 0.1:  # No rotation for main keys
@@ -397,7 +396,6 @@ def create_switch_rectangle(config, dwg, fill_color, key_name, rotation, stroke_
             dwg.text(key_name, insert=(0, 1), text_anchor="middle", font_family="Arial, sans-serif", font_size="2.5",
                      fill=text_color, font_weight="bold"))
         dwg.add(group)
-
 
 def export_svg_for_footprints(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_switches_cad.svg"):
     """
@@ -441,7 +439,6 @@ def export_svg_for_footprints(config: KeyboardLayoutConfig, positions: Dict[str,
     # Save the SVG
     dwg.save()
     print(f"CAD-ready SVG exported to {filename}")
-
 
 def export_svg_switch_plate(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_switch_plate.svg"):
     """
@@ -499,25 +496,15 @@ def export_svg_switch_plate(config: KeyboardLayoutConfig, positions: Dict[str, D
     dwg.save()
     print(f"Switch plate SVG exported to {filename}")
 
-
-def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_hotswap_profile.svg"):
+def export_svg_bottom_plate_hotswap_holes(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_hotswap_profile.svg"):
     """
-    Export hotswap socket profiles and mounting holes positioned relative to switch centers for CAD import (e.g., Fusion 360).
-    Includes hotswap profiles, 3mm center mounting holes, and 2.2mm right-side mounting holes (x+ 5.22mm offset).
+    Export hotswap socket profiles positioned relative to switch centers for CAD import (e.g., Fusion 360).
 
     Args:
         config: KeyboardLayoutConfig instance with layout parameters
         positions: Positions dictionary from generate_all_positions
         filename: Output SVG filename
     """
-    # Hotswap profile offset from switch center (in mm)
-    hotswap_offset_x = -2.55
-    hotswap_offset_y = 3.875
-
-    # Hotswap profile dimensions (from original SVG)
-
-    # Mounting hole dimensions
-    offset_distance = 5.22  # mm
 
     # Calculate SVG dimensions
     dimensions = _calculate_cad_svg_dimensions(positions, config)
@@ -571,6 +558,79 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
                      h {0.23 * FUSION_360_MM_TO_PX:.3f} {2.1999999 * FUSION_360_MM_TO_PX:.3f} z"""
 
         group.add(dwg.path(d=path1_d, fill="none", stroke="#000000", stroke_width="0.1", stroke_linecap="round", stroke_linejoin="round"))
+
+        dwg.add(group)
+
+    # Add hotswap profiles for both halves
+    for half in ["left", "right"]:
+        for key_name, x, y, rotation in positions[half]["switches"]:
+            if abs(rotation) < 0.1:  # No rotation for main keys
+                # Calculate hotswap center position directly
+                hotswap_x = x + hotswap_offset_x
+                hotswap_y = y + hotswap_offset_y
+            else:  # Rotated thumb keys - rotate the offset around switch center
+                import math
+                # Convert rotation to radians
+                rotation_rad = math.radians(rotation)
+                
+                # Rotate the offset vector around the switch center
+                cos_r = math.cos(rotation_rad)
+                sin_r = math.sin(rotation_rad)
+                
+                # Apply rotation matrix to the offset
+                rotated_offset_x = hotswap_offset_x * cos_r - hotswap_offset_y * sin_r
+                rotated_offset_y = hotswap_offset_x * sin_r + hotswap_offset_y * cos_r
+                
+                # Calculate final hotswap position
+                hotswap_x = x + rotated_offset_x
+                hotswap_y = y + rotated_offset_y
+
+            # Convert mm coordinates to pixels
+            hotswap_x_px = hotswap_x * FUSION_360_MM_TO_PX
+            hotswap_y_px = hotswap_y * FUSION_360_MM_TO_PX
+
+            # Add hotswap profile
+            add_hotswap_profile(dwg, hotswap_x_px, hotswap_y_px, rotation)
+
+    # Add midpoint separation line
+    _add_midpoint_separation_line(dwg, positions, config, dimensions)
+
+    # Add coordinate origin marker
+    _add_coordinate_origin_marker(dwg)
+
+    # Save the SVG
+    dwg.save()
+    print(f"Hotswap profile with mounting holes SVG exported to {filename}")
+
+def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], filename: str = "keyboard_hotswap_profile.svg"):
+    """
+    Export hotswap socket profiles and mounting holes positioned relative to switch centers for CAD import (e.g., Fusion 360).
+    Includes hotswap profiles, 3mm center mounting holes, and 2.2mm right-side mounting holes (x+ 5.22mm offset).
+
+    Args:
+        config: KeyboardLayoutConfig instance with layout parameters
+        positions: Positions dictionary from generate_all_positions
+        filename: Output SVG filename
+    """
+
+    # Calculate SVG dimensions
+    dimensions = _calculate_cad_svg_dimensions(positions, config)
+
+    # Create SVG drawing
+    dwg = _create_cad_svg_drawing(filename, dimensions)
+
+    # Define the hotswap profile paths (converted from the original SVG)
+    # These paths are relative to the center of the hotswap profile
+    def add_hotswap_profile(dwg, center_x_px, center_y_px, rotation=0):
+        """Add a hotswap profile centered at the given pixel coordinates."""
+
+        # Create group for rotation and positioning
+        if abs(rotation) < 0.1:
+            # No rotation
+            group = dwg.g(transform=f"translate({center_x_px:.3f},{center_y_px:.3f})")
+        else:
+            # With rotation
+            group = dwg.g(transform=f"translate({center_x_px:.3f},{center_y_px:.3f}) rotate({rotation:.3f})")
 
         # Secondary path (left switch mount) - arc moved up 0.25mm, bottom edge fixed
         path2_d = f"""m {(5.130002 - 6.7) * FUSION_360_MM_TO_PX:.3f},{(2.0998362 - 4.725) * FUSION_360_MM_TO_PX:.3f} 
@@ -716,25 +776,7 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
 
             # Add diode recess
             add_diode_recess(dwg, x_px, y_px, rotation)
-
-    # Add HOLE components (mounting holes) for both halves at 2.2mm diameter
-    hole_diameter_px = 2.2 * FUSION_360_MM_TO_PX
-    for half in ["left", "right"]:
-        if "HOLE" in positions[half]:
-            for hole_name, x, y, rotation in positions[half]["HOLE"]:
-                # Convert mm coordinates to pixels
-                x_px = x * FUSION_360_MM_TO_PX
-                y_px = y * FUSION_360_MM_TO_PX
-
-                # Add 2.2mm diameter hole
-                dwg.add(dwg.circle(
-                    center=(x_px, y_px), 
-                    r=hole_diameter_px / 2, 
-                    fill="none", 
-                    stroke="#000000", 
-                    stroke_width="0.1"
-                ))
-
+    
     # Add midpoint separation line
     _add_midpoint_separation_line(dwg, positions, config, dimensions)
 

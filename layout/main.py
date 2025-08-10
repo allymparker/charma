@@ -12,6 +12,7 @@ from output import (
     export_svg,
     export_svg_for_footprints,
     export_svg_switch_plate,
+    export_svg_bottom_plate_hotswap_holes,
     export_svg_bottom_plate_recesses,
     export_svg_screw_holes,
 )
@@ -62,7 +63,8 @@ def main():
     export_svg(config, positions, "outputs/keyboard_layout.svg")
     export_svg_for_footprints(config, positions, "outputs/keyboard_switch_footprints.svg")
     export_svg_switch_plate(config, positions, "outputs/keyboard_switch_plate.svg")
-    export_svg_bottom_plate_recesses(config, positions, "outputs/keyboard_bottom_plate.svg")
+    export_svg_bottom_plate_recesses(config, positions, "outputs/keyboard_bottom_plate_recesses.svg")
+    export_svg_bottom_plate_hotswap_holes(config, positions, "outputs/keyboard_bottom_plate_hotswap_holes.svg")
     export_svg_screw_holes(config, positions, "outputs/keyboard_screw_holes.svg")
 
     print("\nExport complete! Check the 'outputs' directory for generated files.")
