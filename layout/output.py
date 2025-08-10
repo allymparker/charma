@@ -512,13 +512,12 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
     """
     # Hotswap profile offset from switch center (in mm)
     hotswap_offset_x = -2.55
-    hotswap_offset_y = 3.625  # y + 3.625 mm
+    hotswap_offset_y = 3.875
 
     # Hotswap profile dimensions (from original SVG)
 
     # Mounting hole dimensions
     offset_distance = 5.22  # mm
-    1.1
 
     # Calculate SVG dimensions
     dimensions = _calculate_cad_svg_dimensions(positions, config)
@@ -573,11 +572,11 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
 
         group.add(dwg.path(d=path1_d, fill="none", stroke="#000000", stroke_width="0.1", stroke_linecap="round", stroke_linejoin="round"))
 
-        # Secondary path (left switch mount)
+        # Secondary path (left switch mount) - arc moved up 0.25mm, bottom edge fixed
         path2_d = f"""m {(5.130002 - 6.7) * FUSION_360_MM_TO_PX:.3f},{(2.0998362 - 4.725) * FUSION_360_MM_TO_PX:.3f} 
-                     v {-1 * FUSION_360_MM_TO_PX:.3f} 
+                     v {-1.25 * FUSION_360_MM_TO_PX:.3f} 
                      a {1.1 * FUSION_360_MM_TO_PX:.3f},{1.1 * FUSION_360_MM_TO_PX:.3f} 0 0 0 {-2.1999999 * FUSION_360_MM_TO_PX:.3f},0 
-                     v {1 * FUSION_360_MM_TO_PX:.3f} z"""
+                     v {1.25 * FUSION_360_MM_TO_PX:.3f} z"""
 
         group.add(dwg.path(d=path2_d, fill="none", stroke="#000000", stroke_width="0.1", stroke_linecap="round", stroke_linejoin="round"))
 
