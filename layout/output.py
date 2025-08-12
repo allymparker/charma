@@ -23,8 +23,8 @@ FUSION_360_MM_TO_PX = 96.0 / 25.4
 CAD_MARGIN = 20  # mm
 
 # Hotswap profile offset from switch center (in mm)
-hotswap_offset_x = -2.55
-hotswap_offset_y = 3.875
+HOTSWAP_OFFSET_X = -2.55
+HOTSWAP_OFFSET_Y = 3.875
 
 # Mounting hole dimensions
 offset_distance = 5.22  # mm
@@ -406,10 +406,8 @@ def export_svg_for_footprints(config: KeyboardLayoutConfig, positions: Dict[str,
         positions: Positions dictionary from generate_all_positions
         filename: Output SVG filename
     """
-    # Calculate SVG dimensions
     dimensions = _calculate_cad_svg_dimensions(positions, config)
 
-    # Create SVG drawing
     dwg = _create_cad_svg_drawing(filename, dimensions)
 
     # Add switch rectangles for both halves
@@ -430,13 +428,9 @@ def export_svg_for_footprints(config: KeyboardLayoutConfig, positions: Dict[str,
                 group.add(dwg.rect(insert=(-width_px_rect / 2, -height_px_rect / 2), size=(width_px_rect, height_px_rect), fill="none", stroke="#000000", stroke_width="0.38"))
                 dwg.add(group)
 
-    # Add midpoint separation line
     _add_midpoint_separation_line(dwg, positions, config, dimensions)
-
-    # Add coordinate origin marker
     _add_coordinate_origin_marker(dwg)
 
-    # Save the SVG
     dwg.save()
     print(f"CAD-ready SVG exported to {filename}")
 
@@ -451,10 +445,8 @@ def export_svg_switch_plate(config: KeyboardLayoutConfig, positions: Dict[str, D
         positions: Positions dictionary from generate_all_positions
         filename: Output SVG filename
     """
-    # Calculate SVG dimensions
     dimensions = _calculate_cad_svg_dimensions(positions, config)
 
-    # Create SVG drawing
     dwg = _create_cad_svg_drawing(filename, dimensions)
 
     # Add switch plate holes and recesses for both halves
@@ -486,13 +478,9 @@ def export_svg_switch_plate(config: KeyboardLayoutConfig, positions: Dict[str, D
 
                 dwg.add(group)
 
-    # Add midpoint separation line
     _add_midpoint_separation_line(dwg, positions, config, dimensions)
-    
-    # Add coordinate origin marker
     _add_coordinate_origin_marker(dwg)
 
-    # Save the SVG
     dwg.save()
     print(f"Switch plate SVG exported to {filename}")
 
@@ -506,10 +494,8 @@ def export_svg_bottom_plate_hotswap_holes(config: KeyboardLayoutConfig, position
         filename: Output SVG filename
     """
 
-    # Calculate SVG dimensions
     dimensions = _calculate_cad_svg_dimensions(positions, config)
 
-    # Create SVG drawing
     dwg = _create_cad_svg_drawing(filename, dimensions)
 
     # Define the hotswap profile paths (converted from the original SVG)
@@ -566,8 +552,8 @@ def export_svg_bottom_plate_hotswap_holes(config: KeyboardLayoutConfig, position
         for key_name, x, y, rotation in positions[half]["switches"]:
             if abs(rotation) < 0.1:  # No rotation for main keys
                 # Calculate hotswap center position directly
-                hotswap_x = x + hotswap_offset_x
-                hotswap_y = y + hotswap_offset_y
+                hotswap_x = x + HOTSWAP_OFFSET_X
+                hotswap_y = y + HOTSWAP_OFFSET_Y
             else:  # Rotated thumb keys - rotate the offset around switch center
                 import math
                 # Convert rotation to radians
@@ -578,8 +564,8 @@ def export_svg_bottom_plate_hotswap_holes(config: KeyboardLayoutConfig, position
                 sin_r = math.sin(rotation_rad)
                 
                 # Apply rotation matrix to the offset
-                rotated_offset_x = hotswap_offset_x * cos_r - hotswap_offset_y * sin_r
-                rotated_offset_y = hotswap_offset_x * sin_r + hotswap_offset_y * cos_r
+                rotated_offset_x = HOTSWAP_OFFSET_X * cos_r - HOTSWAP_OFFSET_Y * sin_r
+                rotated_offset_y = HOTSWAP_OFFSET_X * sin_r + HOTSWAP_OFFSET_Y * cos_r
                 
                 # Calculate final hotswap position
                 hotswap_x = x + rotated_offset_x
@@ -589,13 +575,9 @@ def export_svg_bottom_plate_hotswap_holes(config: KeyboardLayoutConfig, position
             hotswap_x_px = hotswap_x * FUSION_360_MM_TO_PX
             hotswap_y_px = hotswap_y * FUSION_360_MM_TO_PX
 
-            # Add hotswap profile
             add_hotswap_profile(dwg, hotswap_x_px, hotswap_y_px, rotation)
 
-    # Add midpoint separation line
     _add_midpoint_separation_line(dwg, positions, config, dimensions)
-
-    # Add coordinate origin marker
     _add_coordinate_origin_marker(dwg)
 
     # Save the SVG
@@ -613,10 +595,8 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
         filename: Output SVG filename
     """
 
-    # Calculate SVG dimensions
     dimensions = _calculate_cad_svg_dimensions(positions, config)
 
-    # Create SVG drawing
     dwg = _create_cad_svg_drawing(filename, dimensions)
 
     # Define the hotswap profile paths (converted from the original SVG)
@@ -711,8 +691,8 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
         for key_name, x, y, rotation in positions[half]["switches"]:
             if abs(rotation) < 0.1:  # No rotation for main keys
                 # Calculate hotswap center position directly
-                hotswap_x = x + hotswap_offset_x
-                hotswap_y = y + hotswap_offset_y
+                hotswap_x = x + HOTSWAP_OFFSET_X
+                hotswap_y = y + HOTSWAP_OFFSET_Y
             else:  # Rotated thumb keys - rotate the offset around switch center
                 import math
                 # Convert rotation to radians
@@ -723,8 +703,8 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
                 sin_r = math.sin(rotation_rad)
                 
                 # Apply rotation matrix to the offset
-                rotated_offset_x = hotswap_offset_x * cos_r - hotswap_offset_y * sin_r
-                rotated_offset_y = hotswap_offset_x * sin_r + hotswap_offset_y * cos_r
+                rotated_offset_x = HOTSWAP_OFFSET_X * cos_r - HOTSWAP_OFFSET_Y * sin_r
+                rotated_offset_y = HOTSWAP_OFFSET_X * sin_r + HOTSWAP_OFFSET_Y * cos_r
                 
                 # Calculate final hotswap position
                 hotswap_x = x + rotated_offset_x
@@ -734,7 +714,6 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
             hotswap_x_px = hotswap_x * FUSION_360_MM_TO_PX
             hotswap_y_px = hotswap_y * FUSION_360_MM_TO_PX
 
-            # Add hotswap profile
             add_hotswap_profile(dwg, hotswap_x_px, hotswap_y_px, rotation)
 
     # Add mounting holes for both halves
@@ -774,16 +753,11 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
             x_px = x * FUSION_360_MM_TO_PX
             y_px = y * FUSION_360_MM_TO_PX
 
-            # Add diode recess
             add_diode_recess(dwg, x_px, y_px, rotation)
     
-    # Add midpoint separation line
     _add_midpoint_separation_line(dwg, positions, config, dimensions)
-
-    # Add coordinate origin marker
     _add_coordinate_origin_marker(dwg)
 
-    # Save the SVG
     dwg.save()
     print(f"Hotswap profile with mounting holes SVG exported to {filename}")
 
@@ -796,10 +770,8 @@ def export_svg_screw_holes(config: KeyboardLayoutConfig, positions: Dict[str, Di
         positions: Positions dictionary from generate_all_positions
         filename: Output SVG filename
     """
-    # Calculate SVG dimensions
     dimensions = _calculate_cad_svg_dimensions(positions, config)
 
-    # Create SVG drawing
     dwg = _create_cad_svg_drawing(filename, dimensions)
 
 
@@ -821,13 +793,10 @@ def export_svg_screw_holes(config: KeyboardLayoutConfig, positions: Dict[str, Di
                     stroke_width="0.1"
                 ))
 
-    # Add midpoint separation line
     _add_midpoint_separation_line(dwg, positions, config, dimensions)
 
-    # Add coordinate origin marker
     _add_coordinate_origin_marker(dwg)
 
-    # Save the SVG
     dwg.save()
     print(f"Screw holes SVG exported to {filename}")
 
