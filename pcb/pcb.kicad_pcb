@@ -26659,7 +26659,7 @@
 	(footprint "Button_Switch_SMD:SW_SPDT_PCM12"
 		(layer "F.Cu")
 		(uuid "81c771f2-9926-49dd-90a8-1742c67ecc3b")
-		(at 33.549999 54.75 -90)
+		(at 33.75 56.25 -90)
 		(descr "Ultraminiature Surface Mount Slide Switch, right-angle, https://www.ckswitches.com/media/1424/pcm.pdf")
 		(property "Reference" "PSWL1"
 			(at 0 -3.2 90)
@@ -27861,7 +27861,7 @@
 	(footprint "Button_Switch_SMD:SW_SPDT_PCM12"
 		(layer "F.Cu")
 		(uuid "8f03f8a8-4cc0-4d62-8209-54e21cf52d60")
-		(at 274.45 54.75 90)
+		(at 274.25 56.25 90)
 		(descr "Ultraminiature Surface Mount Slide Switch, right-angle, https://www.ckswitches.com/media/1424/pcm.pdf")
 		(property "Reference" "PSWR1"
 			(at 0 -3.2 90)
