@@ -383,7 +383,7 @@ def get_charma_config() -> KeyboardLayoutConfig:
         SpecificPosition("HOLE", 4,  98.5,   61.30,    0.0),
         SpecificPosition("BAT",  1,  46.725, 56.260, -90.0),
         SpecificPosition("RSW",  1,  34.0,    3.1,   -180.0),
-        SpecificPosition("PSW",  1,   3.550,  24.75,   90.0),
+        SpecificPosition("PSW",  1,   3.60,  25.75,   90.0),
     ]
 
     # Create and return the Charma configuration
