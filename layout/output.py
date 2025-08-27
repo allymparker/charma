@@ -27,7 +27,7 @@ HOTSWAP_OFFSET_X = -2.55
 HOTSWAP_OFFSET_Y = 3.875
 
 # Mounting hole dimensions
-offset_distance = 5.22  # mm
+OFFSET_DISTANCE = 5.22  # mm
 
 
 def _calculate_cad_svg_dimensions(positions: Dict[str, Dict[str, List[Tuple[str, float, float, float]]]], config: KeyboardLayoutConfig) -> CadSvgDimensions:
@@ -726,7 +726,7 @@ def export_svg_bottom_plate_recesses(config: KeyboardLayoutConfig, positions: Di
             # Circle dimensions in pixels
             center_diameter_px = 3.5 * FUSION_360_MM_TO_PX
             side_diameter_px = 2.2 * FUSION_360_MM_TO_PX
-            offset_distance_px = offset_distance * FUSION_360_MM_TO_PX
+            offset_distance_px = OFFSET_DISTANCE * FUSION_360_MM_TO_PX
 
             if abs(rotation) < 0.1:  # No rotation for main keys
                 # 3mm circle at center
