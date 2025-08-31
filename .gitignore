@@ -9,3 +9,12 @@ scratch/**
 
 pcb/production/** 
 pcb/pcb.step
+pcb/pcb-gerbers/pcb-B_Cu.svg
+pcb/pcb-gerbers/pcb-B_Mask.svg
+pcb/pcb-gerbers/pcb-B_Paste.svg
+pcb/pcb-gerbers/pcb-B_Silkscreen.svg
+pcb/pcb-gerbers/pcb-Edge_Cuts.svg
+pcb/pcb-gerbers/pcb-F_Cu.svg
+pcb/pcb-gerbers/pcb-F_Mask.svg
+pcb/pcb-gerbers/pcb-F_Paste.svg
+pcb/pcb-gerbers/pcb-F_Silkscreen.svg

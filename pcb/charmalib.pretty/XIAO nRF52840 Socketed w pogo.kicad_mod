@@ -17,6 +17,7 @@
 	(property "Value" "SeeeduinoXIAO"
 		(at 0 -0.295 0)
 		(layer "F.SilkS")
+		(hide yes)
 		(uuid "ecb53e6d-488f-4c16-bf3e-8aa271854265")
 		(effects
 			(font

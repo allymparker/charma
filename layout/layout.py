@@ -376,7 +376,7 @@ def get_charma_config() -> KeyboardLayoutConfig:
 
     # Define Charma-specific component positions
     specific_positions = [
-        SpecificPosition("MCU",  1,  10.0,    9.0,   -90.0),
+        SpecificPosition("MCU",  1,  10.0,    9.03,   -90.0),
         SpecificPosition("HOLE", 1,  98.5,    2.50,    0.0),
         SpecificPosition("HOLE", 2,  26.25,   2.50,    0.0),
         SpecificPosition("HOLE", 3,   2.5,   76.70,    0.0),

@@ -13,7 +13,7 @@ Usage:
 4. Run: exec(open('kicad_position_script.py').read())
 
 Alternative usage from any directory:
-exec(open('/workspaces/charma/pcb/layout/kicad_position_script.py').read())
+exec(open('../layout/kicad_position_script.py').read())
 
 Or save this as an action plugin in your KiCad plugins directory.
 """
